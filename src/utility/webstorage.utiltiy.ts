@@ -30,6 +30,7 @@ export class WebStorageUtility {
     }
 
     private static getGettable(value: string): any {
+        if (value === 'undefined') return undefined;
         try {
             return JSON.parse(value);
         } catch(e) {
