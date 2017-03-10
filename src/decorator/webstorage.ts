@@ -32,9 +32,11 @@ export let WebStorage = (webStorage: Storage, key: string) => {
                 cache[key] = true;
 
                 // manual method for force save
-                proxy.save = function() {
-                    WebStorageUtility.set(webStorage, key, proxy);
-                };
+                if (proxy instanceof Object) {
+                    proxy.save = function () {
+                        WebStorageUtility.set(webStorage, key, proxy);
+                    };
+                }
 
                 // handle methods changing value of array
                 if (Array.isArray(proxy)) {
