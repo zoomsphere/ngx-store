@@ -1,11 +1,13 @@
 import {WebStorageUtility} from "../utility/webstorage.utility";
+import {Webstorable} from '../index';
 
-export function LocalStorage(key?: string) {
-    return WebStorage(localStorage, key);
+
+export function LocalStorage(key?: string): Webstorable {
+    return <Webstorable><any>WebStorage(localStorage, key);
 }
 
-export function SessionStorage(key?: string) {
-    return WebStorage(sessionStorage, key);
+export function SessionStorage(key?: string): Webstorable {
+    return <Webstorable><any>WebStorage(sessionStorage, key);
 }
 
 // initialization cache
@@ -29,6 +31,11 @@ export let WebStorage = (webStorage: Storage, key: string) => {
                     WebStorageUtility.set(webStorage, key, value);
                 }
                 cache[key] = true;
+
+                // manual method for force save
+                proxy.save = function() {
+                    WebStorageUtility.set(webStorage, key, proxy);
+                };
 
                 // handle methods changing value of array
                 if (Array.isArray(proxy)) {
