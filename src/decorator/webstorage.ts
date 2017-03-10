@@ -1,13 +1,12 @@
 import {WebStorageUtility} from "../utility/webstorage.utility";
-import {Webstorable} from '../index';
 
 
-export function LocalStorage(key?: string): Webstorable {
-    return <Webstorable><any>WebStorage(localStorage, key);
+export function LocalStorage(key?: string) {
+    return WebStorage(localStorage, key);
 }
 
-export function SessionStorage(key?: string): Webstorable {
-    return <Webstorable><any>WebStorage(sessionStorage, key);
+export function SessionStorage(key?: string) {
+    return WebStorage(sessionStorage, key);
 }
 
 // initialization cache
