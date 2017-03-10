@@ -1,1 +1,1 @@
-export * from './webstorage.utiltiy';
+export * from './webstorage.utility';

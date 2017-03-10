@@ -1,4 +1,4 @@
-import {WebStorageUtility} from "../utility/webstorage.utiltiy";
+import {WebStorageUtility} from "../utility/webstorage.utility";
 
 export function LocalStorage(key?: string) {
     return WebStorage(localStorage, key);
