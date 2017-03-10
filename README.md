@@ -3,9 +3,11 @@
 This little Angular2/typescript decorator makes it super easy to save and restore *automatically* a variable state in your
 directive (class property) using HTML5' LocalStorage.
 
-## Seeking new maintainer
+## What's new
 
-This project is not maintained. Please consider taking it over. More information at https://github.com/open-source-chest/take-it-over.
+Things that have been added in this fork:
+- support for `Array` methods that change its value (`push`, `pop` and `shift` to be exact)
+- `.save()` method on returned object, used in specific cases to force save object changes
 
 ## Use
 
@@ -24,15 +26,38 @@ This project is not maintained. Please consider taking it over. More information
     ```
 
 
-3. Use the `LocalStorage` decorator
-```typescript
-import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
+3. Use the `LocalStorage` or `SessionStorage` decorator
+    ```typescript
+    import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
+    
+    class MySuperComponent {
+        @LocalStorage() public lastSearchQuery:Object = {};
+        @LocalStorage('differentLocalStorageKey') public lastSearchQuery:Object = {};
+        @SessionStorage('itWillBeRemovedAfterBrowserClose') private lastSearchQueries: Array<{}> = [];
+    }
+    ```
 
-class MySuperComponent {
-    @LocalStorage() public lastSearchQuery:Object = {};
-    @LocalStorage('differentLocalStorageKey') public lastSearchQuery:Object = {};
-}
-```
+4. Force save changes
+If you need to modify stored object in ways that can't be automatically handled (generally changing object properties or array elements using index signature),
+and don't want to use Service, then you can take advantage of `.save()` method to force save introduced changes. Example:
+    ```typescript
+    import {LocalStorage, Webstorable} from 'angular2-localstorage';
+
+    type WebstorableObject = Webstorable & Object; // save() method is declared in the Webstorable interface
+
+    class MySuperComponent {
+       @LocalStorage() someObject: WebstorableObject = <WebstorableObject>{};
+       
+       constructor() {
+           this.someObject.a = 1;
+           this.someObject['b'] = 2;
+           delete this.someObject['c'];
+           // upper changes won't be saved without the lower line
+           this.someObject.save();
+       }
+    }
+    ```
+
 
 **Note**: Define always a default value at the property you are using `@LocalStorage`.
 
