@@ -24,6 +24,8 @@ var WebStorageUtility = (function () {
         return typeof value === "string" ? value : JSON.stringify(value);
     };
     WebStorageUtility.getGettable = function (value) {
+        if (value === 'undefined')
+            return undefined;
         try {
             return JSON.parse(value);
         }
@@ -34,4 +36,4 @@ var WebStorageUtility = (function () {
     return WebStorageUtility;
 }());
 exports.WebStorageUtility = WebStorageUtility;
-//# sourceMappingURL=webstorage.utiltiy.js.map
+//# sourceMappingURL=webstorage.utility.js.map

@@ -20,19 +20,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var webstorage_utiltiy_1 = require("../utility/webstorage.utiltiy");
+var webstorage_utility_1 = require("../utility/webstorage.utility");
 var WebStorageService = (function () {
     function WebStorageService(storage) {
         this.storage = storage;
     }
     WebStorageService.prototype.get = function (key) {
-        return webstorage_utiltiy_1.WebStorageUtility.get(this.storage, key);
+        return webstorage_utility_1.WebStorageUtility.get(this.storage, key);
     };
     WebStorageService.prototype.set = function (key, value) {
-        webstorage_utiltiy_1.WebStorageUtility.set(this.storage, key, value);
+        webstorage_utility_1.WebStorageUtility.set(this.storage, key, value);
     };
     WebStorageService.prototype.remove = function (key) {
-        webstorage_utiltiy_1.WebStorageUtility.remove(this.storage, key);
+        webstorage_utility_1.WebStorageUtility.remove(this.storage, key);
     };
     WebStorageService.prototype.clear = function () {
         this.storage.clear();

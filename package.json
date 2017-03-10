@@ -1,6 +1,6 @@
 {
   "name": "angular2-localstorage",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Angular2 decorator to save and restore class properties automatically from LocalStorage.",
   "scripts": {
     "lint": "tslint ./*.ts -t verbose",
