@@ -1,8 +1,8 @@
-const KEY_PREFIX = "angular2ws";
+import {WEBSTORAGE_CONFIG} from '../index';
 
 export class WebStorageUtility {
     static generateStorageKey(key: string): string {
-        return `${KEY_PREFIX}_${key}`
+        return `${WEBSTORAGE_CONFIG.prefix}${key}`
     }
 
     static get(storage: Storage, key: string): any {
