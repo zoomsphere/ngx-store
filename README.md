@@ -13,7 +13,7 @@ Things that have been added in this fork:
 
 ## Installation
 
-1. Download the library: `npm install --save git+https://github.com/zoomsphere/angular2-rest#master`
+1. Download the library: `npm install --save git+https://github.com/zoomsphere/angular2-localstorage#master`
 2. Import the WebStorageModule in your app module:
     ```typescript
     import {Component} from 'angular2/core';
