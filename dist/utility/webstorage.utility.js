@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var KEY_PREFIX = "angular2ws";
+var index_1 = require("../index");
 var WebStorageUtility = (function () {
     function WebStorageUtility() {
     }
     WebStorageUtility.generateStorageKey = function (key) {
-        return KEY_PREFIX + "_" + key;
+        return "" + index_1.WEBSTORAGE_CONFIG.prefix + key;
     };
     WebStorageUtility.get = function (storage, key) {
         var storageKey = WebStorageUtility.generateStorageKey(key);

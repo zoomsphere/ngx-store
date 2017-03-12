@@ -1,38 +1,41 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var webstorage_utility_1 = require("../utility/webstorage.utility");
+var webstorage_service_1 = require("../service/webstorage.service");
 function LocalStorage(key) {
-    return exports.WebStorage(localStorage, key);
+    return exports.WebStorage(localStorage, webstorage_service_1.LocalStorageService, key);
 }
 exports.LocalStorage = LocalStorage;
 function SessionStorage(key) {
-    return exports.WebStorage(sessionStorage, key);
+    return exports.WebStorage(sessionStorage, webstorage_service_1.SessionStorageService, key);
 }
 exports.SessionStorage = SessionStorage;
 // initialization cache
 var cache = {};
-exports.WebStorage = function (webStorage, key) {
+exports.WebStorage = function (webStorage, service, key) {
     return function (target, propertyName) {
         key = key || propertyName;
         var proxy = target[propertyName];
-        var storedValue = webstorage_utility_1.WebStorageUtility.get(webStorage, key);
+        service.keys.push(key);
         Object.defineProperty(target, propertyName, {
             get: function () {
                 return proxy;
             },
             set: function (value) {
-                if (!cache[key] && storedValue) {
-                    proxy = storedValue;
+                if (!cache[key]) {
+                    proxy = webstorage_utility_1.WebStorageUtility.get(webStorage, key) || value;
+                    cache[key] = true;
                 }
                 else {
                     proxy = value;
                     webstorage_utility_1.WebStorageUtility.set(webStorage, key, value);
                 }
-                cache[key] = true;
                 // manual method for force save
-                proxy.save = function () {
-                    webstorage_utility_1.WebStorageUtility.set(webStorage, key, proxy);
-                };
+                if (proxy instanceof Object) {
+                    proxy.save = function () {
+                        webstorage_utility_1.WebStorageUtility.set(webStorage, key, proxy);
+                    };
+                }
                 // handle methods changing value of array
                 if (Array.isArray(proxy)) {
                     proxy.push = function (value) {

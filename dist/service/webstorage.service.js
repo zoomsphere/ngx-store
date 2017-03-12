@@ -35,7 +35,10 @@ var WebStorageService = (function () {
         webstorage_utility_1.WebStorageUtility.remove(this.storage, key);
     };
     WebStorageService.prototype.clear = function () {
-        this.storage.clear();
+        for (var _i = 0, _a = this.constructor.keys; _i < _a.length; _i++) {
+            var key = _a[_i];
+            this.storage.removeItem(key);
+        }
     };
     return WebStorageService;
 }());
@@ -47,6 +50,7 @@ var LocalStorageService = (function (_super) {
     }
     return LocalStorageService;
 }(WebStorageService));
+LocalStorageService.keys = [];
 LocalStorageService = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [])
@@ -59,6 +63,7 @@ var SessionStorageService = (function (_super) {
     }
     return SessionStorageService;
 }(WebStorageService));
+SessionStorageService.keys = [];
 SessionStorageService = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [])
