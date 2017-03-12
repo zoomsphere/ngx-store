@@ -1,21 +1,23 @@
 import {WebStorageUtility} from '../utility/webstorage.utility';
+import {LocalStorageService, SessionStorageService, WebStorageServiceInterface} from '../service/webstorage.service';
 
 
 export function LocalStorage(key?: string) {
-    return WebStorage(localStorage, key);
+    return WebStorage(localStorage, LocalStorageService, key);
 }
 
 export function SessionStorage(key?: string) {
-    return WebStorage(sessionStorage, key);
+    return WebStorage(sessionStorage, SessionStorageService, key);
 }
 
 // initialization cache
 let cache = {};
 
-export let WebStorage = (webStorage: Storage, key: string) => {
+export let WebStorage = (webStorage: Storage, service: WebStorageServiceInterface, key: string) => {
     return (target: Object, propertyName: string): void => {
         key = key || propertyName;
         let proxy = target[propertyName];
+        service.keys.push(key);
 
         Object.defineProperty(target, propertyName, {
             get: function() {

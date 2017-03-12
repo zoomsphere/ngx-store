@@ -1,8 +1,20 @@
 import {Injectable} from '@angular/core';
 import {WebStorageUtility} from '../utility/webstorage.utility';
 
-export class WebStorageService {
-    constructor(private storage: Storage) {
+export interface WebStorageServiceInterface {
+    keys: Array<string>;
+    new(): {
+        get(key: string): any;
+        set(key: string, value: any): void;
+        remove(key: string): void;
+        clear(): void;
+    }
+}
+
+export abstract class WebStorageService {
+    public static keys: Array<string>;
+
+    constructor(protected storage: Storage) {
 
     }
 
@@ -19,12 +31,16 @@ export class WebStorageService {
     }
 
     clear(): void {
-        this.storage.clear();
+        for (let key of (<WebStorageServiceInterface>this.constructor).keys) {
+            this.storage.removeItem(key);
+        }
     }
 }
 
 @Injectable()
 export class LocalStorageService extends WebStorageService {
+    public static keys: Array<string> = [];
+
     constructor() {
         super(localStorage);
     }
@@ -32,6 +48,8 @@ export class LocalStorageService extends WebStorageService {
 
 @Injectable()
 export class SessionStorageService extends WebStorageService {
+    public static keys: Array<string> = [];
+
     constructor() {
         super(sessionStorage);
     }
