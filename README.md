@@ -6,16 +6,18 @@ directive (class property) using HTML5' LocalStorage.
 ## What's new
 
 Things that have been added in this fork:
+- added `.save()` method on returned object, used in specific cases to force save object changes
 - support for `Array` methods that change its value (`push`, `pop` and `shift` to be exact)
-- `.save()` method on returned object, used in specific cases to force save object changes
+- now `WebStorageService.clear()` method removes items created by this repository only
+- storage key prefix (`angular2ws_` by default) can be customized by changing `WEBSTORAGE_CONFIG.prefix` property
 
-## Use
+## Installation
 
-1. Download the library using npm or github: `npm install --save angular2-localstorage`
+1. Download the library: `npm install --save git+https://github.com/zoomsphere/angular2-rest#master`
 2. Import the WebStorageModule in your app module:
     ```typescript
-    import {Component} from "angular2/core";
-    import {WebStorageModule, LocalStorageService} from "angular2-localstorage";
+    import {Component} from 'angular2/core';
+    import {WebStorageModule, LocalStorageService} from 'angular2-localstorage';
 
     @NgModule({
         import: [WebStorageModule]
@@ -25,38 +27,65 @@ Things that have been added in this fork:
     export class AppModule {}
     ```
 
-
-3. Use the `LocalStorage` or `SessionStorage` decorator
+3. If you don't like the default key prefix (`angular2ws_`) or just don't want to use any, then in your `app.module.ts` file add the following:
     ```typescript
-    import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
+    import {WEBSTORAGE_CONFIG} from 'angular2-localstorage';
+    WEBSTORAGE_CONFIG.prefix = ''; // no prefix
+    WEBSTORAGE_CONFIG.prefix = 'newPrefix_';
+    ```
+    Note that it's the best to configure this right after installation, because the data saved under keys with previous prefix won't be automatically read anymore - to prevent that you can change keys of already stored data or override them manually.
+
+## How to use
+
+1. Use the `@LocalStorage()` and/or `@SessionStorage()` decorator functions. Here is where the magic happens, decorated variables' values will be restored from the storage when you reload the site!
+    ```typescript
+    import {LocalStorage, SessionStorage} from 'angular2-localstorage/WebStorage';
     
     class MySuperComponent {
-        @LocalStorage() public lastSearchQuery:Object = {};
-        @LocalStorage('differentLocalStorageKey') public lastSearchQuery:Object = {};
-        @SessionStorage('itWillBeRemovedAfterBrowserClose') private lastSearchQueries: Array<{}> = [];
+        // it will be stored under ${prefix}viewCounts name
+        @LocalStorage() public viewCounts: number = 0;
+        // this under name: ${prefix}differentLocalStorageKey
+        @LocalStorage('differentLocalStorageKey') protected userName: string = '';
+        // and this under ${prefix}itWillBeRemovedAfterBrowserClose in session storage
+        @SessionStorage('itWillBeRemovedAfterBrowserClose') private previousUserNames: Array<string> = [];
+     
+        mySuperMethod(): void {
+            this.viewCounts++;
+            this.userName = 'some name stored in localstorage';
+            this.previousUserNames.push(this.userName);
+            for (let userName of this.previousUserNames) {
+                // do some stuff
+            }
+        } 
     }
     ```
 
-4. Force save changes
-If you need to modify stored object in ways that can't be automatically handled (generally changing object properties or array elements using index signature),
-and don't want to use Service, then you can take advantage of `.save()` method to force save introduced changes. Example:
+2. **Force save changes.** If you need to modify stored object by not a direct assignment, then you can take advantage of `.save()` method to force save introduced changes. Example:
     ```typescript
-    import {LocalStorage, Webstorable} from 'angular2-localstorage';
+    import {LocalStorage, SessionStorage, Webstorable} from 'angular2-localstorage';
 
+    // this is needed to satisfy Typescript type checking
     type WebstorableObject = Webstorable & Object; // save() method is declared in the Webstorable interface
+    type WebstorableArray = Webstorable & Array<any>;
 
     class MySuperComponent {
        @LocalStorage() someObject: WebstorableObject = <WebstorableObject>{};
+       @SessionStorage() arrayOfSomethings: WebstorableArray = [0,1,2,3,4];
        
-       constructor() {
+       mySuperMethod() {
            this.someObject.a = 1;
            this.someObject['b'] = 2;
            delete this.someObject['c'];
+           for (let something of this.arrayOfSomethings) {
+               something++;
+           }
            // upper changes won't be saved without the lower line
            this.someObject.save();
+           this.arrayOfSomethings.save();
        }
     }
     ```
+    Alternatively use `Local`(or Session)`StorageService` or make straight assignment by hand.
 
 
 **Note**: Define always a default value at the property you are using `@LocalStorage`.
@@ -65,59 +94,8 @@ and don't want to use Service, then you can take advantage of `.save()` method t
 
 **Note**: Please don't store circular structures as this library uses JSON.stringify to encode before using LocalStorage.
 
-## Examples
+### TODO
+- Try to automatically handle all data manipulations using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+- Add tests
 
-```typescript
-@Component({
-    selector: 'app-login',
-    template: `
-<form>
-    <div>
-        <input type="text" [(ngModel)]="username" placeholder="Username" />
-        <input type="password" [(ngModel)]="password" placeholder="Password" />
-    </div>
-    
-    <input type="checkbox" [(ngModel)]="rememberMe" /> Keep me logged in
-
-    <button type="submit">Login</button>
-</form>
-    `
-})
-class AppLoginComponent {
-    //here happens the magic. `username` is always restored from the localstorage when you reload the site
-    @LocalStorage() public username:string = '';
-    
-    public password:string;
-    
-    //here happens the magic. `rememberMe` is always restored from the localstorage when you reload the site
-    @LocalStorage() public rememberMe:boolean = false;
-}
-```
-
-
-```typescript
-@Component({
-    selector: 'admin-menu',
-    template: `
-<div *ngFor="#menuItem of menuItems() | mapToIterable; #i = index">
-    <h2 (click)="hiddenMenuItems[i] = !!!hiddenMenuItems[i]">
-        {{i}}: {{category.label}}
-    </h2>
-    <div style="padding-left: 15px;" [hidden]="hiddenMenuItems[i]">
-        <a href>Some sub menu item 1</a>
-        <a href>Some sub menu item 2</a>
-        <a href>Some sub menu item 3</a>
-    </div>
-</div>
-    `
-})
-class AdminMenuComponent {
-    public menuItems = [{title: 'Menu1'}, {title: 'Menu2'}, {title: 'Menu3'}];
-
-    //here happens the magic. `hiddenMenuItems` is always restored from the localstorage when you reload the site
-    @LocalStorage() public hiddenMenuItems:Array<boolean> = [];
-    
-    //here happens the magic. `profile` is always restored from the sessionStorage when you reload the site from the current tab/browser. This is perfect for more sensitive information that shouldn't stay once the user closes the browser.
-    @SessionStorage() public profile:any = {};
-}
-```
+**Contributions are welcome!**
