@@ -16,20 +16,19 @@ export let WebStorage = (webStorage: Storage, key: string) => {
     return (target: Object, propertyName: string): void => {
         key = key || propertyName;
         let proxy = target[propertyName];
-        let storedValue = WebStorageUtility.get(webStorage, key);
 
         Object.defineProperty(target, propertyName, {
             get: function() {
                 return proxy;
             },
             set: function(value: any) {
-                if (!cache[key] && storedValue) { // first setter handle
-                    proxy = storedValue;
-                } else { // if no value in localStorage, set it to initializer
+                if (!cache[key]) { // first setter handle
+                    proxy = WebStorageUtility.get(webStorage, key) || value;
+                    cache[key] = true;
+                } else { // if there is no value in localStorage, set it to initializer
                     proxy = value;
                     WebStorageUtility.set(webStorage, key, value);
                 }
-                cache[key] = true;
 
                 // manual method for force save
                 if (proxy instanceof Object) {
