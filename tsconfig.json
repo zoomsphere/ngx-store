@@ -8,8 +8,21 @@
 		"experimentalDecorators": true,
 		"inlineSources": true,
 		"outDir": "dist",
-		"declaration": true
+        "declaration": true,
+        "lib": [
+            "dom",
+            "es6"
+        ],
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "types": [
+            "node"
+        ]
 	},
+    "include": [
+        "src/**/*"
+    ],
 	"exclude": [
 		"node_modules",
 		"index.d.ts",
