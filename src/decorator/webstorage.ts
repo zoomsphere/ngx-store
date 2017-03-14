@@ -41,21 +41,17 @@ export let WebStorage = (webStorage: Storage, service: WebStorageServiceInterfac
 
                 // handle methods changing value of array
                 if (Array.isArray(proxy)) {
-                    proxy.push = function(value) {
-                        let result = Array.prototype.push.apply(proxy, arguments);
-                        WebStorageUtility.set(webStorage, key, proxy);
-                        return result;
-                    };
-                    proxy.pop = function() {
-                        let result = Array.prototype.pop.apply(proxy, arguments);
-                        WebStorageUtility.set(webStorage, key, proxy);
-                        return result;
-                    };
-                    proxy.shift = function() {
-                        let result = Array.prototype.shift.apply(proxy, arguments);
-                        WebStorageUtility.set(webStorage, key, proxy);
-                        return result;
-                    };
+                    const methodsToOverwrite = [
+                        'join', 'pop', 'push', 'reverse', 'shift', 'unshift', 'splice',
+                        'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin'
+                    ];
+                    for (let method of methodsToOverwrite) {
+                        proxy[method] = function(value) {
+                            let result = Array.prototype[method].apply(proxy, arguments);
+                            WebStorageUtility.set(webStorage, key, proxy);
+                            return result;
+                        }
+                    }
                 }
             },
         });

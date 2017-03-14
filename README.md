@@ -7,7 +7,7 @@ directive (class property) using HTML5' LocalStorage.
 
 Things that have been added in this fork:
 - added `.save()` method on returned object, used in specific cases to force save object changes
-- support for `Array` methods that change its value (`push`, `pop` and `shift` to be exact)
+- support for all `Array` methods that change array object's value
 - now `WebStorageService.clear()` method removes items created by this repository only
 - storage key prefix (`angular2ws_` by default) can be customized by changing `WEBSTORAGE_CONFIG.prefix` property
 
