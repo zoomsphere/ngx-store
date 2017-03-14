@@ -38,21 +38,21 @@ exports.WebStorage = function (webStorage, service, key) {
                 }
                 // handle methods changing value of array
                 if (Array.isArray(proxy)) {
-                    proxy.push = function (value) {
-                        var result = Array.prototype.push.apply(proxy, arguments);
-                        webstorage_utility_1.WebStorageUtility.set(webStorage, key, proxy);
-                        return result;
+                    var methodsToOverwrite = [
+                        'join', 'pop', 'push', 'reverse', 'shift', 'unshift', 'splice',
+                        'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin'
+                    ];
+                    var _loop_1 = function (method) {
+                        proxy[method] = function (value) {
+                            var result = Array.prototype[method].apply(proxy, arguments);
+                            webstorage_utility_1.WebStorageUtility.set(webStorage, key, proxy);
+                            return result;
+                        };
                     };
-                    proxy.pop = function () {
-                        var result = Array.prototype.pop.apply(proxy, arguments);
-                        webstorage_utility_1.WebStorageUtility.set(webStorage, key, proxy);
-                        return result;
-                    };
-                    proxy.shift = function () {
-                        var result = Array.prototype.shift.apply(proxy, arguments);
-                        webstorage_utility_1.WebStorageUtility.set(webStorage, key, proxy);
-                        return result;
-                    };
+                    for (var _i = 0, methodsToOverwrite_1 = methodsToOverwrite; _i < methodsToOverwrite_1.length; _i++) {
+                        var method = methodsToOverwrite_1[_i];
+                        _loop_1(method);
+                    }
                 }
             },
         });
