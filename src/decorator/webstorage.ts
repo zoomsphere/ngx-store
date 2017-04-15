@@ -13,7 +13,7 @@ export function SessionStorage(key?: string) {
 // initialization cache
 let cache = {};
 
-export let WebStorage = (webStorage: Storage, service: WebStorageServiceInterface, key: string) => {
+function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, key: string) {
     return (target: Object, propertyName: string): void => {
         key = key || propertyName;
         let proxy = target[propertyName];
@@ -56,4 +56,4 @@ export let WebStorage = (webStorage: Storage, service: WebStorageServiceInterfac
             },
         });
     }
-};
+}

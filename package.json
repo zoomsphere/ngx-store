@@ -1,11 +1,12 @@
 {
-  "name": "angular2-localstorage",
-  "version": "0.5.0",
-  "description": "Angular2 decorator to save and restore class properties automatically from LocalStorage.",
+  "name": "ngx-store",
+  "version": "0.5.1",
+  "description": "Angular decorator to save and restore class properties automatically from LocalStorage and SessionStorage.",
   "scripts": {
     "lint": "tslint ./*.ts -t verbose",
-    "build": "rimraf dist && tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf dist && ngc -p tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,9 @@
   },
   "keywords": [
     "Angular2",
-    "LocalStorage"
+    "LocalStorage",
+    "SessionStorage",
+    "Storage"
   ],
   "author": "Marc J. Schmidt",
   "license": "ISC",
@@ -22,18 +25,23 @@
   },
   "homepage": "https://github.com/zoomsphere/angular2-localstorage",
   "peerDependencies": {
-    "@angular/core": "^2.0.0 || ^4.0.0",
+    "@angular/core": ">=2.3.0",
     "core-js": "^2.4.1",
     "rxjs": ">=5.0.0-beta.12",
     "zone.js": ">=0.7.2"
   },
   "devDependencies": {
+    "@angular/compiler": "~4.0.0",
+    "@angular/compiler-cli": "~4.0.0",
+    "@angular/core": "~4.0.0",
+    "@angular/platform-server": "~4.0.0",
     "@types/node": "^7.0.0",
     "core-js": "^2.4.1",
     "es6-shim": "^0.35.3",
     "rimraf": "^2.5.4",
-    "tslint": "^3.15.1",
-    "typescript": "^2.2.1",
-    "zone.js": "^0.7.2"
+    "rxjs": ">=5.0.0",
+    "tslint": "^4.5.0",
+    "typescript": "~2.2.2",
+    "zone.js": "^0.8.4"
   }
 }

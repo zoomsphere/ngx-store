@@ -1,11 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = require("../index");
+import { WEBSTORAGE_CONFIG } from '../index';
 var WebStorageUtility = (function () {
     function WebStorageUtility() {
     }
     WebStorageUtility.generateStorageKey = function (key) {
-        return "" + index_1.WEBSTORAGE_CONFIG.prefix + key;
+        return "" + WEBSTORAGE_CONFIG.prefix + key;
     };
     WebStorageUtility.get = function (storage, key) {
         var storageKey = WebStorageUtility.generateStorageKey(key);
@@ -35,5 +33,5 @@ var WebStorageUtility = (function () {
     };
     return WebStorageUtility;
 }());
-exports.WebStorageUtility = WebStorageUtility;
+export { WebStorageUtility };
 //# sourceMappingURL=webstorage.utility.js.map

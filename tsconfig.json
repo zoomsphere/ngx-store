@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "es5",
-		"module": "commonjs",
+		"module": "es2015",
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"emitDecoratorMetadata": true,
@@ -21,11 +21,16 @@
         ]
 	},
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "index.ts"
     ],
 	"exclude": [
 		"node_modules",
-		"index.d.ts",
+//		"index.d.ts",
 		"dist"
-	]
+	],
+    "angularCompilerOptions": {
+        "genDir": "dist",
+        "skipTemplateCodegen": true
+    }
 }
