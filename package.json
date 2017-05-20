@@ -43,5 +43,8 @@
     "tslint": "^4.5.0",
     "typescript": "~2.2.2",
     "zone.js": "^0.8.4"
+  },
+  "dependencies": {
+    "is-empty": "^1.2.0"
   }
 }
