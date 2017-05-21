@@ -1,6 +1,8 @@
 {
   "name": "ngx-store",
-  "version": "0.5.1",
+  "version": "0.5.2",
+  "main": "./dist/index",
+  "typings": "./dist/index",
   "description": "Angular decorator to save and restore class properties automatically from LocalStorage and SessionStorage.",
   "scripts": {
     "lint": "tslint ./*.ts -t verbose",
@@ -27,7 +29,7 @@
   "peerDependencies": {
     "@angular/core": ">=2.3.0",
     "core-js": "^2.4.1",
-    "rxjs": ">=5.0.0-beta.12",
+    "rxjs": ">=5.0.0",
     "zone.js": ">=0.7.2"
   },
   "devDependencies": {

@@ -1,5 +1,9 @@
-### Eclipse template
+### This project
+dist/
+*.tgz
 
+### Third party
+# Eclipse template
 .metadata
 bin/
 tmp/

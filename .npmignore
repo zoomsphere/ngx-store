@@ -1,0 +1,10 @@
+*.ts
+!*.d.ts
+*.tgz
+src/
+.idea/
+tsconfig.json
+Makefile
+.editorconfig
+.gitignore
+.npmignore
