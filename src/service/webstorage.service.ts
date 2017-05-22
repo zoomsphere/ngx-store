@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {WebStorageUtility} from '../utility/webstorage.utility';
+import { Injectable } from '@angular/core';
+import { WebStorageUtility } from '../utility/webstorage.utility';
 
 export interface WebStorageServiceInterface {
     keys: Array<string>;
@@ -14,19 +14,17 @@ export interface WebStorageServiceInterface {
 export abstract class WebStorageService {
     public static keys: Array<string>;
 
-    constructor(protected storage: Storage) {
+    constructor(protected storage: Storage) {}
 
-    }
-
-    get(key: string): any {
+    public get(key: string): any {
         return WebStorageUtility.get(this.storage, key);
     }
 
-    set(key: string, value: any): void {
+    public set(key: string, value: any): void {
         WebStorageUtility.set(this.storage, key, value);
     }
 
-    remove(key: string): void {
+    public remove(key: string): void {
         WebStorageUtility.remove(this.storage, key);
     }
 

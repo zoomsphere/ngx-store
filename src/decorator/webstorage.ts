@@ -1,5 +1,5 @@
-import {WebStorageUtility} from '../utility/webstorage.utility';
-import {LocalStorageService, SessionStorageService, WebStorageServiceInterface} from '../service/webstorage.service';
+import { WebStorageUtility } from '../utility/webstorage.utility';
+import { LocalStorageService, SessionStorageService, WebStorageServiceInterface } from '../service/webstorage.service';
 import * as isEmpty from 'is-empty';
 
 export function LocalStorage(key?: string) {
@@ -11,7 +11,7 @@ export function SessionStorage(key?: string) {
 }
 
 // initialization cache
-let cache = {};
+let cache: {[name: string]: boolean} = {};
 
 function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, key: string) {
     return (target: Object, propertyName: string): void => {

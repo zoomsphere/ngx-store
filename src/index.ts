@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
-import {LocalStorageService, SessionStorageService} from './service/webstorage.service';
+import { NgModule } from '@angular/core';
+import { LocalStorageService, SessionStorageService } from './service/webstorage.service';
 
 export { LocalStorage, SessionStorage } from './decorator/webstorage'
 export { WebStorageService, LocalStorageService, SessionStorageService } from './service/webstorage.service';
@@ -12,6 +12,9 @@ export let WEBSTORAGE_CONFIG = {
 };
 
 @NgModule({
-    providers: [LocalStorageService, SessionStorageService]
+    providers: [
+        LocalStorageService,
+        SessionStorageService,
+    ]
 })
 export class WebStorageModule {}
