@@ -14,9 +14,20 @@ export function SessionStorage(key?: string) {
 let cache: {[name: string]: boolean} = {};
 
 function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, key: string) {
-    return (target: Object, propertyName: string): void => {
+    return (target: any, propertyName: string): void => {
         key = key || propertyName;
-        let proxy = target[propertyName];
+
+        if (target) { // handle Angular Component destruction
+            let originalFunction = target.ngOnDestroy;
+            target.ngOnDestroy = () => {
+                cache[key] = false;
+                if (typeof originalFunction === 'function') {
+                    originalFunction();
+                }
+            };
+        }
+
+        let proxy = WebStorageUtility.get(webStorage, key);
         service.keys.push(key);
 
         Object.defineProperty(target, propertyName, {
@@ -25,11 +36,14 @@ function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, ke
             },
             set: function(value: any) {
                 if (!cache[key]) { // first setter handle
-                    proxy = WebStorageUtility.get(webStorage, key) || value;
+                    console.log('first setter');
+                    if (isEmpty(proxy)) {
+                        // if no value in localStorage, set it to initializer
+                        proxy = WebStorageUtility.set(webStorage, key, value);
+                    }
                     cache[key] = true;
-                } else if (isEmpty(proxy)) { // if there is no value in localStorage, set it to initializer
-                    proxy = value;
-                    WebStorageUtility.set(webStorage, key, value);
+                } else { // if there is no value in localStorage, set it to initializer
+                    proxy = WebStorageUtility.set(webStorage, key, value);
                 }
 
                 // manual method for force save
