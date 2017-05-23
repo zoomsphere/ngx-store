@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { WebStorageUtility } from '../utility/webstorage.utility';
+import { ClearType, WEBSTORAGE_CONFIG } from '../index';
 
 export interface WebStorageServiceInterface {
     keys: Array<string>;
@@ -28,9 +29,20 @@ export abstract class WebStorageService {
         WebStorageUtility.remove(this.storage, key);
     }
 
-    clear(): void {
-        for (let key of (<WebStorageServiceInterface>this.constructor).keys) {
-            this.storage.removeItem(key);
+    public clear(clearType: ClearType = 'decorators'): void {
+        let keys = (<WebStorageServiceInterface>this.constructor).keys; // get keys from child class
+        if (clearType === 'decorators') {
+            for (let key of keys) {
+                this.storage.removeItem(key);
+            }
+        } else if (clearType === 'prefix') {
+            for (let key in this.storage) {
+                if (this.storage.getItem(key).startsWith(WEBSTORAGE_CONFIG.prefix)) {
+                    this.storage.removeItem(key);
+                }
+            }
+        } else if (clearType === 'all') {
+            this.storage.clear();
         }
     }
 }
