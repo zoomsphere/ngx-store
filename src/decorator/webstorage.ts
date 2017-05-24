@@ -1,6 +1,7 @@
 import { WebStorageUtility } from '../utility/webstorage.utility';
 import { LocalStorageService, SessionStorageService, WebStorageServiceInterface } from '../service/webstorage.service';
 import * as isEmpty from 'is-empty';
+import { Config } from '../config';
 
 export function LocalStorage(key?: string) {
     return WebStorage(localStorage, LocalStorageService, key);
@@ -44,6 +45,9 @@ function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, ke
                 } else { // if there is no value in localStorage, set it to initializer
                     proxy = WebStorageUtility.set(webStorage, key, value);
                 }
+
+                // Object mutations below
+                if (!Config.mutateObjects) return;
 
                 // manual method for force save
                 if (proxy instanceof Object) {

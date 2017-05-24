@@ -1,8 +1,8 @@
-import {WEBSTORAGE_CONFIG} from '../index';
+import { Config } from '../config';
 
 export class WebStorageUtility {
     public static generateStorageKey(key: string): string {
-        return `${WEBSTORAGE_CONFIG.prefix}${key}`
+        return `${Config.prefix}${key}`;
     }
 
     public static get(storage: Storage, key: string): any {
