@@ -36,7 +36,6 @@ function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, ke
             },
             set: function(value: any) {
                 if (!cache[key]) { // first setter handle
-                    console.log('first setter');
                     if (isEmpty(proxy)) {
                         // if no value in localStorage, set it to initializer
                         proxy = WebStorageUtility.set(webStorage, key, value);
