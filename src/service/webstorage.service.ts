@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ClearType, Config } from '../config';
-import { WebStorageUtility } from '../utility/webstorage.utility';
+import { WebStorageUtility } from '../utility';
 import { WebStorageConfigInterface } from '../config/config.interface';
 
 export interface WebStorageServiceInterface {

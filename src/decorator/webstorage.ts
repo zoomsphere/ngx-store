@@ -1,4 +1,4 @@
-import { WebStorageUtility } from '../utility/webstorage.utility';
+import { WebStorageUtility } from '../utility';
 import { LocalStorageService, SessionStorageService, WebStorageServiceInterface } from '../service/webstorage.service';
 import * as isEmpty from 'is-empty';
 import { Config } from '../config';
