@@ -1,6 +1,6 @@
 {
   "name": "ngx-store",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "main": "./dist/index",
   "typings": "./dist/index",
   "description": "Angular decorator to save and restore class properties automatically from LocalStorage and SessionStorage.",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:zoomsphere/angular2-localstorage.git"
+    "url": "git@github.com:zoomsphere/ngx-store.git"
   },
   "keywords": [
     "Angular2",
@@ -20,12 +20,12 @@
     "SessionStorage",
     "Storage"
   ],
-  "author": "Marc J. Schmidt",
+  "author": "Daniel Kucal & Marc J. Schmidt",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zoomsphere/angular2-localstorage/issues"
+    "url": "https://github.com/zoomsphere/ngx-store/issues"
   },
-  "homepage": "https://github.com/zoomsphere/angular2-localstorage",
+  "homepage": "https://github.com/zoomsphere/ngx-store",
   "peerDependencies": {
     "@angular/core": ">=2.3.0",
     "core-js": "^2.4.1",

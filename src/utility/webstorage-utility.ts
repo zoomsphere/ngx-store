@@ -3,7 +3,7 @@ export class WebStorageUtility {
     protected _storage: Storage;
 
     public static getSettable(value: any): string {
-        return typeof value === "string" ? value : JSON.stringify(value);
+        return typeof value === 'string' ? value : JSON.stringify(value);
     }
 
     public static getGettable(value: string): any {
@@ -18,6 +18,32 @@ export class WebStorageUtility {
     public constructor(storage: Storage, prefix: string, previousPrefix?: string) {
         this._storage = storage;
         this._prefix = prefix;
+
+        // handle previousPrefix for backward-compatibility and safe config changes below
+        if (prefix === previousPrefix) return;
+        if (previousPrefix === null) return;
+        if (previousPrefix === undefined) return;
+        this.forEach(key => {
+            // ignore config settings when previousPrefix = ''
+            if (key.startsWith(previousPrefix) && !key.startsWith('NGX-STORE_')) {
+                let nameWithoutPrefix = this.trimPrefix(key);
+                this.set(nameWithoutPrefix, this._storage.getItem(key));
+
+                if (previousPrefix !== '') {
+                    this._storage.removeItem(key);
+                }
+            }
+        });
+    }
+
+    public get prefix(): string {
+        return this._prefix;
+    }
+
+    public get keys(): Array<string> {
+        let keys = [];
+        this.forEach(key => keys.push(key));
+        return keys;
     }
 
     public getStorageKey(key: string): string {
@@ -47,9 +73,21 @@ export class WebStorageUtility {
         this._storage.clear();
     }
 
-    public forEach(func: Function) {
+    public forEach(func: (key: string, value: any) => any): void {
         for (let key in this._storage) {
-            func(key, this._storage[key]);
+            func(key, this.getGettable(this._storage[key]));
         }
+    }
+
+    public getSettable(value: any): string {
+        return WebStorageUtility.getSettable(value);
+    }
+
+    public getGettable(value: string): any {
+        return WebStorageUtility.getGettable(value);
+    }
+
+    public trimPrefix(key: string): string {
+       return key.replace(this.prefix, '');
     }
 }

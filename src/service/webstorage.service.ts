@@ -17,20 +17,22 @@ export interface WebStorageServiceInterface {
 }
 
 export abstract class WebStorageService {
-    public static keys: Array<string>;
+    public static decoratorKeys: Array<string>;
 
-    protected _webStorageUtility: WebStorageUtility;
-
-    public constructor(protected webStorageUtility: WebStorageUtility) {
-        this._webStorageUtility = webStorageUtility;
-    }
+    public constructor(public utility: WebStorageUtility) { }
 
     /**
-     * Gets keys from child class
+     * Gets keys for stored variables created by ngx-store,
+     * ignores keys that have not been created by decorators and have no prefix at once
      * @returns {Array<string>}
      */
     public get keys(): Array<string> {
-        return (<WebStorageServiceInterface>this.constructor).keys;
+        // get prefixed key if prefix is defined
+        let prefixKeys = this.utility.keys.filter(key => {
+            return this.utility.prefix && key.startsWith(this.utility.prefix);
+        });
+        let decoratorKeys = (<WebStorageServiceInterface>this.constructor).keys;
+        return prefixKeys.concat(decoratorKeys);
     }
 
     public get config(): WebStorageConfigInterface {
@@ -38,16 +40,16 @@ export abstract class WebStorageService {
     }
 
     public get(key: string): any {
-        return this._webStorageUtility.get(key);
+        return this.utility.get(key);
     }
 
     public set(key: string, value: any): void {
-        return this._webStorageUtility.set(key, value);
+        return this.utility.set(key, value);
     }
 
     // TODO return true if item existed and false otherwise (?)
     public remove(key: string): void {
-        return this._webStorageUtility.remove(key);
+        return this.utility.remove(key);
     }
 
     /**
@@ -59,17 +61,17 @@ export abstract class WebStorageService {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
             for (let key of this.keys) {
-                this._webStorageUtility.remove(key);
+                this.remove(key);
             }
         } else if (clearType === 'prefix') {
             prefix = prefix || Config.prefix;
-            this._webStorageUtility.forEach((key) => {
+            this.utility.forEach((key) => {
                 if (key.startsWith(prefix)) {
-                    this._webStorageUtility.remove(key);
+                    this.remove(this.utility.trimPrefix(key));
                 }
             });
         } else if (clearType === 'all') {
-            this._webStorageUtility.clear();
+            this.utility.clear();
         }
     }
 }

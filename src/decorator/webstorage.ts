@@ -1,8 +1,8 @@
-import { localStorageUtility, sessionStorageUtility } from '../utility';
 import { LocalStorageService, SessionStorageService, WebStorageServiceInterface } from '../service/webstorage.service';
+import { localStorageUtility, sessionStorageUtility } from '../utility';
+import { WebStorageUtility } from '../utility/webstorage-utility';
 import * as isEmpty from 'is-empty';
 import { Config } from '../config';
-import { WebStorageUtility } from '../utility/webstorage-utility';
 
 export function LocalStorage(key?: string) {
     return WebStorage(localStorageUtility, LocalStorageService, key);
@@ -29,7 +29,6 @@ function WebStorage(webStorageUtility: WebStorageUtility, service: WebStorageSer
             };
         }
 
-        // let proxy = WebStorageUtility.get(webStorageUtility, key);
         let proxy = webStorageUtility.get(key);
         service.keys.push(key);
 

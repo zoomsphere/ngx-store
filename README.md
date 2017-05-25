@@ -9,15 +9,16 @@ This library adds decorators that make it super easy to *automagically* save and
     + `get(key: string)`: gets JSON-parsed data from HTML5 Storage
     + `set(key: string, value: any)`: sets data in HTML5 Storage
     + `remove(key: string)` removes variable with given key
-    + `clear()`: clears Storage out of variables with set prefix
-    + `keys`: getter for keys of stored values
+    + `clear(clearType: 'decorators' | 'prefix' | 'all')`: clears Storage out of variables with set prefix
     + `config`: getter for module config
+    + `keys`: getter for keys of values stored by ngx-store (determined by prefix and decorators)
+    + `utility`: access to [WebStorageUtility](https://github.com/zoomsphere/angular2-localstorage/blob/aot/src/utility/webstorage-utility.ts) class for advanced stuff
 - Objects read from Storage have added `.save()` method to easily force save of made changes (configurable by `mutateObjects`)
 - saving support for all `Array` methods that change array object's value (configurable by `mutateObjects`)
 - Easy configuration of what you want (see [#configuration](#configuration) section)
+- Compatibility: either with AoT compiler and previous versions including `angular2-localstorage`
 
 ## Upcoming (TODO)
-- Handle data saved with previous prefix after its change
 - Encoding of saved data
 - Tests coverage
 - Cookies fallback
@@ -47,9 +48,10 @@ As this project uses decorating functions, it's important to provide custom conf
     ```html
     <script>
     var NGXSTORE_CONFIG = {
-      prefix: 'myApp.',    // default: ngx_
-      clearType: 'prefix', // possible values: decorators, prefix, all
-      mutateObjects: true  // defines whether Array methods shall be modified to handle changes automatically and .save() method shall be added to stored objects
+      prefix: 'myApp.',    // default: ngx_, you can set it to '', however using prefix is recommended
+      clearType: 'prefix', // defines default clear() method behavior, possible values are: decorators, prefix, all
+      mutateObjects: true  // defines whether Array methods shall be modified to handle changes automatically and .save() method shall be added to stored objects (can be troublesome for object comparisons)
+      previousPrefix: 'angular2ws_' // you have to set it only if you were using custom prefix in old version ('angular2ws_' is a default value)
     };
     </script>
     ```
@@ -58,7 +60,7 @@ As this project uses decorating functions, it's important to provide custom conf
     plugins: [ 
       new webpack.DefinePlugin({
         NGXSTORE_CONFIG: JSON.stringify({
-          prefix: '' // etc
+          prefix: '', // etc
         })
       }),
     ]
@@ -149,5 +151,6 @@ As this project uses decorating functions, it's important to provide custom conf
 
 **Note**: Please don't store circular structures as this library uses JSON.stringify to encode before using LocalStorage.
 
+**Note**: When you change prefix from '' (empty string) old values won't be removed automatically to avoid deleting necessary data. You should handle it manually or set clearType to 'all'.
 
 **Contributions are welcome!**
