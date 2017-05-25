@@ -15,7 +15,7 @@ export class WebStorageUtility {
         }
     }
 
-    public constructor(storage: Storage, prefix: string) {
+    public constructor(storage: Storage, prefix: string, previousPrefix?: string) {
         this._storage = storage;
         this._prefix = prefix;
     }
@@ -37,6 +37,7 @@ export class WebStorageUtility {
         return value;
     }
 
+    // TODO return true if item existed and false otherwise (?)
     public remove(key: string): void {
         let storageKey = this.getStorageKey(key);
         this._storage.removeItem(storageKey);

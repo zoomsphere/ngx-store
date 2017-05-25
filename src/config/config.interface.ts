@@ -1,5 +1,6 @@
 export interface WebStorageConfigInterface {
     prefix?: string;
+    previousPrefix?: string;
     clearType?: ClearType;
     mutateObjects?: boolean;
 }
