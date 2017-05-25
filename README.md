@@ -41,9 +41,9 @@ This library adds decorators that make it super easy to *automagically* save and
     export class AppModule {}
     ```
 
-## Custom configuration
+## Configuration
 As this project uses decorating functions, it's important to provide custom configuration in `NGXSTORE_CONFIG` before Angular application load. Here are some ways to do it:
-1. `<script>` in `index.html` (before Angular sources)
+1. Add `<script>` in `index.html` (before Angular sources)
     ```html
     <script>
     var NGXSTORE_CONFIG = {
@@ -53,7 +53,7 @@ As this project uses decorating functions, it's important to provide custom conf
     };
     </script>
     ```
-2. If you use webpack, you can provide global variable in `webpack.json`:
+2. If you use webpack, you can provide global variable in your `webpack.js` file:
     ```javascript
     plugins: [ 
       new webpack.DefinePlugin({
@@ -111,6 +111,7 @@ As this project uses decorating functions, it's important to provide custom conf
         // upper changes won't be saved without the lines below
         this.someObject.save();
         this.arrayOfSomethings.save();
+        this.someObject = this.someObject; // it can be considered as a bad code, but also will do the job
        }
     }
     ```
