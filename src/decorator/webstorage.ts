@@ -2,7 +2,7 @@ import { localStorageUtility, sessionStorageUtility } from '../utility';
 import { LocalStorageService, SessionStorageService, WebStorageServiceInterface } from '../service/webstorage.service';
 import * as isEmpty from 'is-empty';
 import { Config } from '../config';
-import { WebStorageUtilityClass } from '../utility/webstorage-utility.class';
+import { WebStorageUtility } from '../utility/webstorage-utility';
 
 export function LocalStorage(key?: string) {
     return WebStorage(localStorageUtility, LocalStorageService, key);
@@ -15,7 +15,7 @@ export function SessionStorage(key?: string) {
 // initialization cache
 let cache: {[name: string]: boolean} = {};
 
-function WebStorage(webStorageUtility: WebStorageUtilityClass, service: WebStorageServiceInterface, key: string) {
+function WebStorage(webStorageUtility: WebStorageUtility, service: WebStorageServiceInterface, key: string) {
     return (target: any, propertyName: string): void => {
         key = key || propertyName;
 

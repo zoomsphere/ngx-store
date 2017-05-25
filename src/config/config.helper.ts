@@ -1,8 +1,8 @@
-import { WebStorageUtilityClass } from '../utility/webstorage-utility.class';
+import { WebStorageUtility } from '../utility/webstorage-utility';
 
 export class ConfigHelper {
-    protected static _webStorageUtility: WebStorageUtilityClass =
-        new WebStorageUtilityClass(localStorage, 'NGX-STORE_');
+    protected static _webStorageUtility: WebStorageUtility =
+        new WebStorageUtility(localStorage, 'NGX-STORE_');
 
     public static getItem(key: string): any {
         return this._webStorageUtility.get(key);

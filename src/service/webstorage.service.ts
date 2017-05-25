@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ClearType, Config } from '../config';
 import { WebStorageConfigInterface } from '../config/config.interface';
-import { WebStorageUtilityClass } from '../utility/webstorage-utility.class';
+import { WebStorageUtility } from '../utility/webstorage-utility';
 import { localStorageUtility, sessionStorageUtility } from '../utility';
 
 export interface WebStorageServiceInterface {
@@ -19,9 +19,9 @@ export interface WebStorageServiceInterface {
 export abstract class WebStorageService {
     public static keys: Array<string>;
 
-    protected _webStorageUtility: WebStorageUtilityClass;
+    protected _webStorageUtility: WebStorageUtility;
 
-    public constructor(protected webStorageUtility: WebStorageUtilityClass) {
+    public constructor(protected webStorageUtility: WebStorageUtility) {
         this._webStorageUtility = webStorageUtility;
     }
 

@@ -1,7 +1,7 @@
 import { Config } from '../config';
-import { WebStorageUtilityClass } from './webstorage-utility.class';
+import { WebStorageUtility } from './webstorage-utility';
 
-export const localStorageUtility: WebStorageUtilityClass =
-    new WebStorageUtilityClass(localStorage, Config.prefix, Config.previousPrefix);
-export const sessionStorageUtility: WebStorageUtilityClass =
-    new WebStorageUtilityClass(sessionStorage, Config.prefix, Config.previousPrefix);
+export const localStorageUtility: WebStorageUtility =
+    new WebStorageUtility(localStorage, Config.prefix, Config.previousPrefix);
+export const sessionStorageUtility: WebStorageUtility =
+    new WebStorageUtility(sessionStorage, Config.prefix, Config.previousPrefix);

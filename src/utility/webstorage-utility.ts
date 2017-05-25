@@ -1,4 +1,4 @@
-export class WebStorageUtilityClass {
+export class WebStorageUtility {
     protected _prefix: string = '';
     protected _storage: Storage;
 
@@ -15,7 +15,7 @@ export class WebStorageUtilityClass {
         }
     }
 
-    public constructor(storage: Storage, prefix: string, previousPrefix?: string) {
+    public constructor(storage: Storage, prefix: string) {
         this._storage = storage;
         this._prefix = prefix;
     }
@@ -27,12 +27,12 @@ export class WebStorageUtilityClass {
     public get(key: string): any {
         let storageKey = this.getStorageKey(key);
         let value = this._storage.getItem(storageKey);
-        return WebStorageUtilityClass.getGettable(value);
+        return WebStorageUtility.getGettable(value);
     }
 
     public set(key: string, value: any): any {
         let storageKey = this.getStorageKey(key);
-        let storable = WebStorageUtilityClass.getSettable(value);
+        let storable = WebStorageUtility.getSettable(value);
         this._storage.setItem(storageKey, storable);
         return value;
     }
