@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ClearType, Config } from '../config';
-import { WebStorageUtility } from '../utility';
 import { WebStorageConfigInterface } from '../config/config.interface';
+import { WebStorageUtilityClass } from '../utility/webstorage-utility.class';
+import { localStorageUtility, sessionStorageUtility } from '../utility';
 
 export interface WebStorageServiceInterface {
     keys: Array<string>;
@@ -18,7 +19,11 @@ export interface WebStorageServiceInterface {
 export abstract class WebStorageService {
     public static keys: Array<string>;
 
-    constructor(protected storage: Storage) {}
+    protected _webStorageUtility: WebStorageUtilityClass;
+
+    public constructor(protected webStorageUtility: WebStorageUtilityClass) {
+        this._webStorageUtility = webStorageUtility;
+    }
 
     /**
      * Gets keys from child class
@@ -33,15 +38,16 @@ export abstract class WebStorageService {
     }
 
     public get(key: string): any {
-        return WebStorageUtility.get(this.storage, key);
+        return this._webStorageUtility.get(key);
     }
 
     public set(key: string, value: any): void {
-        WebStorageUtility.set(this.storage, key, value);
+        return this._webStorageUtility.set(key, value);
     }
 
+    // TODO return true if item existed and false otherwise (?)
     public remove(key: string): void {
-        WebStorageUtility.remove(this.storage, key);
+        return this._webStorageUtility.remove(key);
     }
 
     /**
@@ -53,17 +59,17 @@ export abstract class WebStorageService {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
             for (let key of this.keys) {
-                this.storage.removeItem(key);
+                this._webStorageUtility.remove(key);
             }
         } else if (clearType === 'prefix') {
             prefix = prefix || Config.prefix;
-            for (let key in this.storage) {
-                if (this.storage.getItem(key).startsWith(prefix)) {
-                    this.storage.removeItem(key);
+            this._webStorageUtility.forEach((key) => {
+                if (key.startsWith(prefix)) {
+                    this._webStorageUtility.remove(key);
                 }
-            }
+            });
         } else if (clearType === 'all') {
-            this.storage.clear();
+            this._webStorageUtility.clear();
         }
     }
 }
@@ -73,7 +79,7 @@ export class LocalStorageService extends WebStorageService {
     public static keys: Array<string> = [];
 
     constructor() {
-        super(localStorage);
+        super(localStorageUtility);
     }
 }
 
@@ -82,6 +88,6 @@ export class SessionStorageService extends WebStorageService {
     public static keys: Array<string> = [];
 
     constructor() {
-        super(sessionStorage);
+        super(sessionStorageUtility);
     }
 }

@@ -1,5 +1,6 @@
 export class WebStorageUtilityClass {
     protected _prefix: string = '';
+    protected _storage: Storage;
 
     public static getSettable(value: any): string {
         return typeof value === "string" ? value : JSON.stringify(value);
@@ -14,30 +15,40 @@ export class WebStorageUtilityClass {
         }
     }
 
-    public constructor(prefix: string) {
+    public constructor(storage: Storage, prefix: string, previousPrefix?: string) {
+        this._storage = storage;
         this._prefix = prefix;
     }
-
 
     public getStorageKey(key: string): string {
         return `${this._prefix}${key}`;
     }
 
-    public get(storage: Storage, key: string): any {
+    public get(key: string): any {
         let storageKey = this.getStorageKey(key);
-        let value = storage.getItem(storageKey);
+        let value = this._storage.getItem(storageKey);
         return WebStorageUtilityClass.getGettable(value);
     }
 
-    public set(storage: Storage, key: string, value: any): any {
+    public set(key: string, value: any): any {
         let storageKey = this.getStorageKey(key);
         let storable = WebStorageUtilityClass.getSettable(value);
-        storage.setItem(storageKey, storable);
+        this._storage.setItem(storageKey, storable);
         return value;
     }
 
-    public remove(storage: Storage, key: string): void {
+    public remove(key: string): void {
         let storageKey = this.getStorageKey(key);
-        storage.removeItem(storageKey);
+        this._storage.removeItem(storageKey);
+    }
+
+    public clear() {
+        this._storage.clear();
+    }
+
+    public forEach(func: Function) {
+        for (let key in this._storage) {
+            func(key, this._storage[key]);
+        }
     }
 }

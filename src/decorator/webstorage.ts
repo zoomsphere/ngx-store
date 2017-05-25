@@ -1,20 +1,21 @@
-import { WebStorageUtility } from '../utility';
+import { localStorageUtility, sessionStorageUtility } from '../utility';
 import { LocalStorageService, SessionStorageService, WebStorageServiceInterface } from '../service/webstorage.service';
 import * as isEmpty from 'is-empty';
 import { Config } from '../config';
+import { WebStorageUtilityClass } from '../utility/webstorage-utility.class';
 
 export function LocalStorage(key?: string) {
-    return WebStorage(localStorage, LocalStorageService, key);
+    return WebStorage(localStorageUtility, LocalStorageService, key);
 }
 
 export function SessionStorage(key?: string) {
-    return WebStorage(sessionStorage, SessionStorageService, key);
+    return WebStorage(sessionStorageUtility, SessionStorageService, key);
 }
 
 // initialization cache
 let cache: {[name: string]: boolean} = {};
 
-function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, key: string) {
+function WebStorage(webStorageUtility: WebStorageUtilityClass, service: WebStorageServiceInterface, key: string) {
     return (target: any, propertyName: string): void => {
         key = key || propertyName;
 
@@ -28,7 +29,8 @@ function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, ke
             };
         }
 
-        let proxy = WebStorageUtility.get(webStorage, key);
+        // let proxy = WebStorageUtility.get(webStorageUtility, key);
+        let proxy = webStorageUtility.get(key);
         service.keys.push(key);
 
         Object.defineProperty(target, propertyName, {
@@ -39,11 +41,12 @@ function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, ke
                 if (!cache[key]) { // first setter handle
                     if (isEmpty(proxy)) {
                         // if no value in localStorage, set it to initializer
-                        proxy = WebStorageUtility.set(webStorage, key, value);
+                        // proxy = WebStorageUtility.set(webStorage, key, value);
+                        proxy = webStorageUtility.set(key, value);
                     }
                     cache[key] = true;
                 } else { // if there is no value in localStorage, set it to initializer
-                    proxy = WebStorageUtility.set(webStorage, key, value);
+                    proxy = webStorageUtility.set(key, value);
                 }
 
                 // Object mutations below
@@ -52,7 +55,7 @@ function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, ke
                 // manual method for force save
                 if (proxy instanceof Object) {
                     proxy.save = function () {
-                        WebStorageUtility.set(webStorage, key, proxy);
+                        webStorageUtility.set(key, proxy);
                     };
                 }
 
@@ -65,7 +68,7 @@ function WebStorage(webStorage: Storage, service: WebStorageServiceInterface, ke
                     for (let method of methodsToOverwrite) {
                         proxy[method] = function(value) {
                             let result = Array.prototype[method].apply(proxy, arguments);
-                            WebStorageUtility.set(webStorage, key, proxy);
+                            webStorageUtility.set(key, proxy);
                             return result;
                         }
                     }
