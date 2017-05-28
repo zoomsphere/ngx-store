@@ -15,10 +15,13 @@
     "url": "git@github.com:zoomsphere/ngx-store.git"
   },
   "keywords": [
+    "Angular",
     "Angular2",
+    "Angular4",
     "LocalStorage",
     "SessionStorage",
-    "Storage"
+    "Storage",
+    "Wrapper"
   ],
   "author": "Daniel Kucal & Marc J. Schmidt",
   "license": "ISC",

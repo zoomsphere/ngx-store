@@ -26,6 +26,8 @@ This library adds decorators that make it super easy to *automagically* save and
 - Take configuration from [npm config](https://www.npmjs.com/package/config)'s file (?)
 - Handle out of memory issues
 - `Storage` polyfill for NativeScript (?)
+- Listen to storage changes in different tabs
+- Allow to pass config for single value in decorator
 
 ## Installation
 1. Download the library: `npm install --save ngx-store`
@@ -50,7 +52,7 @@ As this project uses decorating functions, it's important to provide custom conf
     var NGXSTORE_CONFIG = {
       prefix: 'myApp.',    // default: ngx_, you can set it to '', however using prefix is recommended
       clearType: 'prefix', // defines default clear() method behavior, possible values are: decorators, prefix, all
-      mutateObjects: true  // defines whether Array methods shall be modified to handle changes automatically and .save() method shall be added to stored objects (can be troublesome for object comparisons)
+      mutateObjects: true,  // defines whether Array methods shall be modified to handle changes automatically and .save() method shall be added to stored objects (can be troublesome for object comparisons)
       previousPrefix: 'angular2ws_' // you have to set it only if you were using custom prefix in old version ('angular2ws_' is a default value)
     };
     </script>
@@ -129,11 +131,11 @@ As this project uses decorating functions, it's important to provide custom conf
       ) {}
    
       public saveSomeData(object: Object, array: Array<any>) {
-        this.localStorageService.setItem('someObject', object);
-        this.sessionStorageService.setItem('someArray', array);
+        this.localStorageService.set('someObject', object);
+        this.sessionStorageService.set('someArray', array);
         
         this.localStorageService.keys.forEach((key) => {
-          console.log(key + ' =', this.localStorageService.getItem(key));
+          console.log(key + ' =', this.localStorageService.get(key));
         });
       }
    
