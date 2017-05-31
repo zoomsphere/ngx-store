@@ -109,8 +109,8 @@ As this project uses decorating functions, it's important to provide custom conf
         this.someObject.a = 1;
         this.someObject['b'] = 2;
         delete this.someObject['c'];
-        for (let i in this.arrayOfSomethings) {
-          this.arrayOfSomethings[i]++;
+        for (let something of this.arrayOfSomethings) {
+          something++;
         }
         // upper changes won't be saved without the lines below
         this.someObject.save();
@@ -150,6 +150,8 @@ As this project uses decorating functions, it's important to provide custom conf
 3. Combine both ways and have fun!
 
 **Note**: Define always a default value at the property you are using decorator.
+
+**Note**: Do not use `for...in` loop on decorated `Array`s.
 
 **Note**: Please don't store circular structures as this library uses JSON.stringify to encode before using LocalStorage.
 
