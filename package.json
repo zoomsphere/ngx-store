@@ -8,7 +8,7 @@
     "lint": "tslint ./*.ts -t verbose",
     "build": "rimraf dist && ngc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -51,5 +51,10 @@
   },
   "dependencies": {
     "is-empty": "^1.2.0"
+  },
+  "//": "\"engineStrict\": false,",
+  "engines": {
+    "node": ">= 4.2.1",
+    "npm": ">= 5"
   }
 }
