@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ClearType, Config } from '../config';
 import { WebStorageConfigInterface } from '../config/config.interface';
 import { WebStorageUtility } from '../utility/webstorage-utility';
-import { localStorageUtility, sessionStorageUtility } from '../utility';
+import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility } from '../utility';
 
 export interface WebStorageServiceInterface {
     keys: Array<string>;
@@ -17,7 +17,7 @@ export interface WebStorageServiceInterface {
 }
 
 export abstract class WebStorageService {
-    public static decoratorKeys: Array<string>;
+    public static keys: Array<string>;
 
     public constructor(public utility: WebStorageUtility) { }
 
@@ -43,7 +43,7 @@ export abstract class WebStorageService {
         return this.utility.get(key);
     }
 
-    public set(key: string, value: any): void {
+    public set(key: string, value: any): any {
         return this.utility.set(key, value);
     }
 
@@ -91,5 +91,21 @@ export class SessionStorageService extends WebStorageService {
 
     constructor() {
         super(sessionStorageUtility);
+    }
+}
+
+@Injectable()
+export class CookiesStorageService extends WebStorageService {
+    public static keys: Array<string> = [];
+
+    constructor() {
+        super(cookiesStorageUtility);
+    }
+
+    public set(key: string, value: any, expirationDate?: Date): any {
+        let storageKey = this.utility.getStorageKey(key);
+        let storable = WebStorageUtility.getSettable(value);
+        this.utility.set(storageKey, storable);
+        return value;
     }
 }

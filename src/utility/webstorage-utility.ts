@@ -74,6 +74,9 @@ export class WebStorageUtility {
     }
 
     public forEach(func: (key: string, value: any) => any): void {
+        if (typeof this._storage.forEach === 'function') {
+            return this._storage.forEach((key, value) => func(key, this.getGettable(value)));
+        }
         for (let key in this._storage) {
             func(key, this.getGettable(this._storage[key]));
         }

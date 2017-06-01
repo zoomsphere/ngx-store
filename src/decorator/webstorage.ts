@@ -1,5 +1,10 @@
-import { LocalStorageService, SessionStorageService, WebStorageServiceInterface } from '../service/webstorage.service';
-import { localStorageUtility, sessionStorageUtility } from '../utility';
+import {
+    CookiesStorageService,
+    LocalStorageService,
+    SessionStorageService,
+    WebStorageServiceInterface
+} from '../service/webstorage.service';
+import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility } from '../utility';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import * as isEmpty from 'is-empty';
 import { Config } from '../config';
@@ -10,6 +15,9 @@ export function LocalStorage(key?: string) {
 
 export function SessionStorage(key?: string) {
     return WebStorage(sessionStorageUtility, SessionStorageService, key);
+}
+export function CookieStorage(key?: string) {
+    return WebStorage(cookiesStorageUtility, CookiesStorageService, key);
 }
 
 // initialization cache
