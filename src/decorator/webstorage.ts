@@ -36,43 +36,48 @@ function WebStorage(webStorageUtility: WebStorageUtility, service: WebStorageSer
             get: function() {
                 return proxy;
             },
-            set: function(value: any) {
+            set: function(value: any) { // TODO: handle combined decorators
+                let justCached: boolean = false;
                 if (!cache[key]) { // first setter handle
                     if (isEmpty(proxy)) {
                         // if no value in localStorage, set it to initializer
-                        // proxy = WebStorageUtility.set(webStorage, key, value);
                         proxy = webStorageUtility.set(key, value);
                     }
                     cache[key] = true;
+                    justCached = true;
                 } else { // if there is no value in localStorage, set it to initializer
                     proxy = webStorageUtility.set(key, value);
                 }
 
                 // Object mutations below
                 if (!Config.mutateObjects) return;
+                if (cache[key] && !justCached) return;
+                if (!(proxy instanceof Object)) return;
 
+                let prototype: any = Object.assign({}, Object.prototype);
                 // manual method for force save
-                if (proxy instanceof Object) {
-                    proxy.save = function () {
-                        webStorageUtility.set(key, proxy);
-                    };
-                }
+                prototype.save = function () {
+                    webStorageUtility.set(key, proxy);
+                };
 
                 // handle methods changing value of array
                 if (Array.isArray(proxy)) {
+                    prototype = Object.assign({}, prototype, Array.prototype);
                     const methodsToOverwrite = [
                         'join', 'pop', 'push', 'reverse', 'shift', 'unshift', 'splice',
                         'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin'
                     ];
                     for (let method of methodsToOverwrite) {
-                        proxy[method] = function(value) {
+                        prototype[method] = function(value) {
                             let result = Array.prototype[method].apply(proxy, arguments);
                             webStorageUtility.set(key, proxy);
                             return result;
                         }
                     }
                 }
+                Object.setPrototypeOf(proxy, prototype);
             },
         });
+        return target;
     }
 }
