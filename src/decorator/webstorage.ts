@@ -3,7 +3,7 @@ import {
     LocalStorageService,
     SessionStorageService,
     WebStorageServiceInterface
-} from '../service/webstorage.service';
+} from '../service';
 import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility } from '../utility';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import * as isEmpty from 'is-empty';

@@ -1,20 +1,7 @@
-import { Injectable } from '@angular/core';
 import { ClearType, Config } from '../config';
 import { WebStorageConfigInterface } from '../config/config.interface';
 import { WebStorageUtility } from '../utility/webstorage-utility';
-import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility } from '../utility';
-
-export interface WebStorageServiceInterface {
-    keys: Array<string>;
-    new(): {
-        keys: Array<string>;
-        config: WebStorageConfigInterface;
-        get(key: string): any;
-        set(key: string, value: any): void;
-        remove(key: string): void;
-        clear(): void;
-    }
-}
+import { WebStorageServiceInterface } from './webstorage.interface';
 
 export abstract class WebStorageService {
     public static keys: Array<string>;
@@ -73,39 +60,5 @@ export abstract class WebStorageService {
         } else if (clearType === 'all') {
             this.utility.clear();
         }
-    }
-}
-
-@Injectable()
-export class LocalStorageService extends WebStorageService {
-    public static keys: Array<string> = [];
-
-    constructor() {
-        super(localStorageUtility);
-    }
-}
-
-@Injectable()
-export class SessionStorageService extends WebStorageService {
-    public static keys: Array<string> = [];
-
-    constructor() {
-        super(sessionStorageUtility);
-    }
-}
-
-@Injectable()
-export class CookiesStorageService extends WebStorageService {
-    public static keys: Array<string> = [];
-
-    constructor() {
-        super(cookiesStorageUtility);
-    }
-
-    public set(key: string, value: any, expirationDate?: Date): any {
-        let storageKey = this.utility.getStorageKey(key);
-        let storable = WebStorageUtility.getSettable(value);
-        this.utility.set(storageKey, storable);
-        return value;
     }
 }
