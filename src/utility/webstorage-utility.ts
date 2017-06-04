@@ -1,3 +1,5 @@
+export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage';
+
 export class WebStorageUtility {
     protected _prefix: string = '';
     protected _storage: Storage;
@@ -48,6 +50,14 @@ export class WebStorageUtility {
 
     public getStorageKey(key: string): string {
         return `${this._prefix}${key}`;
+    }
+
+    public getStorageName(): StorageName {
+        let storageName: any = this._storage.constructor.name;
+        if (storageName === 'Storage') {
+            storageName = (this._storage === localStorage) ? 'LocalStorage' : 'SessionStorage';
+        }
+        return storageName;
     }
 
     public get(key: string): any {
