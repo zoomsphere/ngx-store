@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "is-empty": "^1.2.0",
-    "ts-debug": "^1.0.1"
+    "ts-debug": "^1.0.2"
   },
   "//": "\"engineStrict\": false,",
   "engines": {
