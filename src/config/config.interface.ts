@@ -3,5 +3,6 @@ export interface WebStorageConfigInterface {
     previousPrefix?: string;
     clearType?: ClearType;
     mutateObjects?: boolean;
+    debugMode?: boolean;
 }
 export type ClearType = 'decorators' | 'prefix' | 'all';

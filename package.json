@@ -50,7 +50,8 @@
     "zone.js": "^0.8.4"
   },
   "dependencies": {
-    "is-empty": "^1.2.0"
+    "is-empty": "^1.2.0",
+    "ts-debug": "^1.0.1"
   },
   "//": "\"engineStrict\": false,",
   "engines": {

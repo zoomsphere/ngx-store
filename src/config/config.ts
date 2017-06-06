@@ -1,5 +1,6 @@
 import { WebStorageConfigInterface } from './config.interface';
 import { ConfigHelper } from './config.helper';
+import { Debugger } from 'ts-debug';
 
 // TODO allow to set different config for local and session storage
 // TODO check if NGXSTORE_CONFIG implements WebStorageConfigInterface
@@ -10,6 +11,7 @@ const DefaultConfig: WebStorageConfigInterface = {
     previousPrefix: 'angular2ws_',
     clearType: 'prefix',
     mutateObjects: true,
+    debugMode: false,
 };
 
 // take configuration provided as a global variable
@@ -37,4 +39,5 @@ export let WEBSTORAGE_CONFIG = DefaultConfig;
 export const Config: WebStorageConfigInterface =
     Object.assign({}, DefaultConfig, WEBSTORAGE_CONFIG, ConfigFills);
 
+export const debug = new Debugger(console, Config.debugMode, '[ngx-store] ');
 ConfigHelper.setItem('prefix', Config.prefix);
