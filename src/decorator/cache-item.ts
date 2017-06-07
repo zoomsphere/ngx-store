@@ -19,7 +19,7 @@ export class CacheItem implements CacheItemInterface {
     public utilities: Array<WebStorageUtility> = [];
     protected proxy: any;
     protected _key: string = '';
-    protected isNewTarget: boolean = false;
+    protected newTargetsCount: number = 0;
 
     constructor(cacheItem: CacheItemInterface) {
         this._key = cacheItem.key;
@@ -34,19 +34,22 @@ export class CacheItem implements CacheItemInterface {
     }
 
     public saveValue(value: any): any {
-        // prevent overwriting value by initializators
-        if (this.isNewTarget && (!isEmpty(this.readValue()) || this.targets.length > 1)) {
-            this.isNewTarget = false;
-            debug.log('initial value for ' + this.key + ' in ' +
-                this.targets[this.targets.length-1].constructor.name, this.proxy);
-            return this.proxy || this.getProxy(value);
-        } else {
-            debug.groupCollapsed('CacheItem#saveValue for ' + this.key);
-            debug.log('new value ', value);
-            debug.log('isNewTarget? ', this.isNewTarget);
-            debug.log('previous value: ', this.readValue());
-            debug.log('targets.length: ', this.targets.length);
-            debug.groupEnd();
+        debug.groupCollapsed('CacheItem#saveValue for ' + this.key);
+        debug.log('new value ', value);
+        debug.log('newTargetsCount ', this.newTargetsCount);
+        debug.log('previous value: ', this.readValue());
+        debug.log('targets.length: ', this.targets.length);
+        debug.groupEnd();
+
+        if (this.newTargetsCount) { // prevent overwriting value by initializators
+            this.newTargetsCount--;
+            let savedValue = this.readValue();
+            if (!isEmpty(savedValue)) {
+                let proxy = (this.targets.length) ? this.proxy : this.getProxy(savedValue);
+                debug.log('initial value for ' + this.key + ' in ' +
+                    this.targets[this.newTargetsCount].constructor.name, proxy);
+                return proxy;
+            }
         }
 
         this.utilities.forEach(utility => {
@@ -64,7 +67,7 @@ export class CacheItem implements CacheItemInterface {
         if (!value && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
         value = value || this.readValue();
         if (!Config.mutateObjects) return value;
-        if (typeof value !== 'object') return value;
+        if (typeof value !== 'object' || value === null) return value;
 
         let _this = this; // alias to use in standard function expressions
         let prototype: any = Object.assign({}, Object.prototype);
@@ -130,7 +133,7 @@ export class CacheItem implements CacheItemInterface {
                         debug.groupEnd();
                     };
                     this.targets.push(target);
-                    this.isNewTarget = true;
+                    this.newTargetsCount++;
                 }
             }
         });
