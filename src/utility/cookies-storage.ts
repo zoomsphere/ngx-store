@@ -1,3 +1,7 @@
+export interface WebStorage extends Storage {
+   setItem(key: string, data: string, expirationDate?: Date): void;
+}
+
 // TODO: in future use ES6 Proxy to handle indexers
 export class CookiesStorage implements Storage {
     [key: string]: any;

@@ -8,22 +8,37 @@ import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility } fro
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { Cache } from './cache';
 
-export function LocalStorage(key?: string) {
-    return WebStorage(localStorageUtility, LocalStorageService, key);
+export interface WebStorageDecoratorConfig {
+    mutate?: boolean;
+}
+export interface LocalStorageDecoratorConfig extends WebStorageDecoratorConfig { }
+export interface SessionStorageDecoratorConfig extends WebStorageDecoratorConfig { }
+export interface CookieStorageDecoratorConfig extends WebStorageDecoratorConfig {
+    expires?: Date;
+}
+export type DecoratorConfig = LocalStorageDecoratorConfig & SessionStorageDecoratorConfig & CookieStorageDecoratorConfig;
+
+export function LocalStorage(key?: string, config?: LocalStorageDecoratorConfig) {
+    return WebStorage(localStorageUtility, LocalStorageService, key, config);
+}
+export function SessionStorage(key?: string, config?: SessionStorageDecoratorConfig) {
+    return WebStorage(sessionStorageUtility, SessionStorageService, key, config);
+}
+export function CookieStorage(key?: string, config?: CookieStorageDecoratorConfig) {
+    return WebStorage(cookiesStorageUtility, CookiesStorageService, key, config);
 }
 
-export function SessionStorage(key?: string) {
-    return WebStorage(sessionStorageUtility, SessionStorageService, key);
-}
-export function CookieStorage(key?: string) {
-    return WebStorage(cookiesStorageUtility, CookiesStorageService, key);
-}
-
-function WebStorage(webStorageUtility: WebStorageUtility, service: WebStorageServiceInterface, key: string) {
+function WebStorage(
+    webStorageUtility: WebStorageUtility,
+    service: WebStorageServiceInterface,
+    key: string,
+    config: DecoratorConfig = {}
+) {
     return (target: any, propertyName: string): void => {
         key = key || propertyName;
 
         let cacheItem = Cache.getCacheFor({
+            config,
             key: key,
             name: propertyName,
             targets: [ target ],

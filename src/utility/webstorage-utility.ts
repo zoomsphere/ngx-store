@@ -1,8 +1,10 @@
+import { DecoratorConfig } from '../decorator/webstorage';
+import { WebStorage } from './cookies-storage';
 export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage';
 
 export class WebStorageUtility {
     protected _prefix: string = '';
-    protected _storage: Storage;
+    protected _storage: WebStorage;
 
     public static getSettable(value: any): string {
         return typeof value === 'string' ? value : JSON.stringify(value);
@@ -66,10 +68,10 @@ export class WebStorageUtility {
         return WebStorageUtility.getGettable(value);
     }
 
-    public set(key: string, value: any): any {
+    public set(key: string, value: any, config: DecoratorConfig = {}): any {
         let storageKey = this.getStorageKey(key);
         let storable = WebStorageUtility.getSettable(value);
-        this._storage.setItem(storageKey, storable);
+        this._storage.setItem(storageKey, storable, config.expires);
         return value;
     }
 

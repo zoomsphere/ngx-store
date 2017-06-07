@@ -87,8 +87,9 @@ As this project uses decorating functions, it's important to provide custom conf
         this.userName = 'some name stored in localstorage';
         this.previousUserNames.push(this.userName);
         for (let userName of this.previousUserNames) {
-          // do some stuff
+          console.log(userName);
         }
+        this.previousUserNames.map(userName => userName.split('').reverse().join(''));
       }
     }
     ```
@@ -109,8 +110,8 @@ As this project uses decorating functions, it's important to provide custom conf
         this.someObject.a = 1;
         this.someObject['b'] = 2;
         delete this.someObject['c'];
-        for (let something of this.arrayOfSomethings) {
-          something++;
+        for (let i=0; i < this.arrayOfSomethings.length; i++) {
+          this.arrayOfSomethings[i] += i;
         }
         // upper changes won't be saved without the lines below
         this.someObject.save();
@@ -151,9 +152,9 @@ As this project uses decorating functions, it's important to provide custom conf
 
 **Note**: Define always a default value at the property you are using decorator.
 
-**Note**: Do not use `for...in` loop on decorated `Array`s.
+**Note**: Do not use `for-in` loop on decorated Arrays.
 
-**Note**: Please don't store circular structures as this library uses JSON.stringify to encode before using LocalStorage.
+**Note**: Please don't store circular structures as this library uses JSON.stringify to encode data before saving.
 
 **Note**: When you change prefix from '' (empty string) old values won't be removed automatically to avoid deleting necessary data. You should handle it manually or set clearType to 'all'.
 

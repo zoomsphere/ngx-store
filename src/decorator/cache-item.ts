@@ -1,6 +1,7 @@
 import { WebStorageServiceInterface } from '../service/webstorage.interface';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { Config, debug } from '../config/config';
+import { DecoratorConfig } from './webstorage';
 import * as isEmpty from 'is-empty';
 import { Cache } from './cache';
 
@@ -10,13 +11,16 @@ export interface CacheItemInterface {
     targets: Array<Object>;
     services: Array<WebStorageServiceInterface>;
     utilities: Array<WebStorageUtility>;
+    config: DecoratorConfig;
 }
 
+// TODO: handle standalone decorator configs for different targets and utilities
 export class CacheItem implements CacheItemInterface {
     public name: string = '';
     public targets: Array<Object> = [];
     public services: Array<WebStorageServiceInterface> = [];
     public utilities: Array<WebStorageUtility> = [];
+    public config: DecoratorConfig = {};
     protected proxy: any;
     protected _key: string = '';
     protected newTargetsCount: number = 0;
@@ -24,6 +28,7 @@ export class CacheItem implements CacheItemInterface {
     constructor(cacheItem: CacheItemInterface) {
         this._key = cacheItem.key;
         this.name = cacheItem.name;
+        this.config = cacheItem.config;
         this.addTargets(cacheItem.targets);
         this.addServices(cacheItem.services);
         this.addUtilities(cacheItem.utilities);
@@ -54,7 +59,7 @@ export class CacheItem implements CacheItemInterface {
 
         this.utilities.forEach(utility => {
             try {
-                utility.set(this._key, value);
+                utility.set(this._key, value, this.config);
             } catch (e) {
                 console.warn('[ngx-store] ' + utility.getStorageName() + ': error occurred while trying to save: ', value);
                 console.error(e);
@@ -66,8 +71,8 @@ export class CacheItem implements CacheItemInterface {
     public getProxy(value?: any): any {
         if (!value && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
         value = value || this.readValue();
-        if (!Config.mutateObjects) return value;
         if (typeof value !== 'object' || value === null) return value;
+        if ((!Config.mutateObjects && !this.config.mutate) || this.config.mutate === false) return value;
 
         let _this = this; // alias to use in standard function expressions
         let prototype: any = Object.assign({}, Object.prototype);

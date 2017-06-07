@@ -1,4 +1,3 @@
-import { WebStorageUtility } from '../utility/webstorage-utility';
 import { WebStorageService } from './webstorage.service';
 import { cookiesStorageUtility } from '../utility/index';
 import { Injectable } from '@angular/core';
@@ -12,9 +11,6 @@ export class CookiesStorageService extends WebStorageService {
     }
 
     public set(key: string, value: any, expirationDate?: Date): any {
-        let storageKey = this.utility.getStorageKey(key);
-        let storable = WebStorageUtility.getSettable(value);
-        this.utility.set(storageKey, storable);
-        return value;
+        return this.utility.set(key, value, { expires: expirationDate });
     }
 }
