@@ -11,16 +11,13 @@ export interface CacheItemInterface {
     targets: Array<Object>;
     services: Array<WebStorageServiceInterface>;
     utilities: Array<WebStorageUtility>;
-    config: DecoratorConfig;
 }
 
-// TODO: handle standalone decorator configs for different targets and utilities
 export class CacheItem implements CacheItemInterface {
     public name: string = '';
     public targets: Array<Object> = [];
     public services: Array<WebStorageServiceInterface> = [];
     public utilities: Array<WebStorageUtility> = [];
-    public config: DecoratorConfig = {};
     protected proxy: any;
     protected _key: string = '';
     protected newTargetsCount: number = 0;
@@ -28,7 +25,6 @@ export class CacheItem implements CacheItemInterface {
     constructor(cacheItem: CacheItemInterface) {
         this._key = cacheItem.key;
         this.name = cacheItem.name;
-        this.config = cacheItem.config;
         this.addTargets(cacheItem.targets);
         this.addServices(cacheItem.services);
         this.addUtilities(cacheItem.utilities);
@@ -38,7 +34,7 @@ export class CacheItem implements CacheItemInterface {
         return this._key;
     }
 
-    public saveValue(value: any): any {
+    public saveValue(value: any, config: DecoratorConfig = {}): any {
         debug.groupCollapsed('CacheItem#saveValue for ' + this.key);
         debug.log('new value ', value);
         debug.log('newTargetsCount ', this.newTargetsCount);
@@ -50,7 +46,8 @@ export class CacheItem implements CacheItemInterface {
             this.newTargetsCount--;
             let savedValue = this.readValue();
             if (!isEmpty(savedValue)) {
-                let proxy = (this.targets.length) ? this.proxy : this.getProxy(savedValue);
+                let proxy = (this.targets.length) ? this.proxy : this.getProxy(savedValue, config);
+                proxy = proxy || value; // it is undefined when value is not an object
                 debug.log('initial value for ' + this.key + ' in ' +
                     this.targets[this.newTargetsCount].constructor.name, proxy);
                 return proxy;
@@ -59,26 +56,26 @@ export class CacheItem implements CacheItemInterface {
 
         this.utilities.forEach(utility => {
             try {
-                utility.set(this._key, value, this.config);
+                utility.set(this._key, value, config);
             } catch (e) {
                 console.warn('[ngx-store] ' + utility.getStorageName() + ': error occurred while trying to save: ', value);
                 console.error(e);
             }
         });
-        return this.getProxy(value);
+        return this.getProxy(value, config);
     }
 
-    public getProxy(value?: any): any {
+    public getProxy(value?: any, config: DecoratorConfig = {}): any {
         if (!value && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
         value = value || this.readValue();
         if (typeof value !== 'object' || value === null) return value;
-        if ((!Config.mutateObjects && !this.config.mutate) || this.config.mutate === false) return value;
+        if ((!Config.mutateObjects && !config.mutate) || config.mutate === false) return value;
 
         let _this = this; // alias to use in standard function expressions
         let prototype: any = Object.assign({}, Object.prototype);
 
         prototype.save = function () { // add method for triggering force save
-            _this.saveValue(value);
+            _this.saveValue(value, config);
         };
 
         // TODO set prototype for Array.prototype or something
@@ -93,7 +90,7 @@ export class CacheItem implements CacheItemInterface {
                 prototype[method] = function () {
                     let value = _this.readValue();
                     let result = Array.prototype[method].apply(value, arguments);
-                    _this.saveValue(value);
+                    _this.saveValue(value, config);
                     return result;
                 }
             }

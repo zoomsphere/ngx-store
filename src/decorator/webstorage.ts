@@ -38,7 +38,6 @@ function WebStorage(
         key = key || propertyName;
 
         let cacheItem = Cache.getCacheFor({
-            config,
             key: key,
             name: propertyName,
             targets: [ target ],
@@ -46,15 +45,14 @@ function WebStorage(
             utilities: [ webStorageUtility ]
         });
 
-        let proxy = cacheItem.getProxy();
+        let proxy = cacheItem.getProxy(undefined, config);
 
         Object.defineProperty(target, propertyName, {
             get: function() {
                 return proxy;
             },
-            set: function(value: any) { // TODO: handle combined decorators
-                proxy = cacheItem.saveValue(value);
-
+            set: function(value: any) {
+                proxy = cacheItem.saveValue(value, config);
             },
         });
         return target;
