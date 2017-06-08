@@ -9,6 +9,7 @@ import { WebStorageUtility } from '../utility/webstorage-utility';
 import { Cache } from './cache';
 
 export interface WebStorageDecoratorConfig {
+    key?: string;
     mutate?: boolean;
 }
 export interface LocalStorageDecoratorConfig extends WebStorageDecoratorConfig { }
@@ -18,12 +19,15 @@ export interface CookieStorageDecoratorConfig extends WebStorageDecoratorConfig 
 }
 export type DecoratorConfig = LocalStorageDecoratorConfig & SessionStorageDecoratorConfig & CookieStorageDecoratorConfig;
 
+export function LocalStorage(config?: LocalStorageDecoratorConfig);
 export function LocalStorage(key?: string, config?: LocalStorageDecoratorConfig) {
     return WebStorage(localStorageUtility, LocalStorageService, key, config);
 }
+export function SessionStorage(config?: SessionStorageDecoratorConfig);
 export function SessionStorage(key?: string, config?: SessionStorageDecoratorConfig) {
     return WebStorage(sessionStorageUtility, SessionStorageService, key, config);
 }
+export function CookieStorage(config?: CookieStorageDecoratorConfig);
 export function CookieStorage(key?: string, config?: CookieStorageDecoratorConfig) {
     return WebStorage(cookiesStorageUtility, CookiesStorageService, key, config);
 }
@@ -31,11 +35,18 @@ export function CookieStorage(key?: string, config?: CookieStorageDecoratorConfi
 function WebStorage(
     webStorageUtility: WebStorageUtility,
     service: WebStorageServiceInterface,
-    key: string,
+    keyOrConfig: string | DecoratorConfig,
     config: DecoratorConfig = {}
 ) {
     return (target: any, propertyName: string): void => {
-        key = key || propertyName;
+        let key;
+        if (typeof keyOrConfig === 'object') {
+            key = keyOrConfig.key;
+            config = keyOrConfig;
+        } else if (typeof keyOrConfig === 'string') {
+            key = keyOrConfig;
+        }
+        key = key || config.key || propertyName;
 
         let cacheItem = Cache.getCacheFor({
             key: key,
