@@ -46,8 +46,9 @@ export class CacheItem implements CacheItemInterface {
             this.newTargetsCount--;
             let savedValue = this.readValue();
             if (!isEmpty(savedValue)) {
-                let proxy = (this.targets.length) ? this.proxy : this.getProxy(savedValue, config);
-                proxy = proxy || value; // it is undefined when value is not an object
+                let proxy = (this.newTargetsCount < this.targets.length-1)
+                    ? this.proxy : this.getProxy(savedValue, config);
+                proxy = proxy || value;
                 debug.log('initial value for ' + this.key + ' in ' +
                     this.targets[this.newTargetsCount].constructor.name, proxy);
                 return proxy;
@@ -68,7 +69,10 @@ export class CacheItem implements CacheItemInterface {
     public getProxy(value?: any, config: DecoratorConfig = {}): any {
         if (!value && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
         value = value || this.readValue();
-        if (typeof value !== 'object' || value === null) return value;
+        if (typeof value !== 'object' || value === null) {
+            this.proxy = value;
+            return value;
+        }
         if ((!Config.mutateObjects && !config.mutate) || config.mutate === false) return value;
 
         let _this = this; // alias to use in standard function expressions
