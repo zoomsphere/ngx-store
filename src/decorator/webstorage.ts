@@ -22,21 +22,21 @@ export interface CookieStorageDecoratorConfig extends WebStorageDecoratorConfig 
 }
 export type DecoratorConfig = LocalStorageDecoratorConfig & SessionStorageDecoratorConfig & CookieStorageDecoratorConfig;
 
-export function LocalStorage(config?: LocalStorageDecoratorConfig);
-export function LocalStorage(key?: string, config?: LocalStorageDecoratorConfig) {
-    return WebStorage(localStorageUtility, LocalStorageService, key, config);
+export function LocalStorage(keyOrConfig?: string | LocalStorageDecoratorConfig,
+                             config?: LocalStorageDecoratorConfig) {
+    return WebStorage(localStorageUtility, LocalStorageService, keyOrConfig, config);
 }
-export function SessionStorage(config?: SessionStorageDecoratorConfig);
-export function SessionStorage(key?: string, config?: SessionStorageDecoratorConfig) {
-    return WebStorage(sessionStorageUtility, SessionStorageService, key, config);
+export function SessionStorage(keyOrConfig?: string | SessionStorageDecoratorConfig,
+                               config?: SessionStorageDecoratorConfig) {
+    return WebStorage(sessionStorageUtility, SessionStorageService, keyOrConfig, config);
 }
-export function CookieStorage(config?: CookieStorageDecoratorConfig);
-export function CookieStorage(key?: string, config?: CookieStorageDecoratorConfig) {
-    return WebStorage(cookiesStorageUtility, CookiesStorageService, key, config);
+export function CookieStorage(keyOrConfig?: string | CookieStorageDecoratorConfig,
+                              config?: CookieStorageDecoratorConfig) {
+    return WebStorage(cookiesStorageUtility, CookiesStorageService, keyOrConfig, config);
 }
-export function SharedStorage(config?: WebStorageDecoratorConfig);
-export function SharedStorage(key?: string, config?: WebStorageDecoratorConfig) {
-    return WebStorage(sharedStorageUtility, SharedStorageService, key, config);
+export function SharedStorage(keyOrConfig?: string | WebStorageDecoratorConfig,
+                              config?: WebStorageDecoratorConfig) {
+    return WebStorage(sharedStorageUtility, SharedStorageService, keyOrConfig, config);
 }
 
 function WebStorage(
