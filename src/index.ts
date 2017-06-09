@@ -7,6 +7,8 @@ export { WebStorageConfigInterface, WEBSTORAGE_CONFIG } from './config';
 export declare class Webstorable {
     save(): void;
 }
+export type WebstorableObject = Webstorable & Object;
+export type WebstorableArray<T> = Webstorable & Array<T>;
 
 @NgModule({
     providers: [
