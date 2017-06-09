@@ -72,7 +72,7 @@ export class CacheItem implements CacheItemInterface {
         if ((!Config.mutateObjects && !config.mutate) || config.mutate === false) return value;
 
         let _this = this; // alias to use in standard function expressions
-        let prototype: any = Object.assign({}, Object.prototype);
+        let prototype: any = Object.assign(new value.constructor(), value.__proto__);
 
         prototype.save = function () { // add method for triggering force save
             _this.saveValue(value, config);
