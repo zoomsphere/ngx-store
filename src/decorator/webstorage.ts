@@ -4,16 +4,19 @@ import {
     SessionStorageService,
     WebStorageServiceInterface
 } from '../service';
-import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility } from '../utility';
+import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility, sharedStorageUtility } from '../utility';
+import { SharedStorageService } from '../service/shared-storage.service';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { Cache } from './cache';
 
 export interface WebStorageDecoratorConfig {
     key?: string;
+}
+export interface StorageDecoratorConfig {
     mutate?: boolean;
 }
-export interface LocalStorageDecoratorConfig extends WebStorageDecoratorConfig { }
-export interface SessionStorageDecoratorConfig extends WebStorageDecoratorConfig { }
+export interface LocalStorageDecoratorConfig extends StorageDecoratorConfig { }
+export interface SessionStorageDecoratorConfig extends StorageDecoratorConfig { }
 export interface CookieStorageDecoratorConfig extends WebStorageDecoratorConfig {
     expires?: Date;
 }
@@ -30,6 +33,10 @@ export function SessionStorage(key?: string, config?: SessionStorageDecoratorCon
 export function CookieStorage(config?: CookieStorageDecoratorConfig);
 export function CookieStorage(key?: string, config?: CookieStorageDecoratorConfig) {
     return WebStorage(cookiesStorageUtility, CookiesStorageService, key, config);
+}
+export function SharedStorage(config?: WebStorageDecoratorConfig);
+export function SharedStorage(key?: string, config?: WebStorageDecoratorConfig) {
+    return WebStorage(sharedStorageUtility, SharedStorageService, key, config);
 }
 
 function WebStorage(

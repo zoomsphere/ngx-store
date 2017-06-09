@@ -1,5 +1,5 @@
 import { DecoratorConfig } from '../decorator/webstorage';
-import { WebStorage } from './cookies-storage';
+import { WebStorage } from './storage/cookies-storage';
 export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage';
 
 export class WebStorageUtility {
@@ -65,12 +65,12 @@ export class WebStorageUtility {
     public get(key: string): any {
         let storageKey = this.getStorageKey(key);
         let value = this._storage.getItem(storageKey);
-        return WebStorageUtility.getGettable(value);
+        return this.getGettable(value);
     }
 
     public set(key: string, value: any, config: DecoratorConfig = {}): any {
         let storageKey = this.getStorageKey(key);
-        let storable = WebStorageUtility.getSettable(value);
+        let storable = this.getSettable(value);
         this._storage.setItem(storageKey, storable, config.expires);
         return value;
     }
