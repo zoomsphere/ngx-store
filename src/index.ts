@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { LocalStorageService, SessionStorageService } from './service';
+import { CookiesStorageService, LocalStorageService, SessionStorageService } from './service';
 
 export { CookieStorage, LocalStorage, SessionStorage, SharedStorage } from './decorator/webstorage'
 export { WebStorageService, CookiesStorageService, LocalStorageService, SessionStorageService } from './service';
@@ -14,6 +14,7 @@ export type WebstorableArray<T> = Webstorable & Array<T>;
     providers: [
         LocalStorageService,
         SessionStorageService,
+        CookiesStorageService,
     ]
 })
 export class WebStorageModule {}
