@@ -7,7 +7,7 @@ export class WebStorageUtility {
     protected _storage: WebStorage;
 
     public static getSettable(value: any): string {
-        return typeof value === 'string' ? value : JSON.stringify(value);
+        return JSON.stringify(value);
     }
 
     public static getGettable(value: string): any {
