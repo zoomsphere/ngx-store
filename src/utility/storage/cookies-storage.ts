@@ -45,8 +45,8 @@ export class CookiesStorage implements Storage {
         this.getAllKeys().forEach(key => this.removeItem(key));
     }
 
-    public forEach(func: (key: string, value: string) => any): void {
-        return this.getAllItems().forEach((key, value) => func(key, value));
+    public forEach(func: (value: string, key: string) => any): void {
+        return this.getAllItems().forEach((value, key) => func(value, key));
     }
 
     protected getAllKeys(): Array<string> {

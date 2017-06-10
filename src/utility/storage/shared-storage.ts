@@ -27,8 +27,8 @@ export class SharedStorage implements Storage {
         this.sharedMap.clear();
     }
 
-    public forEach(func: (key: string, value: any) => any): void {
-        return this.sharedMap.forEach((key, value) => func(key, value));
+    public forEach(func: (value: string, key: any) => any): void {
+        return this.sharedMap.forEach((value, key) => func(value, key));
     }
 
     protected getAllKeys(): Array<string> {

@@ -46,7 +46,7 @@ export class WebStorageUtility {
 
     public get keys(): Array<string> {
         let keys = [];
-        this.forEach(key => keys.push(key));
+        this.forEach((value, key) => keys.push(key));
         return keys;
     }
 
@@ -86,12 +86,12 @@ export class WebStorageUtility {
         this._storage.clear();
     }
 
-    public forEach(func: (key: string, value: any) => any): void {
+    public forEach(func: (value: any, key: string) => any): void {
         if (typeof this._storage.forEach === 'function') {
-            return this._storage.forEach((key, value) => func(key, this.getGettable(value)));
+            return this._storage.forEach((value, key) => func(this.getGettable(value), key));
         }
         for (let key in this._storage) {
-            func(key, this.getGettable(this._storage[key]));
+            func(this.getGettable(this._storage[key]), key);
         }
     }
 
