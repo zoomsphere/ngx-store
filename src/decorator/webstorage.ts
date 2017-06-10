@@ -9,18 +9,20 @@ import { SharedStorageService } from '../service/shared-storage.service';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { Cache } from './cache';
 
+// TODO: consider adding 'readonly' property
 export interface WebStorageDecoratorConfig {
     key?: string;
 }
-export interface StorageDecoratorConfig {
+export interface StorageDecoratorConfig extends WebStorageDecoratorConfig {
+    prefix?: string;
     mutate?: boolean;
 }
 export interface LocalStorageDecoratorConfig extends StorageDecoratorConfig { }
 export interface SessionStorageDecoratorConfig extends StorageDecoratorConfig { }
-export interface CookieStorageDecoratorConfig extends WebStorageDecoratorConfig {
+export interface CookieStorageDecoratorConfig extends StorageDecoratorConfig {
     expires?: Date;
 }
-export type DecoratorConfig = LocalStorageDecoratorConfig & SessionStorageDecoratorConfig & CookieStorageDecoratorConfig;
+export type DecoratorConfig = CookieStorageDecoratorConfig; // should contain all fields
 
 export function LocalStorage(keyOrConfig?: string | LocalStorageDecoratorConfig,
                              config?: LocalStorageDecoratorConfig) {

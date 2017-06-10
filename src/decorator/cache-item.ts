@@ -38,13 +38,13 @@ export class CacheItem implements CacheItemInterface {
         debug.groupCollapsed('CacheItem#saveValue for ' + this.key);
         debug.log('new value ', value);
         debug.log('newTargetsCount ', this.newTargetsCount);
-        debug.log('previous value: ', this.readValue());
+        debug.log('previous value: ', this.readValue(config));
         debug.log('targets.length: ', this.targets.length);
         debug.groupEnd();
 
         if (this.newTargetsCount) { // prevent overwriting value by initializators
             this.newTargetsCount--;
-            let savedValue = this.readValue();
+            let savedValue = this.readValue(config);
             if (!isEmpty(savedValue)) {
                 let proxy = (this.newTargetsCount < this.targets.length-1)
                     ? this.proxy : this.getProxy(savedValue, config);
@@ -68,7 +68,7 @@ export class CacheItem implements CacheItemInterface {
 
     public getProxy(value?: any, config: DecoratorConfig = {}): any {
         if (!value && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
-        value = value || this.readValue();
+        value = value || this.readValue(config);
         if (typeof value !== 'object' || value === null) {
             this.proxy = value;
             return value;
@@ -92,7 +92,7 @@ export class CacheItem implements CacheItemInterface {
             ];
             for (let method of methodsToOverwrite) {
                 prototype[method] = function () {
-                    let value = _this.readValue();
+                    let value = _this.readValue(config);
                     let result = Array.prototype[method].apply(value, arguments);
                     _this.saveValue(value, config);
                     return result;
@@ -104,11 +104,11 @@ export class CacheItem implements CacheItemInterface {
         return value;
     }
 
-    public readValue(): any {
+    public readValue(config: DecoratorConfig = {}): any {
         let value = null;
         this.utilities.forEach(utility => {
             if (!value) {
-                value = utility.get(this._key);
+                value = utility.get(this._key, config);
             }
         });
         return value;

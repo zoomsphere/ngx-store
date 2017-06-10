@@ -19,7 +19,7 @@ export class WebStorageUtility {
         }
     }
 
-    public constructor(storage: Storage, prefix: string, previousPrefix?: string) {
+    public constructor(storage: WebStorage, prefix: string, previousPrefix?: string) {
         this._storage = storage;
         this._prefix = prefix;
 
@@ -50,8 +50,9 @@ export class WebStorageUtility {
         return keys;
     }
 
-    public getStorageKey(key: string): string {
-        return `${this._prefix}${key}`;
+    public getStorageKey(key: string, prefix?: string): string {
+        prefix = (typeof prefix === 'string') ? prefix : this._prefix;
+        return `${prefix}${key}`;
     }
 
     public getStorageName(): StorageName {
@@ -62,14 +63,14 @@ export class WebStorageUtility {
         return storageName;
     }
 
-    public get(key: string): any {
-        let storageKey = this.getStorageKey(key);
+    public get(key: string, config: DecoratorConfig = {}): any {
+        let storageKey = this.getStorageKey(key, config.prefix);
         let value = this._storage.getItem(storageKey);
         return this.getGettable(value);
     }
 
     public set(key: string, value: any, config: DecoratorConfig = {}): any {
-        let storageKey = this.getStorageKey(key);
+        let storageKey = this.getStorageKey(key, config.prefix);
         let storable = this.getSettable(value);
         this._storage.setItem(storageKey, storable, config.expires);
         return value;
