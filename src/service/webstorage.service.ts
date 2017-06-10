@@ -2,6 +2,7 @@ import { ClearType, Config } from '../config';
 import { WebStorageConfigInterface } from '../config/config.interface';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
+import { debug } from '../config/config';
 
 export abstract class WebStorageService {
     public static keys: Array<string>;
@@ -47,12 +48,11 @@ export abstract class WebStorageService {
     public clear(clearType?: ClearType, prefix?: string): void {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
-            for (let key of this.keys) {
-                this.remove(key);
-            }
+            debug.log('Removing decorated data from ' + this.utility.getStorageName() + ':', this.keys);
+            this.keys.forEach(key => this.remove(key));
         } else if (clearType === 'prefix') {
             prefix = prefix || Config.prefix;
-            this.utility.forEach((key) => {
+            this.utility.forEach((value, key) => {
                 if (key.startsWith(prefix)) {
                     this.remove(this.utility.trimPrefix(key));
                 }
