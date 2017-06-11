@@ -1,5 +1,6 @@
 import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
+import { debug } from '../config/config';
 export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage';
 
 export class WebStorageUtility {
@@ -27,7 +28,8 @@ export class WebStorageUtility {
         if (prefix === previousPrefix) return;
         if (previousPrefix === null) return;
         if (previousPrefix === undefined) return;
-        this.forEach(key => {
+        debug.log('Detected prefix change from ' + prefix + ' to ' + previousPrefix);
+        this.forEach((value, key) => {
             // ignore config settings when previousPrefix = ''
             if (key.startsWith(previousPrefix) && !key.startsWith('NGX-STORE_')) {
                 let nameWithoutPrefix = this.trimPrefix(key);
