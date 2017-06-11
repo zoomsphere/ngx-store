@@ -65,14 +65,12 @@ function WebStorage(
             utilities: [ webStorageUtility ]
         });
 
-        let proxy = cacheItem.getProxy(undefined, config);
-
         Object.defineProperty(target, propertyName, {
             get: function() {
-                return proxy;
+                return cacheItem.getProxy(undefined, config);
             },
             set: function(value: any) {
-                proxy = cacheItem.saveValue(value, config);
+                cacheItem.saveValue(value, config);
             },
         });
         return target;

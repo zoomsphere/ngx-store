@@ -1,5 +1,6 @@
 import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
+import { Cache } from '../decorator/cache';
 import { debug } from '../config/config';
 export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage';
 
@@ -72,6 +73,9 @@ export class WebStorageUtility {
     }
 
     public set(key: string, value: any, config: DecoratorConfig = {}): any {
+        if (value === null || value === undefined) {
+            return this.remove(key);
+        }
         let storageKey = this.getStorageKey(key, config.prefix);
         let storable = this.getSettable(value);
         this._storage.setItem(storageKey, storable, config.expires);
@@ -82,10 +86,16 @@ export class WebStorageUtility {
     public remove(key: string): void {
         let storageKey = this.getStorageKey(key);
         this._storage.removeItem(storageKey);
+        let cacheItem = Cache.get(key);
+        if (cacheItem) {
+            cacheItem.resetProxy();
+        }
     }
 
     public clear() {
-        this._storage.clear();
+        this.forEach((value, key) => {
+            this.remove(key);
+        });
     }
 
     public forEach(func: (value: any, key: string) => any): void {

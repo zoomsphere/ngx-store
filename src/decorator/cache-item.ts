@@ -36,8 +36,8 @@ export class CacheItem implements CacheItemInterface {
 
     public saveValue(value: any, config: DecoratorConfig = {}): any {
         debug.groupCollapsed('CacheItem#saveValue for ' + this.key);
-        debug.log('new value ', value);
-        debug.log('newTargetsCount ', this.newTargetsCount);
+        debug.log('new value: ', value);
+        debug.log('newTargetsCount: ', this.newTargetsCount);
         debug.log('previous value: ', this.readValue(config));
         debug.log('targets.length: ', this.targets.length);
         debug.groupEnd();
@@ -130,7 +130,7 @@ export class CacheItem implements CacheItemInterface {
                             this.services.forEach(service => {
                                 service.keys = service.keys.filter(key => key !== this._key);
                             });
-                            Cache.remove(this);
+                            this.resetProxy();
                         }
                         debug.group('OnDestroy handler:');
                         debug.log('removed target:', target.constructor.name);
@@ -160,5 +160,9 @@ export class CacheItem implements CacheItemInterface {
                 this.utilities.push(utility);
             }
         });
+    }
+
+    public resetProxy(): void {
+        this.proxy = undefined;
     }
 }
