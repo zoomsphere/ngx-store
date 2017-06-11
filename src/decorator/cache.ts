@@ -5,7 +5,7 @@ export class Cache {
     public static items: Map<string, CacheItem> = new Map();
 
     public static getCacheFor(cacheCandidate: CacheItemInterface): CacheItem {
-        let cacheItem = this.get(cacheCandidate);
+        let cacheItem = this.get(cacheCandidate.key);
         if (!cacheItem) {
             cacheItem = new CacheItem(cacheCandidate);
             this.set(cacheItem);
@@ -23,12 +23,12 @@ export class Cache {
         return this.items.delete(cacheItem.key);
     }
 
-    protected static get(cacheItem: CacheItemInterface): CacheItem {
-        return this.items.get(cacheItem.key);
+    public static get(key: string): CacheItem {
+        return this.items.get(key);
     }
 
     protected static set(cacheItem: CacheItem): void {
-        if (!this.get(cacheItem)) {
+        if (!this.get(cacheItem.key)) {
             debug.log('CacheItem for ' + cacheItem.key, cacheItem);
         }
         this.items.set(cacheItem.key, cacheItem);
