@@ -84,8 +84,6 @@ export class CacheItem implements CacheItemInterface {
 
         // TODO set prototype for Array.prototype or something
         if (Array.isArray(value)) { // handle methods changing value of array
-            prototype = Object.assign({}, prototype, Array.prototype);
-            // this.proxy = value;
             const methodsToOverwrite = [
                 'join', 'pop', 'push', 'reverse', 'shift', 'unshift', 'splice',
                 'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin'
