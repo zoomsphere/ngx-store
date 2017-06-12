@@ -1,4 +1,4 @@
-import { WebStorageConfigInterface } from '../config/config.interface';
+import { ClearType, WebStorageConfigInterface } from '../config/config.interface';
 
 export interface WebStorageServiceInterface {
     keys: Array<string>;
@@ -8,6 +8,6 @@ export interface WebStorageServiceInterface {
         get(key: string): any;
         set(key: string, value: any): void;
         remove(key: string): void;
-        clear(): void;
+        clear(clearType?: ClearType, secondParam?: any): void;
     }
 }

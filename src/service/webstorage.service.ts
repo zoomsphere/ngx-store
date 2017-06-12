@@ -3,6 +3,7 @@ import { WebStorageConfigInterface } from '../config/config.interface';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
 import { debug } from '../config/config';
+import { Cache } from '../decorator/cache';
 
 export abstract class WebStorageService {
     public static keys: Array<string>;
@@ -42,18 +43,38 @@ export abstract class WebStorageService {
 
     /**
      * Clears chosen data from Storage
-     * @param clearType 'decorators', 'prefix' or 'all'
-     * @param prefix if clearType = prefix, defines the prefix
+     * @param clearType 'prefix'
+     * @param prefix defines the prefix
      */
-    public clear(clearType?: ClearType, prefix?: string): void {
+    public clear(clearType?: 'prefix', prefix?: string): void;
+    /**
+     * Clears chosen data from Storage
+     * @param clearType 'decorators'
+     * @param target defines the class (not its instance) whose decorators should be cleared
+     */
+    public clear(clearType?: 'decorators', target?: Object): void;
+    /**
+     * Clears all data from Storage
+     * @param clearType 'all'
+     */
+    public clear(clearType?: 'all'): void;
+    public clear(clearType?: ClearType, secondParam?: any): void {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
-            debug.log('Removing decorated data from ' + this.utility.getStorageName() + ':', this.keys);
-            this.keys.forEach(key => this.remove(key));
+            let keys = [];
+            debug.log('this.keys:', this.keys);
+            if (typeof secondParam === 'object') {
+                keys = this.keys.filter(key => Cache.get(key).targets.indexOf(secondParam) !== -1);
+                debug.log(this.utility.getStorageName() + ' > Removing decorated data from ' + secondParam.constructor.name + ':', keys);
+            } else {
+                keys = this.keys;
+                debug.log(this.utility.getStorageName() + ' > Removing decorated data:', keys);
+            }
+            keys.forEach(key => this.remove(key));
         } else if (clearType === 'prefix') {
-            prefix = prefix || Config.prefix;
+            secondParam = secondParam || Config.prefix;
             this.utility.forEach((value, key) => {
-                if (key.startsWith(prefix)) {
+                if (key.startsWith(secondParam)) {
                     this.remove(this.utility.trimPrefix(key));
                 }
             });

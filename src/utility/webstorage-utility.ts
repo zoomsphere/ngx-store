@@ -29,7 +29,7 @@ export class WebStorageUtility {
         if (prefix === previousPrefix) return;
         if (previousPrefix === null) return;
         if (previousPrefix === undefined) return;
-        debug.log('Detected prefix change from ' + prefix + ' to ' + previousPrefix);
+        debug.log(this.getStorageName() + ' > Detected prefix change from ' + previousPrefix + ' to ' + prefix);
         this.forEach((value, key) => {
             // ignore config settings when previousPrefix = ''
             if (key.startsWith(previousPrefix) && !key.startsWith('NGX-STORE_')) {
