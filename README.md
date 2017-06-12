@@ -9,7 +9,7 @@ This library adds decorators that make it super easy to *automagically* save and
     + `@SessionStorage()` - to save variable in HTML5 sessionStorage
     + `@CookieStorage()` - to save variable as a cookie
     + `@SharedStorage()` - to keep variable in temporary memory
-- Injectable `LocalStorageService`, `SessionStorageService` and `CookiesStorageService` ([read more here](#more))
+- Injectable `LocalStorageService`, `SessionStorageService` and `CookiesStorageService` ([read more here](src/service#angular-storage))
 - Easy configuration (see [#configuration](#configuration) section)
 - Compatibility with: 
     + all previous versions
@@ -29,7 +29,7 @@ This library adds decorators that make it super easy to *automagically* save and
 
 
 ## Installation
-1. Download the library: `npm install --save ngx-store`
+1. Download the library: `npm install --save ngx-store@beta`
 2. Import the WebStorageModule in your `app.module.ts`:
     ```typescript
     import { NgModule } from '@angular/core';
@@ -83,10 +83,9 @@ As this project uses decorating functions, it is important to provide custom con
 
 ## Decorators config
 Decorating functions can take config object with the following fields:
-
-    - `key: string;` - key under the variable will be stored, default key is the variable name
-    - `mutate: boolean;` - enable or disable object mutation for instance, default depends on global config
-    - `expires: Date;` - for `@CookieStorage()` only, specifies expiration date, null = lifetime cookie
+- `key: string` - key under the variable will be stored, default key is the variable name
+- `mutate: boolean` - enable or disable object mutation for instance, default depends on global config
+- `expires: Date` - for `@CookieStorage()` only, specifies expiration date, null = lifetime cookie
 
 
 ## Usage
@@ -204,9 +203,9 @@ Decorating functions can take config object with the following fields:
 
 3. Combine both ways and have fun!
 
-**Note**: Define always a default value at the property you are using decorator.
+**Note**: Always define default value at the property you are using decorator.
 
-**Note**: Never use `for-in` loop on decorated Arrays without filtering by `.hasOwnPropert()`.
+**Note**: Never use `for-in` loop on decorated Arrays without filtering by `.hasOwnProperty()`.
 
 **Note**: Please don't ngx-store circular structures as this library uses JSON.stringify to encode data before saving.
 
