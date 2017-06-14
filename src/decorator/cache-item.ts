@@ -121,7 +121,7 @@ export class CacheItem implements CacheItemInterface {
                         if (typeof originalFunction === 'function') {
                             originalFunction();
                         }
-                        target.ngOnDestroy = originalFunction;
+                        target.ngOnDestroy = originalFunction || function(){};
 
                         this.targets = this.targets.filter(t => t !== target);
                         if (!this.targets.length) {
