@@ -29,7 +29,7 @@ This library adds decorators that make it super easy to *automagically* save and
 
 
 ## Installation
-1. Download the library: `npm install --save ngx-store@beta`
+1. Download the library: `npm install --save ngx-store`
 2. Import the WebStorageModule in your `app.module.ts`:
     ```typescript
     import { NgModule } from '@angular/core';
