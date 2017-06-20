@@ -67,8 +67,8 @@ export class CacheItem implements CacheItemInterface {
     }
 
     public getProxy(value?: any, config: DecoratorConfig = {}): any {
-        if (!value && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
-        value = value || this.readValue(config);
+        if (value === undefined && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
+        value = (value === undefined) ? this.readValue(config) : value;
         if (typeof value !== 'object' || value === null) {
             this.proxy = value;
             return value;
