@@ -62,7 +62,6 @@ export abstract class WebStorageService {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
             let keys = [];
-            debug.log('this.keys:', this.keys);
             if (typeof secondParam === 'object') {
                 keys = this.keys.filter(key => Cache.get(key).targets.indexOf(secondParam) !== -1);
                 debug.log(this.utility.getStorageName() + ' > Removing decorated data from ' + secondParam.constructor.name + ':', keys);
