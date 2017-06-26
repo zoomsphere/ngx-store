@@ -1,6 +1,6 @@
 {
   "name": "ngx-store",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "./dist/index",
   "typings": "./dist/index",
   "description": "Angular decorator to save and restore class properties automatically from LocalStorage and SessionStorage.",
@@ -40,7 +40,7 @@
     "@angular/compiler-cli": "~4.0.0",
     "@angular/core": "~4.0.0",
     "@angular/platform-server": "~4.0.0",
-    "@types/node": "^7.0.31",
+    "@types/node": "^7.0.32",
     "core-js": "^2.4.1",
     "es6-shim": "^0.35.3",
     "rimraf": "^2.5.4",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "is-empty": "^1.2.0",
-    "ts-debug": "^1.0.4"
+    "ts-debug": "^1.0.5"
   },
   "//": "\"engineStrict\": false,",
   "engines": {
