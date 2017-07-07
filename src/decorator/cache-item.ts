@@ -83,9 +83,9 @@ export class CacheItem implements CacheItemInterface {
         };
 
         // TODO set prototype for Array.prototype or something
-        if (Array.isArray(value)) { // handle methods changing value of array
+        if (Array.isArray(value)) { // handle methods that could change value of array
             const methodsToOverwrite = [
-                'join', 'pop', 'push', 'reverse', 'shift', 'unshift', 'splice',
+                'pop', 'push', 'reverse', 'shift', 'unshift',
                 'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin'
             ];
             for (let method of methodsToOverwrite) {
