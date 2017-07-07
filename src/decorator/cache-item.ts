@@ -75,11 +75,11 @@ export class CacheItem implements CacheItemInterface {
         }
         if ((!Config.mutateObjects && !config.mutate) || config.mutate === false) return value;
 
-        let _this = this; // alias to use in standard function expressions
+        let _self = this; // alias to use in standard function expressions
         let prototype: any = Object.assign(new value.constructor(), value.__proto__);
 
         prototype.save = function () { // add method for triggering force save
-            _this.saveValue(value, config);
+            _self.saveValue(value, config);
         };
 
         // TODO set prototype for Array.prototype or something
@@ -90,9 +90,9 @@ export class CacheItem implements CacheItemInterface {
             ];
             for (let method of methodsToOverwrite) {
                 prototype[method] = function () {
-                    let value = _this.readValue(config);
+                    let value = _self.readValue(config);
                     let result = Array.prototype[method].apply(value, arguments);
-                    _this.saveValue(value, config);
+                    _self.saveValue(value, config);
                     return result;
                 }
             }
@@ -117,23 +117,24 @@ export class CacheItem implements CacheItemInterface {
             if (this.targets.indexOf(target) === -1) {
                 if (typeof target === 'object') { // handle Angular Component destruction
                     let originalFunction = target.ngOnDestroy;
-                    target.ngOnDestroy = () => {
+                    let _self = this;
+                    target.ngOnDestroy = function() {
                         if (typeof originalFunction === 'function') {
-                            originalFunction();
+                            originalFunction.apply(this, arguments);
                         }
                         target.ngOnDestroy = originalFunction || function(){};
 
-                        this.targets = this.targets.filter(t => t !== target);
-                        if (!this.targets.length) {
-                            this.services.forEach(service => {
-                                service.keys = service.keys.filter(key => key !== this._key);
+                        _self.targets = _self.targets.filter(t => t !== target);
+                        if (!_self.targets.length) {
+                            _self.services.forEach(service => {
+                                service.keys = service.keys.filter(key => key !== _self._key);
                             });
-                            this.resetProxy();
+                            _self.resetProxy();
                         }
                         debug.group('OnDestroy handler:');
                         debug.log('removed target:', target.constructor.name);
-                        debug.log('remaining targets:', this.targets);
-                        debug.log('cacheItem removed?', Cache.items.get(this.key));
+                        debug.log('remaining targets:', _self.targets);
+                        debug.log('cacheItem:', Cache.get(_self.key));
                         debug.groupEnd();
                     };
                     this.targets.push(target);
