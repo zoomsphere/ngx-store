@@ -65,6 +65,7 @@ As this project uses decorating functions, it is important to provide custom con
       clearType: 'prefix', // default: 'prefix'
       mutateObjects: true, // default: true
       debugMode: false,    // you can enable debug logs if you ever meet any bug to localize its source
+      cookiesScope: '',    // examples for sub.domain.com: '.' = .sub.domain.com, '../.' = .domain.com
       previousPrefix: 'angular2ws_', // you have to set it only if you were using custom prefix in old version ('angular2ws_' is a default value)
     };
     </script>

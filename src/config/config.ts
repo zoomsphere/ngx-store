@@ -11,6 +11,7 @@ const DefaultConfig: WebStorageConfigInterface = {
     previousPrefix: 'angular2ws_',
     clearType: 'prefix',
     mutateObjects: true,
+    cookiesScope: '',
     debugMode: false,
 };
 

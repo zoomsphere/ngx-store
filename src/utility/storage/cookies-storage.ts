@@ -1,3 +1,4 @@
+import { Config, debug } from '../../config/config';
 export interface WebStorage extends Storage {
    setItem(key: string, data: string, expirationDate?: Date): void;
 }
@@ -31,14 +32,19 @@ export class CookiesStorage implements Storage {
      */
     public setItem(key: string, data: string, expirationDate?: Date): void {
         if (typeof document === 'undefined') return;
+        let domain = this.resolveDomain(Config.cookiesScope);
+        debug.log('Cookies domain:', domain);
+        domain = (domain) ? 'domain=' + domain + ';' : '';
         let utcDate = '';
         if (expirationDate instanceof Date) {
             utcDate = expirationDate.toUTCString();
         } else if (expirationDate === null) {
             utcDate = 'Fri, 18 Dec 2099 12:00:00 GMT';
         }
-        let expires = utcDate ? '; expires=' + utcDate : '';
-        document.cookie = key + '=' + data + expires + '; path=/;';
+        let expires = utcDate ? '; expires=' + utcDate + ';' : '';
+        let cookie = key + '=' + data + expires + 'path=/;' + domain;
+        debug.log('Cookie`s set instruction:', cookie);
+        document.cookie = cookie;
     }
 
     public clear(): void {
@@ -67,6 +73,19 @@ export class CookiesStorage implements Storage {
             map.set(key, value);
         }
         return map;
+    }
+
+    protected resolveDomain(path: string): string {
+        let hostname = window.location.hostname;
+        if ((hostname.match(/\./g) || []).length < 1) {
+            return '';
+        }
+        let www = (hostname.indexOf('www.') === 0) ? 'www.' : '';
+        while (path.indexOf('../') > -1) {
+            path = path.substr(3, '../'.length);
+            hostname = hostname.split('.').slice(1).join('.');
+        }
+        return www + path + hostname;
     }
 }
 
