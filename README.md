@@ -55,6 +55,7 @@ Things you should take into consideration while configuring this module:
     + `'prefix'` - removes all variables prefixed by ngx-store
     + `'decorators'` - removes only variables created by decorating functions (useful when not using prefix)
     Default behavior is specified by setting `clearType`, but it's possible to pass this parameter directly into service `clear()` method.
+- Examples for `cookiesScope` can be found in [this comment](https://github.com/zoomsphere/ngx-store/blob/master/src/utility/storage/cookies-storage.ts#L78)
 
 As this project uses decorating functions, it is important to provide custom configuration in global variable named `NGXSTORE_CONFIG` before Angular application load. Here are some ways to do it:
 1. Add `<script>` in `index.html` (before Angular sources)
@@ -65,7 +66,7 @@ As this project uses decorating functions, it is important to provide custom con
       clearType: 'prefix', // default: 'prefix'
       mutateObjects: true, // default: true
       debugMode: false,    // you can enable debug logs if you ever meet any bug to localize its source
-      cookiesScope: '',    // examples for sub.domain.com: '.' = .sub.domain.com, '../.' = .domain.com
+      cookiesScope: '',    // what you pass here will actually prepend base domain
       previousPrefix: 'angular2ws_', // you have to set it only if you were using custom prefix in old version ('angular2ws_' is a default value)
     };
     </script>

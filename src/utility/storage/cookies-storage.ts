@@ -75,17 +75,41 @@ export class CookiesStorage implements Storage {
         return map;
     }
 
+    /**
+     * domain.com         + path="."          = .domain.com
+     * domain.com         + path=".sub."      = .sub.domain.com
+     * sub.domain.com     + path="sub."       = sub.domain.com
+     * www.sub.domain.com + path="."          = .sub.domain.com
+     * localhost          + path=".whatever." = localhost
+     * @param path
+     * @returns {string}
+     */
     protected resolveDomain(path: string): string {
-        let hostname = window.location.hostname;
+        if (!path) return '';
+        let hostname = document.domain;
         if ((hostname.match(/\./g) || []).length < 1) {
             return '';
         }
-        let www = (hostname.indexOf('www.') === 0) ? 'www.' : '';
-        while (path.indexOf('../') > -1) {
-            path = path.substr(3, '../'.length);
-            hostname = hostname.split('.').slice(1).join('.');
+        let www = (path[0] !== '.' && hostname.indexOf('www.') === 0) ? 'www.' : '';
+        return www + path + this.getDomain();
+    }
+
+    /**
+     * This function determines base domain by setting cookie at the highest level possible
+     * @url http://rossscrivener.co.uk/blog/javascript-get-domain-exclude-subdomain
+     * @returns {string}
+     */
+    protected getDomain(): string {
+        let i = 0;
+        let domain = document.domain;
+        let domainParts = domain.split('.');
+        let s = '_gd' + (new Date()).getTime();
+        while (i < (domainParts.length - 1) && document.cookie.indexOf(s + '=' + s) == -1) {
+            domain = domainParts.slice(-1 - (++i)).join('.');
+            document.cookie = s + '=' + s + ';domain=' + domain + ';';
         }
-        return www + path + hostname;
+        document.cookie = s + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;domain=' + domain + ';';
+        return domain;
     }
 }
 
