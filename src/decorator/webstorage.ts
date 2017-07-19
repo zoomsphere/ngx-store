@@ -70,6 +70,7 @@ function WebStorage(
                 return cacheItem.getProxy(undefined, config);
             },
             set: function(value: any) {
+                cacheItem.currentTarget = target;
                 cacheItem.saveValue(value, config);
             },
         });

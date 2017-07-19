@@ -2,7 +2,6 @@ import { WebStorageServiceInterface } from '../service/webstorage.interface';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { Config, debug } from '../config/config';
 import { DecoratorConfig } from './webstorage';
-import * as isEmpty from 'is-empty';
 import { Cache } from './cache';
 
 export interface CacheItemInterface {
@@ -18,9 +17,11 @@ export class CacheItem implements CacheItemInterface {
     public targets: Array<Object> = [];
     public services: Array<WebStorageServiceInterface> = [];
     public utilities: Array<WebStorageUtility> = [];
+    public currentTarget: Object;
     protected proxy: any;
     protected _key: string = '';
     protected newTargetsCount: number = 0;
+    protected initializedTargets: Set<Object> = new Set();
 
     constructor(cacheItem: CacheItemInterface) {
         this._key = cacheItem.key;
@@ -35,24 +36,24 @@ export class CacheItem implements CacheItemInterface {
     }
 
     public saveValue(value: any, config: DecoratorConfig = {}): any {
-        debug.groupCollapsed('CacheItem#saveValue for ' + this.key);
+        debug.groupCollapsed('CacheItem#saveValue for ' + this.key + ' in ' + this.currentTarget.constructor.name);
         debug.log('new value: ', value);
-        debug.log('newTargetsCount: ', this.newTargetsCount);
         debug.log('previous value: ', this.readValue(config));
+        debug.log('newTargetsCount: ', this.newTargetsCount);
         debug.log('targets.length: ', this.targets.length);
+        debug.log('currentTarget:', this.currentTarget);
         debug.groupEnd();
 
-        if (this.newTargetsCount) { // prevent overwriting value by initializators
+        // prevent overwriting value by initializators
+        if (this.newTargetsCount && !this.initializedTargets.has(this.currentTarget)) {
+            this.initializedTargets.add(this.currentTarget);
             this.newTargetsCount--;
-            let savedValue = this.readValue(config);
-            if (!isEmpty(savedValue)) {
-                let proxy = (this.newTargetsCount < this.targets.length-1)
-                    ? this.proxy : this.getProxy(savedValue, config);
-                proxy = proxy || value;
-                debug.log('initial value for ' + this.key + ' in ' +
-                    this.targets[this.newTargetsCount].constructor.name, proxy);
-                return proxy;
-            }
+            let savedValue = this.readValue(config) || value;
+            let proxy = (this.newTargetsCount < this.targets.length - 1)
+                ? this.proxy : this.getProxy(savedValue, config);
+            proxy = proxy || value;
+            debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
+            return proxy;
         }
 
         this.utilities.forEach(utility => {
@@ -92,6 +93,7 @@ export class CacheItem implements CacheItemInterface {
                 prototype[method] = function () {
                     let value = _self.readValue(config);
                     let result = Array.prototype[method].apply(value, arguments);
+                    debug.log('Saving value for ' + this.key + ' by method ' + prototype.constructor.name + '.' + method);
                     _self.saveValue(value, config);
                     return result;
                 }
@@ -130,6 +132,7 @@ export class CacheItem implements CacheItemInterface {
                                 service.keys = service.keys.filter(key => key !== _self._key);
                             });
                             _self.resetProxy();
+                            Cache.remove(_self);
                         }
                         debug.group('OnDestroy handler:');
                         debug.log('removed target:', target.constructor.name);
