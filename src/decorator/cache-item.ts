@@ -20,7 +20,6 @@ export class CacheItem implements CacheItemInterface {
     public currentTarget: Object;
     protected proxy: any;
     protected _key: string = '';
-    protected newTargetsCount: number = 0;
     protected initializedTargets: Set<Object> = new Set();
 
     constructor(cacheItem: CacheItemInterface) {
@@ -39,19 +38,15 @@ export class CacheItem implements CacheItemInterface {
         debug.groupCollapsed('CacheItem#saveValue for ' + this.key + ' in ' + this.currentTarget.constructor.name);
         debug.log('new value: ', value);
         debug.log('previous value: ', this.readValue(config));
-        debug.log('newTargetsCount: ', this.newTargetsCount);
         debug.log('targets.length: ', this.targets.length);
         debug.log('currentTarget:', this.currentTarget);
         debug.groupEnd();
 
         // prevent overwriting value by initializators
-        if (this.newTargetsCount && !this.initializedTargets.has(this.currentTarget)) {
+        if (!this.initializedTargets.has(this.currentTarget)) {
             this.initializedTargets.add(this.currentTarget);
-            this.newTargetsCount--;
             let savedValue = this.readValue(config) || value;
-            let proxy = (this.newTargetsCount < this.targets.length - 1)
-                ? this.proxy : this.getProxy(savedValue, config);
-            proxy = proxy || value;
+            let proxy = this.getProxy(savedValue, config) || value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
             return proxy;
         }
@@ -141,7 +136,6 @@ export class CacheItem implements CacheItemInterface {
                         debug.groupEnd();
                     };
                     this.targets.push(target);
-                    this.newTargetsCount++;
                 }
             }
         });
