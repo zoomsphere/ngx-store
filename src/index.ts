@@ -3,7 +3,7 @@ import { CookiesStorageService, LocalStorageService, SessionStorageService } fro
 import { SharedStorageService } from './service/shared-storage.service';
 
 export { CookieStorage, LocalStorage, SessionStorage, SharedStorage } from './decorator/webstorage'
-export { WebStorageService, CookiesStorageService, LocalStorageService, SessionStorageService } from './service';
+export { WebStorageService, CookiesStorageService, LocalStorageService, SessionStorageService, SharedStorageService } from './service';
 export { WebStorageConfigInterface, WEBSTORAGE_CONFIG } from './config';
 export declare class Webstorable {
     save(): void;
