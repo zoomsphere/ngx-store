@@ -9,7 +9,7 @@ This library adds decorators that make it super easy to *automagically* save and
     + `@SessionStorage()` - to save variable in HTML5 sessionStorage
     + `@CookieStorage()` - to save variable as a cookie
     + `@SharedStorage()` - to keep variable in temporary memory
-- Injectable `LocalStorageService`, `SessionStorageService` and `CookiesStorageService` ([read more here](src/service#angular-storage))
+- Injectable `LocalStorageService`, `SessionStorageService`, `CookiesStorageService` and `SharedStorageService` ([read more here](src/service#angular-storage))
 - Easy configuration (see [#configuration](#configuration) section)
 - Compatibility with: 
     + all previous versions
@@ -172,15 +172,16 @@ Decorating functions can take config object with the following fields:
     }
     ```
     
-2. Use `LocalStorageService`, `SessionStorageService` and / or `CookieStorageService` to manage your data:
+2. Use all or just one of the [services](src/service#angular-storage) to manage your data:
     ```typescript
-    import { CookiesStorageService, LocalStorageService, SessionStorageService } from 'ngx-store';
+    import { CookiesStorageService, LocalStorageService, SessionStorageService, SharedStorageService } from 'ngx-store';
  
     export class MyService {
       constructor(
         localStorageService: LocalStorageService,
         sessionStorageService: SessionStorageService,
         cookiesStorageService: CookiesStorageService,
+        sharedStorageService: SharedStorageService,
       ) {
         console.log('all cookies:');
         cookiesStorageService.utility.forEach((value, key) => console.log(key + '=', value));
@@ -211,6 +212,6 @@ Decorating functions can take config object with the following fields:
 
 **Note**: Please don't ngx-store circular structures as this library uses JSON.stringify to encode data before saving.
 
-**Note**: When you change prefix from '' (empty string) old values won't be removed automatically to avoid deleting necessary data. You should handle it manually or set clearType to 'all'.
+**Note**: When you change prefix from '' (empty string) old values won't be removed automatically to avoid deleting necessary data. You should handle it manually or set clearType to 'all' for some time.
 
 **Contributions are welcome!**

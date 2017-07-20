@@ -4,6 +4,7 @@ Injectable Angular services included in this library:
 - `LocalStorageService`
 - `SessionStorageService`
 - `CookiesStorageService`
+- `SharedStorageService`
 
 All of them provide common methods:
 + `get(key: string)`: returns JSON-parsed data
