@@ -121,6 +121,7 @@ export class CacheItem implements CacheItemInterface {
                         }
                         target.ngOnDestroy = originalFunction || function(){};
 
+                        _self.initializedTargets.delete(target);
                         _self.targets = _self.targets.filter(t => t !== target);
                         if (!_self.targets.length) {
                             _self.services.forEach(service => {
