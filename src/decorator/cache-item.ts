@@ -18,7 +18,7 @@ export class CacheItem implements CacheItemInterface {
     public services: Array<WebStorageServiceInterface> = [];
     public utilities: Array<WebStorageUtility> = [];
     public currentTarget: Object;
-    protected proxy: any;
+    protected proxy: any = null;
     protected _key: string = '';
     protected initializedTargets: Set<Object> = new Set();
 
