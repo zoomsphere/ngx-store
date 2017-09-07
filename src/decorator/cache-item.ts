@@ -152,6 +152,6 @@ export class CacheItem implements CacheItemInterface {
     }
 
     public resetProxy(): void {
-        this.proxy = undefined;
+        this.proxy = null;
     }
 }
