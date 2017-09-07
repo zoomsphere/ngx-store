@@ -50,15 +50,7 @@ export class CacheItem implements CacheItemInterface {
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
             return proxy;
         }
-
-        this.utilities.forEach(utility => {
-            try {
-                utility.set(this._key, value, config);
-            } catch (e) {
-                console.warn('[ngx-store] ' + utility.getStorageName() + ': error occurred while trying to save: ', value);
-                console.error(e);
-            }
-        });
+        this.utilities.forEach(utility => utility.set(this._key, value, config));
         return this.getProxy(value, config);
     }
 
@@ -88,7 +80,7 @@ export class CacheItem implements CacheItemInterface {
                 prototype[method] = function () {
                     let value = _self.readValue(config);
                     let result = Array.prototype[method].apply(value, arguments);
-                    debug.log('Saving value for ' + this.key + ' by method ' + prototype.constructor.name + '.' + method);
+                    debug.log('Saving value for ' + _self.key + ' by method ' + prototype.constructor.name + '.' + method);
                     _self.saveValue(value, config);
                     return result;
                 }

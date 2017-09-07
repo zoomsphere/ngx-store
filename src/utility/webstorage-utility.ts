@@ -76,9 +76,14 @@ export class WebStorageUtility {
         if (value === null || value === undefined) {
             return this.remove(key);
         }
-        let storageKey = this.getStorageKey(key, config.prefix);
-        let storable = this.getSettable(value);
-        this._storage.setItem(storageKey, storable, config.expires);
+        try {
+            let storageKey = this.getStorageKey(key, config.prefix);
+            let storable = this.getSettable(value);
+            this._storage.setItem(storageKey, storable, config.expires);
+        } catch (error) {
+            console.warn(`[ngx-store] ${this.getStorageName()}: following error occurred while trying to save ${key} =`, value);
+            console.error(error);
+        }
         return value;
     }
 
