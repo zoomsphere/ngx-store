@@ -45,7 +45,8 @@ export class CacheItem implements CacheItemInterface {
         // prevent overwriting value by initializators
         if (!this.initializedTargets.has(this.currentTarget)) {
             this.initializedTargets.add(this.currentTarget);
-            let savedValue = this.readValue(config) || value;
+            let readValue = this.readValue(config);
+            let savedValue = (readValue !== null) ? readValue : value;
             let proxy = this.getProxy(savedValue, config) || value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
             return proxy;
@@ -94,11 +95,11 @@ export class CacheItem implements CacheItemInterface {
     public readValue(config: DecoratorConfig = {}): any {
         let value = null;
         this.utilities.forEach(utility => {
-            if (!value) {
+            if (value === null) {
                 value = utility.get(this._key, config);
             }
         });
-        return value || JSON.parse(JSON.stringify(this.proxy));
+        return (typeof value !== 'object') ? value : JSON.parse(JSON.stringify(this.proxy));
     }
 
     public addTargets(targets: Array<any>): void {
