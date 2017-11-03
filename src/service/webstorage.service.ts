@@ -4,9 +4,12 @@ import { WebStorageUtility } from '../utility/webstorage-utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
 import { debug } from '../config/config';
 import { Cache } from '../decorator/cache';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/filter';
 
 export abstract class WebStorageService {
     public static keys: Array<string>;
+    protected _changes: Observable<StorageEvent>;
 
     public constructor(public utility: WebStorageUtility) { }
 
@@ -39,6 +42,17 @@ export abstract class WebStorageService {
     // TODO return true if item existed and false otherwise (?)
     public remove(key: string): void {
         return this.utility.remove(key);
+    }
+
+    public observe(key?: string, exactMatch?: boolean) {
+        return this._changes.filter((event: StorageEvent) => {
+            if (!key) { return true; }
+            if (exactMatch) {
+                return event.key === Config.prefix + key;
+            } else {
+                return event.key.indexOf(key) !== -1;
+            }
+        });
     }
 
     /**
