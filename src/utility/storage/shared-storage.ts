@@ -3,6 +3,10 @@ import { NgxStorage } from './storage';
 export class SharedStorage extends NgxStorage {
     protected sharedMap: Map<string, any> = new Map();
 
+    protected get type() {
+        return 'sharedStorage';
+    }
+
     public get length(): number {
         return this.getAllKeys().length;
     }
