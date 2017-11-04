@@ -12,7 +12,8 @@ export class SharedStorage implements Storage {
     }
 
     public getItem(key: string): any {
-        return this.sharedMap.get(key);
+        let value = this.sharedMap.get(key);
+        return (value !== undefined) ? value : null;
     }
 
     public removeItem(key: string): void {
