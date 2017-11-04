@@ -6,10 +6,11 @@ import { debug } from '../config/config';
 import { Cache } from '../decorator/cache';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
+import { NgxStorageEvent } from '../utility/storage/storage-event';
 
 export abstract class WebStorageService {
     public static keys: Array<string>;
-    protected _changes: Observable<StorageEvent>;
+    protected _changes: Observable<NgxStorageEvent>;
 
     public constructor(public utility: WebStorageUtility) { }
 
@@ -45,7 +46,7 @@ export abstract class WebStorageService {
     }
 
     public observe(key?: string, exactMatch?: boolean) {
-        return this._changes.filter((event: StorageEvent) => {
+        return this._changes.filter((event: NgxStorageEvent) => {
             if (!key) { return true; }
             if (exactMatch) {
                 return event.key === Config.prefix + key;

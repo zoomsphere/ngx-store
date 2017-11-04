@@ -2,6 +2,7 @@ import { WebStorageService } from './webstorage.service';
 import { sessionStorageUtility } from '../utility/index';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { NgxStorageEvent } from '../utility/storage/storage-event';
 
 @Injectable()
 export class SessionStorageService extends WebStorageService {
@@ -10,6 +11,6 @@ export class SessionStorageService extends WebStorageService {
     constructor() {
         super(sessionStorageUtility);
         this._changes = Observable.fromEvent(window, 'storage')
-            .filter((event: StorageEvent) => event.storageArea === sessionStorage);
+            .filter((event: NgxStorageEvent) => event.storageArea === sessionStorage);
     }
 }
