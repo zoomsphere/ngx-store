@@ -49,6 +49,9 @@ export abstract class WebStorageService {
         return this._changes.filter((event: NgxStorageEvent) => {
             if (!key) { return true; }
             if (exactMatch) {
+                if (key.startsWith(Config.prefix)) {
+                    return event.key === key;
+                }
                 return event.key === Config.prefix + key;
             } else {
                 return event.key.indexOf(key) !== -1;
