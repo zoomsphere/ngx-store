@@ -1,6 +1,6 @@
-export class SharedStorage implements Storage {
-    [key: string]: any;
-    [index: number]: string;
+import { NgxStorage } from './storage';
+
+export class SharedStorage extends NgxStorage {
     protected sharedMap: Map<string, any> = new Map();
 
     public get length(): number {
@@ -17,14 +17,17 @@ export class SharedStorage implements Storage {
     }
 
     public removeItem(key: string): void {
+        this.emitEvent(key, null);
         this.sharedMap.delete(key);
     }
 
-    public setItem(key: string, data: any): void {
-        this.sharedMap.set(key, data);
+    public setItem(key: string, value: any): void {
+        this.emitEvent(key, value);
+        this.sharedMap.set(key, value);
     }
 
     public clear(): void {
+        this.emitEvent(null, null);
         this.sharedMap.clear();
     }
 
