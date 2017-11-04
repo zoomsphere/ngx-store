@@ -2,7 +2,7 @@ import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
 import { Cache } from '../decorator/cache';
 import { debug } from '../config/config';
-export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage';
+export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage' | 'SharedStorage';
 
 export class WebStorageUtility {
     protected _prefix: string = '';
