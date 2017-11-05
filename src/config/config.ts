@@ -12,6 +12,7 @@ const DefaultConfig: WebStorageConfigInterface = {
     clearType: 'prefix',
     mutateObjects: true,
     cookiesScope: '',
+    cookiesCheckInterval: 0,
     debugMode: false,
 };
 
