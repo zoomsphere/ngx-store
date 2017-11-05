@@ -99,4 +99,12 @@ export abstract class WebStorageService {
             this.utility.clear();
         }
     }
+
+    protected generateEvent(key: string, newValue: any, oldValue?: any): NgxStorageEvent {
+        let type = this.utility.getStorageName().charAt(0).toLowerCase() + this.utility.getStorageName().slice(1);
+        let event = new NgxStorageEvent(type, key, this.utility.getStorage());
+        event.oldValue = (oldValue !== undefined) ? oldValue : this.get(key);
+        event.newValue = newValue;
+        return event;
+    }
 }
