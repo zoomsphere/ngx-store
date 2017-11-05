@@ -105,12 +105,17 @@ export class CookiesStorage extends NgxStorage {
             let cachedValue = this.cachedItemsMap.get(key);
             cachedValue = (cachedValue !== undefined) ? cachedValue : null;
             if (value !== cachedValue) {
-                this.emitEvent(key, WebStorageUtility.getGettable(value), WebStorageUtility.getGettable(cachedValue));
+                this.emitEvent(
+                    key,
+                    WebStorageUtility.getGettable(value),
+                    WebStorageUtility.getGettable(cachedValue),
+                    false,
+                );
             }
         });
         this.cachedItemsMap.forEach((value, key) => {
             if (!map.has(key)) {
-                this.emitEvent(key, null, WebStorageUtility.getGettable(value));
+                this.emitEvent(key, null, WebStorageUtility.getGettable(value), false);
             }
         });
         this.cachedCookieString = document.cookie;

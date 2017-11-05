@@ -16,7 +16,7 @@ export class NgxStorageEvent implements StorageEvent {
     public readonly srcElement = <any>window;
     public readonly target = window;
     public readonly url = window.location.href;
-    public readonly isInternal = true;
+    public isInternal = true;
 
     constructor(public type: string, public key: string, public storageArea: Storage) {
         setTimeout(() => Object.setPrototypeOf(this, new StorageEvent(type)));

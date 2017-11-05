@@ -15,10 +15,12 @@ export abstract class NgxStorage implements Storage {
 
     protected abstract get type(): string;
 
-    protected emitEvent(key: string, newValue: any, oldValue?: any) {
+    // TODO consider passing parameters in object
+    protected emitEvent(key: string, newValue: any, oldValue?: any, isInternal: boolean = true) {
         let event = new NgxStorageEvent(this.type, key, this);
         event.oldValue = (oldValue !== undefined) ? oldValue : this.getItem(key);
         event.newValue = newValue;
+        event.isInternal = isInternal;
         this.changes.next(event);
     }
 }
