@@ -7,6 +7,7 @@ export interface WebStorage extends Storage {
 }
 
 export class CookiesStorage extends NgxStorage {
+    protected cachedCookieString: string;
     protected cachedItemsMap: Map<string, string> = new Map();
 
     constructor() {
@@ -14,7 +15,12 @@ export class CookiesStorage extends NgxStorage {
         this.getAllItems();
         if (Config.cookiesCheckInterval) {
             Observable.interval(Config.cookiesCheckInterval)
-                .subscribe(() => this.getAllItems());
+                .subscribe(() => {
+                    if (!this.changes.observers.length) {
+                        return; // don't run if there are no set subscriptions
+                    }
+                    this.getAllItems();
+                });
         }
     }
 
@@ -80,6 +86,9 @@ export class CookiesStorage extends NgxStorage {
 
     // TODO: consider getting cookies from all paths
     protected getAllItems(): Map<string, string> {
+        if (this.cachedCookieString === document.cookie) { // No changes
+            return this.cachedItemsMap;
+        }
         let map = new Map();
         if (typeof document === 'undefined') return map;
         let cookies = document.cookie.split(';');
@@ -104,6 +113,7 @@ export class CookiesStorage extends NgxStorage {
                 this.emitEvent(key, null, WebStorageUtility.getGettable(value));
             }
         });
+        this.cachedCookieString = document.cookie;
         return this.cachedItemsMap = map;
     }
 
