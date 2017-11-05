@@ -61,22 +61,10 @@ export abstract class WebStorageService {
 
     /**
      * Clears chosen data from Storage
-     * @param clearType 'prefix'
-     * @param prefix defines the prefix
+     * @param clearType 'prefix' | 'decorators' | 'all'
+     * @param secondParam defines the prefix or class (not its instance) whose decorators should be cleared
      */
-    public clear(clearType?: 'prefix', prefix?: string): void;
-    /**
-     * Clears chosen data from Storage
-     * @param clearType 'decorators'
-     * @param target defines the class (not its instance) whose decorators should be cleared
-     */
-    public clear(clearType?: 'decorators', target?: Object): void;
-    /**
-     * Clears all data from Storage
-     * @param clearType 'all'
-     */
-    public clear(clearType?: 'all'): void;
-    public clear(clearType?: ClearType, secondParam?: any): void {
+    public clear(clearType?: ClearType, secondParam?: string | object): void {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
             let keys = [];
@@ -91,7 +79,7 @@ export abstract class WebStorageService {
         } else if (clearType === 'prefix') {
             secondParam = secondParam || Config.prefix;
             this.utility.forEach((value, key) => {
-                if (key.startsWith(secondParam)) {
+                if (key.startsWith(<string>secondParam)) {
                     this.remove(this.utility.trimPrefix(key));
                 }
             });
