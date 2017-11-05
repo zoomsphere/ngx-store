@@ -1,3 +1,4 @@
+import { cookiesStorage } from '../utility/storage/cookies-storage';
 import { WebStorageService } from './webstorage.service';
 import { cookiesStorageUtility } from '../utility/index';
 import { Injectable } from '@angular/core';
@@ -8,6 +9,7 @@ export class CookiesStorageService extends WebStorageService {
 
     constructor() {
         super(cookiesStorageUtility);
+        this._changes = cookiesStorage.changes.asObservable();
     }
 
     public set(key: string, value: any, expirationDate?: Date): any {
