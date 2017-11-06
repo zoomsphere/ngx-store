@@ -56,7 +56,7 @@ export abstract class WebStorageService {
             } else {
                 return event.key.indexOf(key) !== -1;
             }
-        });
+        }).delay(30); // event should come after actual data change and propagation
     }
 
     /**
