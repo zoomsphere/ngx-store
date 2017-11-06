@@ -2,7 +2,7 @@ import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
 import { Cache } from '../decorator/cache';
 import { debug } from '../config/config';
-export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage';
+export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage' | 'SharedStorage';
 
 export class WebStorageUtility {
     protected _prefix: string = '';
@@ -51,6 +51,10 @@ export class WebStorageUtility {
         let keys = [];
         this.forEach((value, key) => keys.push(key));
         return keys;
+    }
+
+    public getStorage() {
+        return this._storage;
     }
 
     public getStorageKey(key: string, prefix?: string): string {

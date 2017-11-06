@@ -4,9 +4,13 @@ import { WebStorageUtility } from '../utility/webstorage-utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
 import { debug } from '../config/config';
 import { Cache } from '../decorator/cache';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/filter';
+import { NgxStorageEvent } from '../utility/storage/storage-event';
 
 export abstract class WebStorageService {
     public static keys: Array<string>;
+    protected _changes: Observable<NgxStorageEvent>;
 
     public constructor(public utility: WebStorageUtility) { }
 
@@ -41,24 +45,26 @@ export abstract class WebStorageService {
         return this.utility.remove(key);
     }
 
+    public observe(key?: string, exactMatch?: boolean) {
+        return this._changes.filter((event: NgxStorageEvent) => {
+            if (!key) { return true; }
+            if (exactMatch) {
+                if (key.startsWith(Config.prefix)) {
+                    return event.key === key;
+                }
+                return event.key === Config.prefix + key;
+            } else {
+                return event.key.indexOf(key) !== -1;
+            }
+        }).delay(30); // event should come after actual data change and propagation
+    }
+
     /**
      * Clears chosen data from Storage
-     * @param clearType 'prefix'
-     * @param prefix defines the prefix
+     * @param clearType 'prefix' | 'decorators' | 'all'
+     * @param secondParam defines the prefix or class (not its instance) whose decorators should be cleared
      */
-    public clear(clearType?: 'prefix', prefix?: string): void;
-    /**
-     * Clears chosen data from Storage
-     * @param clearType 'decorators'
-     * @param target defines the class (not its instance) whose decorators should be cleared
-     */
-    public clear(clearType?: 'decorators', target?: Object): void;
-    /**
-     * Clears all data from Storage
-     * @param clearType 'all'
-     */
-    public clear(clearType?: 'all'): void;
-    public clear(clearType?: ClearType, secondParam?: any): void {
+    public clear(clearType?: ClearType, secondParam?: string | object): void {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
             let keys = [];
@@ -73,12 +79,20 @@ export abstract class WebStorageService {
         } else if (clearType === 'prefix') {
             secondParam = secondParam || Config.prefix;
             this.utility.forEach((value, key) => {
-                if (key.startsWith(secondParam)) {
+                if (key.startsWith(<string>secondParam)) {
                     this.remove(this.utility.trimPrefix(key));
                 }
             });
         } else if (clearType === 'all') {
             this.utility.clear();
         }
+    }
+
+    protected generateEvent(key: string, newValue: any, oldValue?: any): NgxStorageEvent {
+        let type = this.utility.getStorageName().charAt(0).toLowerCase() + this.utility.getStorageName().slice(1);
+        let event = new NgxStorageEvent(type, key, this.utility.getStorage());
+        event.oldValue = (oldValue !== undefined) ? oldValue : this.get(key);
+        event.newValue = newValue;
+        return event;
     }
 }

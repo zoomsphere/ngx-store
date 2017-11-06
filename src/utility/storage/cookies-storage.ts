@@ -1,12 +1,32 @@
 import { Config, debug } from '../../config/config';
+import { NgxStorage } from './storage';
+import { WebStorageUtility } from '../webstorage-utility';
+import { Observable } from 'rxjs/Rx';
 export interface WebStorage extends Storage {
    setItem(key: string, data: string, expirationDate?: Date): void;
 }
 
-// TODO: in future use ES6 Proxy to handle indexers
-export class CookiesStorage implements Storage {
-    [key: string]: any;
-    [index: number]: string;
+export class CookiesStorage extends NgxStorage {
+    protected cachedCookieString: string;
+    protected cachedItemsMap: Map<string, string>;
+
+    constructor() {
+        super();
+        this.getAllItems();
+        if (Config.cookiesCheckInterval) {
+            Observable.interval(Config.cookiesCheckInterval)
+                .subscribe(() => {
+                    if (!this.changes.observers.length) {
+                        return; // don't run if there are no set subscriptions
+                    }
+                    this.getAllItems();
+                });
+        }
+    }
+
+    protected get type() {
+        return 'cookiesStorage';
+    }
 
     public get length(): number {
         return this.getAllKeys().length;
@@ -22,17 +42,19 @@ export class CookiesStorage implements Storage {
 
     public removeItem(key: string): void {
         if (typeof document === 'undefined') return;
+        this.emitEvent(key, null);
         let domain = this.resolveDomain(Config.cookiesScope);
         domain = (domain) ? 'domain=' + domain + ';' : '';
         document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;' + domain;
+        this.cachedItemsMap.delete(key);
     }
 
     /**
      * @param key
-     * @param data
+     * @param value
      * @param expirationDate passing null affects in lifetime cookie
      */
-    public setItem(key: string, data: string, expirationDate?: Date): void {
+    public setItem(key: string, value: string, expirationDate?: Date): void {
         if (typeof document === 'undefined') return;
         let domain = this.resolveDomain(Config.cookiesScope);
         debug.log('Cookies domain:', domain);
@@ -43,18 +65,21 @@ export class CookiesStorage implements Storage {
         } else if (expirationDate === null) {
             utcDate = 'Fri, 18 Dec 2099 12:00:00 GMT';
         }
-        let expires = utcDate ? '; expires=' + utcDate + ';' : '';
-        let cookie = key + '=' + data + expires + 'path=/;' + domain;
+        let expires = utcDate ? '; expires=' + utcDate : '';
+        let cookie = key + '=' + value + expires + ';path=/;' + domain;
         debug.log('Cookie`s set instruction:', cookie);
+        this.emitEvent(key, WebStorageUtility.getGettable(value), WebStorageUtility.getGettable(this.cachedItemsMap.get(key)));
+        this.cachedItemsMap.set(key, value);
         document.cookie = cookie;
     }
 
     public clear(): void {
+        this.emitEvent(null, null);
         this.getAllKeys().forEach(key => this.removeItem(key));
     }
 
-    public forEach(func: (value: string, key: string) => any): void {
-        return this.getAllItems().forEach((value, key) => func(value, key));
+    public forEach(callbackFn: (value: string, key: string) => any): void {
+        return this.getAllItems().forEach((value, key) => callbackFn(value, key));
     }
 
     protected getAllKeys(): Array<string> {
@@ -63,6 +88,9 @@ export class CookiesStorage implements Storage {
 
     // TODO: consider getting cookies from all paths
     protected getAllItems(): Map<string, string> {
+        if (this.cachedCookieString === document.cookie) { // No changes
+            return this.cachedItemsMap;
+        }
         let map = new Map();
         if (typeof document === 'undefined') return map;
         let cookies = document.cookie.split(';');
@@ -74,7 +102,28 @@ export class CookiesStorage implements Storage {
             let value = eqPos > -1 ? cookie.substr(eqPos + 1, cookie.length): cookie;
             map.set(key, value);
         }
-        return map;
+        // detect changes and emit events
+        if (this.cachedItemsMap) {
+            map.forEach((value, key) => {
+                let cachedValue = this.cachedItemsMap.get(key);
+                cachedValue = (cachedValue !== undefined) ? cachedValue : null;
+                if (value !== cachedValue) {
+                    this.emitEvent(
+                        key,
+                        WebStorageUtility.getGettable(value),
+                        WebStorageUtility.getGettable(cachedValue),
+                        false,
+                    );
+                }
+            });
+            this.cachedItemsMap.forEach((value, key) => {
+                if (!map.has(key)) {
+                    this.emitEvent(key, null, WebStorageUtility.getGettable(value), false);
+                }
+            });
+        }
+        this.cachedCookieString = document.cookie;
+        return this.cachedItemsMap = map;
     }
 
     /**
