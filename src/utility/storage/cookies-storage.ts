@@ -64,8 +64,8 @@ export class CookiesStorage extends NgxStorage {
         } else if (expirationDate === null) {
             utcDate = 'Fri, 18 Dec 2099 12:00:00 GMT';
         }
-        let expires = utcDate ? '; expires=' + utcDate + ';' : '';
-        let cookie = key + '=' + data + expires + 'path=/;' + domain;
+        let expires = utcDate ? '; expires=' + utcDate : '';
+        let cookie = key + '=' + value + expires + ';path=/;' + domain;
         debug.log('Cookie`s set instruction:', cookie);
         this.emitEvent(key, WebStorageUtility.getGettable(data));
         document.cookie = cookie;
