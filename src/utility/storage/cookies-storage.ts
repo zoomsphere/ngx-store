@@ -8,7 +8,7 @@ export interface WebStorage extends Storage {
 
 export class CookiesStorage extends NgxStorage {
     protected cachedCookieString: string;
-    protected cachedItemsMap: Map<string, string> = new Map();
+    protected cachedItemsMap: Map<string, string>;
 
     constructor() {
         super();
@@ -46,14 +46,15 @@ export class CookiesStorage extends NgxStorage {
         let domain = this.resolveDomain(Config.cookiesScope);
         domain = (domain) ? 'domain=' + domain + ';' : '';
         document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;' + domain;
+        this.cachedItemsMap.delete(key);
     }
 
     /**
      * @param key
-     * @param data
+     * @param value
      * @param expirationDate passing null affects in lifetime cookie
      */
-    public setItem(key: string, data: string, expirationDate?: Date): void {
+    public setItem(key: string, value: string, expirationDate?: Date): void {
         if (typeof document === 'undefined') return;
         let domain = this.resolveDomain(Config.cookiesScope);
         debug.log('Cookies domain:', domain);
@@ -67,7 +68,8 @@ export class CookiesStorage extends NgxStorage {
         let expires = utcDate ? '; expires=' + utcDate : '';
         let cookie = key + '=' + value + expires + ';path=/;' + domain;
         debug.log('Cookie`s set instruction:', cookie);
-        this.emitEvent(key, WebStorageUtility.getGettable(data));
+        this.emitEvent(key, WebStorageUtility.getGettable(value));
+        this.cachedItemsMap.set(key, value);
         document.cookie = cookie;
     }
 
@@ -101,23 +103,25 @@ export class CookiesStorage extends NgxStorage {
             map.set(key, value);
         }
         // detect changes and emit events
-        map.forEach((value, key) => {
-            let cachedValue = this.cachedItemsMap.get(key);
-            cachedValue = (cachedValue !== undefined) ? cachedValue : null;
-            if (value !== cachedValue) {
-                this.emitEvent(
-                    key,
-                    WebStorageUtility.getGettable(value),
-                    WebStorageUtility.getGettable(cachedValue),
-                    false,
-                );
-            }
-        });
-        this.cachedItemsMap.forEach((value, key) => {
-            if (!map.has(key)) {
-                this.emitEvent(key, null, WebStorageUtility.getGettable(value), false);
-            }
-        });
+        if (this.cachedItemsMap) {
+            map.forEach((value, key) => {
+                let cachedValue = this.cachedItemsMap.get(key);
+                cachedValue = (cachedValue !== undefined) ? cachedValue : null;
+                if (value !== cachedValue) {
+                    this.emitEvent(
+                        key,
+                        WebStorageUtility.getGettable(value),
+                        WebStorageUtility.getGettable(cachedValue),
+                        false,
+                    );
+                }
+            });
+            this.cachedItemsMap.forEach((value, key) => {
+                if (!map.has(key)) {
+                    this.emitEvent(key, null, WebStorageUtility.getGettable(value), false);
+                }
+            });
+        }
         this.cachedCookieString = document.cookie;
         return this.cachedItemsMap = map;
     }
