@@ -68,7 +68,7 @@ export class CookiesStorage extends NgxStorage {
         let expires = utcDate ? '; expires=' + utcDate : '';
         let cookie = key + '=' + value + expires + ';path=/;' + domain;
         debug.log('Cookie`s set instruction:', cookie);
-        this.emitEvent(key, WebStorageUtility.getGettable(value));
+        this.emitEvent(key, WebStorageUtility.getGettable(value), WebStorageUtility.getGettable(this.cachedItemsMap.get(key)));
         this.cachedItemsMap.set(key, value);
         document.cookie = cookie;
     }
