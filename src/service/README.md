@@ -32,6 +32,7 @@ this.localStorageService.observe()
     // events here are equal like would be in:
     // window.addEventListener('storage', (event) => {});
     // excluding sessionStorage events
+    // and event.type will be set to 'localStorage' (instead of 'storage')
   });
 ```
 In order to listen for changes in cookies constantly (i.e. if they can get changed by server or external library), we have to specify `Config.cookiesCheckInterval`.  It's recommended setting it to 1000 ms as it will be fast enough in most of cases and doesn't cause noticeably CPU usage. These changes are being detected only if there is active subscription to `CookiesStorageService.observe()`.

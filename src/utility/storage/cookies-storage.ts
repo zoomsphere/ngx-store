@@ -1,6 +1,6 @@
 import { Config, debug } from '../../config/config';
 import { NgxStorage } from './storage';
-import { WebStorageUtility } from '../webstorage-utility';
+import { StorageName, WebStorageUtility } from '../webstorage-utility';
 import { Observable } from 'rxjs/Rx';
 export interface WebStorage extends Storage {
    setItem(key: string, data: string, expirationDate?: Date): void;
@@ -16,7 +16,7 @@ export class CookiesStorage extends NgxStorage {
         if (Config.cookiesCheckInterval) {
             Observable.interval(Config.cookiesCheckInterval)
                 .subscribe(() => {
-                    if (!this.changes.observers.length) {
+                    if (!this.externalChanges.observers.length) {
                         return; // don't run if there are no set subscriptions
                     }
                     this.getAllItems();
@@ -24,7 +24,7 @@ export class CookiesStorage extends NgxStorage {
         }
     }
 
-    protected get type() {
+    protected get type(): StorageName {
         return 'cookiesStorage';
     }
 
@@ -42,7 +42,6 @@ export class CookiesStorage extends NgxStorage {
 
     public removeItem(key: string): void {
         if (typeof document === 'undefined') return;
-        this.emitEvent(key, null);
         let domain = this.resolveDomain(Config.cookiesScope);
         domain = (domain) ? 'domain=' + domain + ';' : '';
         document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;' + domain;
@@ -68,13 +67,11 @@ export class CookiesStorage extends NgxStorage {
         let expires = utcDate ? '; expires=' + utcDate : '';
         let cookie = key + '=' + value + expires + ';path=/;' + domain;
         debug.log('Cookie`s set instruction:', cookie);
-        this.emitEvent(key, WebStorageUtility.getGettable(value), WebStorageUtility.getGettable(this.cachedItemsMap.get(key)));
         this.cachedItemsMap.set(key, value);
         document.cookie = cookie;
     }
 
     public clear(): void {
-        this.emitEvent(null, null);
         this.getAllKeys().forEach(key => this.removeItem(key));
     }
 
@@ -112,13 +109,12 @@ export class CookiesStorage extends NgxStorage {
                         key,
                         WebStorageUtility.getGettable(value),
                         WebStorageUtility.getGettable(cachedValue),
-                        false,
                     );
                 }
             });
             this.cachedItemsMap.forEach((value, key) => {
                 if (!map.has(key)) {
-                    this.emitEvent(key, null, WebStorageUtility.getGettable(value), false);
+                    this.emitEvent(key, null, WebStorageUtility.getGettable(value));
                 }
             });
         }

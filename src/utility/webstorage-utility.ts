@@ -2,11 +2,15 @@ import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
 import { Cache } from '../decorator/cache';
 import { debug } from '../config/config';
-export type StorageName = 'LocalStorage' | 'SessionStorage' | 'CookiesStorage' | 'SharedStorage';
+import { Subject } from 'rxjs/Subject';
+import { NgxStorageEvent } from './storage/storage-event';
+import { Observable } from 'rxjs/Observable';
+export type StorageName = 'localStorage' | 'sessionStorage' | 'cookiesStorage' | 'sharedStorage';
 
 export class WebStorageUtility {
     protected _prefix: string = '';
     protected _storage: WebStorage;
+    protected _changes: Subject<NgxStorageEvent> = new Subject();
 
     public static getSettable(value: any): string {
         return JSON.stringify(value);
@@ -53,6 +57,10 @@ export class WebStorageUtility {
         return keys;
     }
 
+    public get changes(): Observable<NgxStorageEvent> {
+        return this._changes.asObservable();
+    }
+
     public getStorage() {
         return this._storage;
     }
@@ -65,7 +73,7 @@ export class WebStorageUtility {
     public getStorageName(): StorageName {
         let storageName: any = this._storage.constructor.name;
         if (storageName === 'Storage') {
-            storageName = (this._storage === localStorage) ? 'LocalStorage' : 'SessionStorage';
+            storageName = (this._storage === localStorage) ? 'localStorage' : 'sessionStorage';
         }
         return storageName;
     }
@@ -83,6 +91,7 @@ export class WebStorageUtility {
         try {
             let storageKey = this.getStorageKey(key, config.prefix);
             let storable = this.getSettable(value);
+            this.emitEvent(key, value);
             this._storage.setItem(storageKey, storable, config.expires);
         } catch (error) {
             console.warn(`[ngx-store] ${this.getStorageName()}: following error occurred while trying to save ${key} =`, value);
@@ -92,8 +101,11 @@ export class WebStorageUtility {
     }
 
     // TODO return true if item existed and false otherwise (?)
-    public remove(key: string): void {
+    public remove(key: string, noEvent?: boolean): void {
         let storageKey = this.getStorageKey(key);
+        if (!noEvent) {
+            this.emitEvent(key, null);
+        }
         this._storage.removeItem(storageKey);
         let cacheItem = Cache.get(key);
         if (cacheItem) {
@@ -102,8 +114,9 @@ export class WebStorageUtility {
     }
 
     public clear() {
+        this.emitEvent(null, null, null);
         this.forEach((value, key) => {
-            this.remove(key);
+            this.remove(key, true);
         });
     }
 
@@ -126,5 +139,12 @@ export class WebStorageUtility {
 
     public trimPrefix(key: string): string {
        return key.replace(this.prefix, '');
+    }
+
+    protected emitEvent(key: string, newValue: any, oldValue?: any) {
+        let event = new NgxStorageEvent(this.getStorageName(), key, this._storage);
+        event.oldValue = (oldValue !== undefined) ? oldValue : this.get(key);
+        event.newValue = newValue;
+        this._changes.next(event);
     }
 }

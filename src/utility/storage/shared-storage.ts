@@ -1,9 +1,15 @@
 import { NgxStorage } from './storage';
+import { StorageName } from '../webstorage-utility';
 
 export class SharedStorage extends NgxStorage {
     protected sharedMap: Map<string, any> = new Map();
 
-    protected get type() {
+    constructor() {
+        super();
+        this.externalChanges = undefined;
+    }
+
+    protected get type(): StorageName {
         return 'sharedStorage';
     }
 
@@ -21,17 +27,14 @@ export class SharedStorage extends NgxStorage {
     }
 
     public removeItem(key: string): void {
-        this.emitEvent(key, null);
         this.sharedMap.delete(key);
     }
 
     public setItem(key: string, value: any): void {
-        this.emitEvent(key, value);
         this.sharedMap.set(key, value);
     }
 
     public clear(): void {
-        this.emitEvent(null, null);
         this.sharedMap.clear();
     }
 

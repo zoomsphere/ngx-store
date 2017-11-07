@@ -9,7 +9,8 @@ export class CookiesStorageService extends WebStorageService {
 
     constructor() {
         super(cookiesStorageUtility);
-        this._changes = cookiesStorage.changes.asObservable();
+        this._changes = cookiesStorage.externalChanges.asObservable()
+            .merge(cookiesStorageUtility.changes);
     }
 
     public set(key: string, value: any, expirationDate?: Date): any {

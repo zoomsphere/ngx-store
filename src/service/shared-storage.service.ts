@@ -9,6 +9,6 @@ export class SharedStorageService extends WebStorageService {
 
     constructor() {
         super(sharedStorageUtility);
-        this._changes = sharedStorage.changes.asObservable();
+        this._changes = sharedStorageUtility.changes;
     }
 }
