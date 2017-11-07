@@ -107,12 +107,12 @@ export class WebStorageUtility {
         });
     }
 
-    public forEach(func: (value: any, key: string) => any): void {
+    public forEach(callbackFn: (value: any, key: string) => any): void {
         if (typeof this._storage.forEach === 'function') {
-            return this._storage.forEach((value, key) => func(this.getGettable(value), key));
+            return this._storage.forEach((value, key) => callbackFn(this.getGettable(value), key));
         }
         for (let key in this._storage) {
-            func(this.getGettable(this._storage[key]), key);
+            callbackFn(this.getGettable(this._storage[key]), key);
         }
     }
 
