@@ -13,7 +13,7 @@ export abstract class NgxStorage implements Storage {
     public abstract key(index: number);
     public abstract clear(): void;
     public abstract get length(): number;
-    protected abstract get type(): StorageName;
+    public abstract get type(): StorageName;
 
     protected emitEvent(key: string, newValue: any, oldValue?: any) {
         let event = new NgxStorageEvent(this.type, key, this);

@@ -24,7 +24,7 @@ export class CookiesStorage extends NgxStorage {
         }
     }
 
-    protected get type(): StorageName {
+    public get type(): StorageName {
         return 'cookiesStorage';
     }
 

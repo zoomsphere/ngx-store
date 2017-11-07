@@ -9,7 +9,7 @@ export class SharedStorage extends NgxStorage {
         this.externalChanges = undefined;
     }
 
-    protected get type(): StorageName {
+    public get type(): StorageName {
         return 'sharedStorage';
     }
 
