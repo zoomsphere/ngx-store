@@ -10,6 +10,7 @@ This library adds decorators that make it super easy to *automagically* save and
     + `@CookieStorage()` - to save variable as a cookie
     + `@SharedStorage()` - to keep variable in temporary memory
 - Injectable `LocalStorageService`, `SessionStorageService`, `CookiesStorageService` and `SharedStorageService` ([read more here](src/service#angular-storage))
+- Availability to [listen for storage changes](https://github.com/zoomsphere/ngx-store/tree/master/src/service#listening-for-changes)
 - Easy configuration (see [#configuration](#configuration) section)
 - Compatibility with: 
     + all previous versions
@@ -25,11 +26,10 @@ This library adds decorators that make it super easy to *automagically* save and
 - Automatically handle all data manipulations using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (ES6)
 - Take configuration from [npm config](https://www.npmjs.com/package/config)'s file (?)
 - Handle out of memory cases
-- Listen to storage changes in different tabs (?)
 
 
 ## Installation
-1. Download the library: `npm install --save ngx-store`
+1. Download the library: `npm install ngx-store --save`
 2. Import the WebStorageModule in your `app.module.ts`:
     ```typescript
     import { NgModule } from '@angular/core';
@@ -46,15 +46,15 @@ This library adds decorators that make it super easy to *automagically* save and
 
 ## Configuration
 Things you should take into consideration while configuring this module:
-- Decorated objects can have added `.save()` method to easily force save of made changes (configurable by `mutateObjects`)
-- Support for all `Array` methods that change array object's value can be enabled (configurable by `mutateObjects`)
-- Object mutation can troublesome for object comparisons, so you can disable or enable this feature for single instance passing [decorator config](#decorators-config)
-- You may not use prefix (by setting it to `''`), however we recommend to use it, as it helps avoid conflicts with other libraries
+- Decorated objects have added `.save()` method to easily force save of made changes (configurable by `mutateObjects`)
+- Support for all `Array` methods that change array object's value can be disabled (configurable by `mutateObjects`)
+- Object mutation can troublesome for object comparisons, so you can configure this feature for single field passing [decorator config](#decorators-config)
+- You may not use prefix (by setting it to `''`), however we recommend to use it, as it helps avoid conflicts with other libraries (configurable by `prefix`)
 - There are 3 ways to clear ngx-stored data:
     + `'all'` - completely clears current Storage
     + `'prefix'` - removes all variables prefixed by ngx-store
     + `'decorators'` - removes only variables created by decorating functions (useful when not using prefix)
-    Default behavior is specified by setting `clearType`, but it's possible to pass this parameter directly into service `clear()` method.
+    Default behaviour is specified by setting `clearType`, but it's possible to pass this parameter directly into service `clear()` method.
 - Examples for `cookiesScope` can be found in [this comment](https://github.com/zoomsphere/ngx-store/blob/master/src/utility/storage/cookies-storage.ts#L78)
 
 As this project uses decorating functions, it is important to provide custom configuration in global variable named `NGXSTORE_CONFIG` before Angular application load. Here are some ways to do it:
@@ -67,11 +67,12 @@ As this project uses decorating functions, it is important to provide custom con
       mutateObjects: true, // default: true
       debugMode: false,    // you can enable debug logs if you ever meet any bug to localize its source
       cookiesScope: '',    // what you pass here will actually prepend base domain
+      cookiesCheckInterval: 0, // number in ms describing how often cookies should be checked for changes
       previousPrefix: 'angular2ws_', // you have to set it only if you were using custom prefix in old version ('angular2ws_' is a default value)
     };
     </script>
     ```
-2. If you use webpack, you can provide global variable in your `webpack.js` file:
+2. If you use webpack, you can provide global variable in your `webpack.js` file this way:
     ```javascript
     plugins: [ 
       new webpack.DefinePlugin({
@@ -172,7 +173,19 @@ Decorating functions can take config object with the following fields:
     }
     ```
     
-2. Use all or just one of the [services](src/service#angular-storage) to manage your data:
+    **Limited lifecycle classes in AoT compilation:** There is a special case when Service or Component in your application containing decorated variable is being destroyed:
+    ```typescript
+    import { OnDestroy } from '@angular/core';
+    import { LocalStorage } from 'ngx-store';
+
+    export class SomeService implements OnDestroy { // implement the interface
+        @LocalStorage() destroyedVariable: any = {};
+     
+        ngOnDestroy() {} // event empty method is needed to allow ngx-store handle class destruction
+    }
+    ```
+    
+2. Use the [services](src/service#angular-storage) to manage your data:
     ```typescript
     import { CookiesStorageService, LocalStorageService, SessionStorageService, SharedStorageService } from 'ngx-store';
  
