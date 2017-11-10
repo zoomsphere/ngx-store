@@ -21,11 +21,11 @@ This library adds decorators that make it super easy to *automagically* save and
 
 
 ## Upcoming (TODO)
-- Encoding of saved data
 - Tests coverage
-- Automatically handle all data manipulations using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (ES6)
-- Take configuration from [npm config](https://www.npmjs.com/package/config)'s file (?)
+- Encoding of saved data
 - Handle out of memory cases
+- Take configuration from [npm config](https://www.npmjs.com/package/config)'s file (?)
+- Automatically handle all data manipulations using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (ES6)
 
 
 ## Installation
@@ -98,15 +98,15 @@ Decorating functions can take config object with the following fields:
     
     export class MySuperComponent {
       // it will be stored under ${prefix}viewCounts name
-      @LocalStorage() public viewCounts: number = 0;
+      @LocalStorage() viewCounts: number = 0;
       // this under name: ${prefix}differentLocalStorageKey
-      @LocalStorage('differentLocalStorageKey') protected userName: string = '';
-      // it will be read from cookie 'user_id' (can be shared with backend) and saved to localStorage and cookies after change
-      @LocalStorage() @CookieStorage({prefix: '', key: 'user_id'}) public userId: string = '';
+      @LocalStorage('differentLocalStorageKey') userName: string = '';
       // it will be stored under ${prefix}itWillBeRemovedAfterBrowserClose in session storage
-      @SessionStorage({key: 'itWillBeRemovedAfterBrowserClose'}) private previousUserNames: Array<string> = [];
+      @SessionStorage({key: 'itWillBeRemovedAfterBrowserClose'}) previousUserNames: Array<string> = [];
+      // it will be read from cookie 'user_id' (can be shared with backend) and saved to localStorage and cookies after change
+      @LocalStorage() @CookieStorage({prefix: '', key: 'user_id'}) userId: string = '';
       // it will be stored in a cookie named ${prefix}user_workspaces for 24 hours
-      @CookieStorage({key: 'user_workspaces', expires: new Date((new Date()).getDate() + 1)}) userWorkspaces = [];
+      @CookieStorage({key: 'user_workspaces', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}) userWorkspaces = [];
      
       constructor() {
         this.viewCounts++;
@@ -125,8 +125,8 @@ Decorating functions can take config object with the following fields:
     import { LocalStorage, SharedStorage } from 'ngx-store';
     
     export class HomeComponent {
-      @SharedStorage() public title: string = 'Homepage'; // it will be kept in temp memory until app reload
-      @LocalStorage() public userNote: string = 'Leave your note here'; // it will be read from and saved to localStorage
+      @SharedStorage() title: string = 'Homepage'; // it will be kept in temp memory until app reload
+      @LocalStorage() userNote: string = 'Leave your note here'; // it will be read from and saved to localStorage
    
       constructor() {
         setTimeout(() => {
@@ -152,9 +152,9 @@ Decorating functions can take config object with the following fields:
     import { CookieStorage, LocalStorage, SessionStorage, WebstorableArray } from 'ngx-store';
 
     export class MySuperComponent {
-      @LocalStorage() public someObject: any = { c: 3 };
-      @SessionStorage() protected arrayOfSomethings: WebstorableArray<number> = <any>[0,1,2,3,4];
-      @CookieStorage({ mutate: false }) private someCookie: {version?: number, content?: string} = {};
+      @LocalStorage() someObject: any = { c: 3 };
+      @SessionStorage() arrayOfSomethings: WebstorableArray<number> = <any>[0,1,2,3,4];
+      @CookieStorage({ mutate: false }) someCookie: {version?: number, content?: string} = {};
        
       constructor() {
         this.someObject.a = 1;
@@ -216,8 +216,6 @@ Decorating functions can take config object with the following fields:
       }
     }
     ```
-
-3. Combine both ways and have fun!
 
 **Note**: Always define default value at the property you are using decorator.
 
