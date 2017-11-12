@@ -8,7 +8,7 @@ This library adds decorators that make it super easy to *automagically* save and
     + `@LocalStorage()` - to save variable in HTML5 localStorage
     + `@SessionStorage()` - to save variable in HTML5 sessionStorage
     + `@CookieStorage()` - to save variable as a cookie
-    + `@SharedStorage()` - to keep variable in temporary memory
+    + `@SharedStorage()` - to keep variable in temporary memory that can be shared across classes
 - Injectable `LocalStorageService`, `SessionStorageService`, `CookiesStorageService` and `SharedStorageService` ([read more here](src/service#angular-storage))
 - Availability to [listen for storage changes](https://github.com/zoomsphere/ngx-store/tree/master/src/service#listening-for-changes)
 - Easy configuration (see [#configuration](#configuration) section)
@@ -48,14 +48,14 @@ This library adds decorators that make it super easy to *automagically* save and
 Things you should take into consideration while configuring this module:
 - Decorated objects have added `.save()` method to easily force save of made changes (configurable by `mutateObjects`)
 - Support for all `Array` methods that change array object's value can be disabled (configurable by `mutateObjects`)
-- Object mutation can troublesome for object comparisons, so you can configure this feature for single field passing [decorator config](#decorators-config)
+- Object mutation can be troublesome for object comparisons, so you can configure this feature for single field passing [decorator config](#decorators-config)
 - You may not use prefix (by setting it to `''`), however we recommend to use it, as it helps avoid conflicts with other libraries (configurable by `prefix`)
 - There are 3 ways to clear ngx-stored data:
     + `'all'` - completely clears current Storage
     + `'prefix'` - removes all variables prefixed by ngx-store
     + `'decorators'` - removes only variables created by decorating functions (useful when not using prefix)
     Default behaviour is specified by setting `clearType`, but it's possible to pass this parameter directly into service `clear()` method.
-- Examples for `cookiesScope` can be found in [this comment](https://github.com/zoomsphere/ngx-store/blob/master/src/utility/storage/cookies-storage.ts#L78)
+- Examples for `cookiesScope` can be found in [this comment](https://github.com/zoomsphere/ngx-store/blob/master/src/utility/storage/cookies-storage.ts#L125)
 
 As this project uses decorating functions, it is important to provide custom configuration in global variable named `NGXSTORE_CONFIG` before Angular application load. Here are some ways to do it:
 1. Add `<script>` in `index.html` (before Angular sources)
