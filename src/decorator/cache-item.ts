@@ -99,7 +99,7 @@ export class CacheItem implements CacheItemInterface {
                 value = utility.get(this._key, config);
             }
         });
-        return (typeof value !== 'object') ? value : JSON.parse(JSON.stringify(this.proxy));
+        return (typeof value !== 'object') ? value : JSON.parse(JSON.stringify(this.getProxy(value, config)));
     }
 
     public addTargets(targets: Array<any>): void {
