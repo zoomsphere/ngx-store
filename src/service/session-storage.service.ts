@@ -1,7 +1,7 @@
 import { WebStorageService } from './webstorage.service';
 import { sessionStorageUtility } from '../utility/index';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
 
 @Injectable()
