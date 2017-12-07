@@ -24,7 +24,7 @@ All of them provide common methods:
 ```
 public observe(key?: string, exactMatch?: boolean): Observable<NgxStorageEvent>;
 ```
-`key` specifies filter pattern for `event.key`, by default it's enough to just contain it, but we can easily change the behaviour by passing `exactMatch = true` - in this case prefix is automatically added to the passed key if not included. Returned value is an RxJS Observable of `NgxStorageEvent`, which is just a wrapper for native [`StorageEvent`](https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent) with added `isInternal = true` property, so we can filter out e.g. localStorage events from other tab by this code:
+`key` specifies filter pattern for `event.key`, by default it's enough to just contain it, but we can easily change the behaviour by passing `exactMatch = true` - in this case prefix is automatically added to the passed key if not included. Returned value is an RxJS Observable of `NgxStorageEvent`, which is just a wrapper of native [`StorageEvent`](https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent) with added `isInternal = true` property, so we can filter out e.g. localStorage events from other tab by this code:
 ```
 this.localStorageService.observe()
   .filter(event => !event.isInternal)

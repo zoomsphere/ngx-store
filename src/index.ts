@@ -8,8 +8,10 @@ export { WebStorageConfigInterface, WEBSTORAGE_CONFIG } from './config';
 export declare class Webstorable {
     save(): void;
 }
-export type WebstorableObject = Webstorable & Object;
-export type WebstorableArray<T> = Webstorable & Array<T>;
+type WebstorableObject = Webstorable & {[prop: string]: any};
+type WebstorableArray<T> = Webstorable & Array<T>;
+export { WebstorableObject, WebstorableArray };
+export { NgxStorageEvent } from './utility/storage/storage-event';
 
 @NgModule({
     providers: [
