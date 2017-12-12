@@ -1,11 +1,12 @@
 import { ClearType, Config } from '../config';
-import { WebStorageConfigInterface } from '../config/config.interface';
+import { WebStorageConfigInterface } from '../config';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
-import { debug } from '../config/config';
+import { debug } from '../config';
 import { Cache } from '../decorator/cache';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/delay';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
 
 export abstract class WebStorageService {

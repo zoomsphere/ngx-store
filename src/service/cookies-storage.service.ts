@@ -1,6 +1,7 @@
 import { cookiesStorage } from '../utility/storage/cookies-storage';
 import { WebStorageService } from './webstorage.service';
-import { cookiesStorageUtility } from '../utility/index';
+import { cookiesStorageUtility } from '../utility';
+import 'rxjs/add/operator/merge';
 import { Injectable } from '@angular/core';
 
 @Injectable()
