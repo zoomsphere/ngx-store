@@ -1,9 +1,9 @@
 {
   "name": "ngx-store",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "main": "./dist/index",
   "typings": "./dist/index",
-  "description": "Angular decorator to save and restore class properties automatically from LocalStorage and SessionStorage.",
+  "description": "Angular decorators to automagically keep variables in HTML5 LocalStorage, SessionStorage, cookies; injectable services for managing and listening to data changes and a bit more.",
   "scripts": {
     "lint": "tslint ./*.ts -t verbose",
     "build": "rimraf dist && ngc -p tsconfig.json",
@@ -26,7 +26,7 @@
     "Decorator",
     "Library"
   ],
-  "author": "Daniel Kucal & Marc J. Schmidt",
+  "author": "Daniel Kucal",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/zoomsphere/ngx-store/issues"
