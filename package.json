@@ -53,7 +53,7 @@
     "zone.js": "^0.8.16"
   },
   "dependencies": {
-    "ts-debug": "^1.0.5"
+    "ts-debug": "^1.1.1"
   },
   "//": "\"engineStrict\": false,",
   "engines": {
