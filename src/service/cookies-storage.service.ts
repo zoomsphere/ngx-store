@@ -14,7 +14,7 @@ export class CookiesStorageService extends WebStorageService {
             .merge(cookiesStorageUtility.changes);
     }
 
-    public set(key: string, value: any, expirationDate?: Date): any {
+    public set<T>(key: string, value: T, expirationDate?: Date): T {
         return this.utility.set(key, value, { expires: expirationDate });
     }
 }

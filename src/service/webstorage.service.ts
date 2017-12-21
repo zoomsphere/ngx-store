@@ -37,7 +37,7 @@ export abstract class WebStorageService {
         return this.utility.get(key);
     }
 
-    public set(key: string, value: any): any {
+    public set<T>(key: string, value: T): T {
         return this.utility.set(key, value);
     }
 
