@@ -49,7 +49,7 @@ export class CacheItem implements CacheItemInterface {
             let savedValue = (readValue !== null) ? readValue : value;
             let proxy = this.getProxy(savedValue, config) || value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
-            this.utilities.forEach(utility => utility.set(this._key, value, config));
+            this.utilities.forEach(utility => utility.set(this._key, savedValue, config));
             return proxy;
         }
         this.utilities.forEach(utility => utility.set(this._key, value, config));
