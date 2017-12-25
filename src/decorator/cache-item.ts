@@ -1,6 +1,6 @@
-import { WebStorageServiceInterface } from '../service/webstorage.interface';
+import { WebStorageServiceInterface } from '../service';
 import { WebStorageUtility } from '../utility/webstorage-utility';
-import { Config, debug } from '../config/config';
+import { Config, debug } from '../config';
 import { DecoratorConfig } from './webstorage';
 import { Cache } from './cache';
 
@@ -49,6 +49,7 @@ export class CacheItem implements CacheItemInterface {
             let savedValue = (readValue !== null) ? readValue : value;
             let proxy = this.getProxy(savedValue, config) || value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
+            this.utilities.forEach(utility => utility.set(this._key, value, config));
             return proxy;
         }
         this.utilities.forEach(utility => utility.set(this._key, value, config));
@@ -123,7 +124,7 @@ export class CacheItem implements CacheItemInterface {
                             _self.resetProxy();
                             Cache.remove(_self);
                         }
-                        debug.group('OnDestroy handler:');
+                        debug.groupCollapsed(`${_self.key} OnDestroy handler:`);
                         debug.log('removed target:', target.constructor.name);
                         debug.log('remaining targets:', _self.targets);
                         debug.log('cacheItem:', Cache.get(_self.key));
