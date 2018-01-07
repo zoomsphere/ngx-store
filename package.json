@@ -18,7 +18,6 @@
     "Angular",
     "Angular2",
     "Angular4",
-    "Angular5",
     "LocalStorage",
     "SessionStorage",
     "Storage",
@@ -40,15 +39,15 @@
     "zone.js": ">=0.7.2"
   },
   "devDependencies": {
-    "@angular/compiler": "~5.0.0",
-    "@angular/compiler-cli": "~5.0.0",
-    "@angular/core": "~5.0.0",
-    "@angular/platform-server": "~5.0.0",
+    "@angular/compiler": "~4.0.0",
+    "@angular/compiler-cli": "~4.0.0",
+    "@angular/core": "~4.0.0",
+    "@angular/platform-server": "~4.0.0",
     "@types/node": "^7.0.39",
     "core-js": "^2.4.1",
     "es6-shim": "^0.35.3",
     "rimraf": "^2.5.4",
-    "rxjs": "^5.5.2",
+    "rxjs": "^5.4.2",
     "tslint": "^4.5.0",
     "typescript": "^2.6.1",
     "zone.js": "^0.8.16"
