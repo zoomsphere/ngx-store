@@ -7,17 +7,18 @@ Angular-Injectable services included in this library:
 - `SharedStorageService` - for managing of shared variables (stored in usual browser's temporary memory)
 
 All of them provide common methods:
-+ `get(key: string)`: returns JSON-parsed data
-+ `set(key: string, value: any)`: sets data in Storage
-+ `remove(key: string)` removes variable with given key
-+ `clear()`: clears Storage in mode provided by `Config.clearType` (`'prefix'` by default)
-+ `clear('all')`: clears whole Storage
-+ `clear('prefix', prefix?: string)`: clears Storage keys starting by passed `prefix` (or `Config.prefix` if not provided)
-+ `clear('decorators', target?: Object)`: clears Storage keys created by decorators, all or only from given target class
-+ `observe(key?: string, exactMatch?: boolean)`: returns an observable emitting [`NgxStorageEvent`](https://github.com/zoomsphere/ngx-store/blob/master/src/utility/storage/storage-event.ts#L1)s (see [#Listening for changes](https://github.com/zoomsphere/ngx-store/tree/master/src/service#listening-for-changes) section below)
-+ `config`: getter for module config (read only)
-+ `keys`: keys of values stored by `ngx-store` (determined by prefix and decorators)
-+ `utility`: access to [`WebStorageUtility`](https://github.com/zoomsphere/ngx-store/src/utility/webstorage-utility.ts) class for advanced usage
++ `get(key: string): any`: returns JSON-parsed data
++ `set(key: string, value: T): T`: sets data in Storage
++ `update(key: string, changes: any): any`: updates object stored under `key` by deep merge, throws an error if stored value exists and is not an object
++ `remove(key: string): void` removes variable with given key
++ `clear(): void`: clears Storage in mode provided by `Config.clearType` (`'prefix'` by default)
++ `clear('all'): void`: clears whole Storage
++ `clear('prefix', prefix?: string): void`: clears Storage keys starting by passed `prefix` (or `Config.prefix` if not provided)
++ `clear('decorators', target?: Object): void`: clears Storage keys created by decorators, all or only from given target class
++ `observe(key?: string, exactMatch?: boolean): Observable<NgxStorageEvent>`: returns an observable emitting [`NgxStorageEvent`](https://github.com/zoomsphere/ngx-store/blob/master/src/utility/storage/storage-event.ts#L1)s (see [#Listening for changes](https://github.com/zoomsphere/ngx-store/tree/master/src/service#listening-for-changes) section below)
++ `config: WebStorageConfigInterface`: getter for module config (read only)
++ `keys: Array<string>`: keys of values stored by `ngx-store` (determined by prefix and decorators)
++ `utility: WebStorageUtility`: access to [`WebStorageUtility`](https://github.com/zoomsphere/ngx-store/src/utility/webstorage-utility.ts) class for advanced usage
 
 ## Listening for changes
 `WebstorageService.observe()` method allows to watch storage changes and can take up to 2 parameters:

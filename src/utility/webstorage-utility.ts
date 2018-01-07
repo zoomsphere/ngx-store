@@ -1,7 +1,7 @@
 import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
 import { Cache } from '../decorator/cache';
-import { debug } from '../config/config';
+import { debug } from '../config';
 import { Subject } from 'rxjs/Subject';
 import { NgxStorageEvent } from './storage/storage-event';
 import { Observable } from 'rxjs/Observable';
@@ -84,9 +84,10 @@ export class WebStorageUtility {
         return this.getGettable(value);
     }
 
-    public set(key: string, value: any, config: DecoratorConfig = {}): any {
+    public set<T>(key: string, value: T, config: DecoratorConfig = {}): T {
         if (value === null || value === undefined) {
-            return this.remove(key);
+            this.remove(key);
+            return null;
         }
         try {
             let storageKey = this.getStorageKey(key, config.prefix);

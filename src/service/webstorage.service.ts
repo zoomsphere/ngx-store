@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/delay';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
+const merge = require('lodash.merge');
 
 export abstract class WebStorageService {
     public static keys: Array<string>;
@@ -37,8 +38,17 @@ export abstract class WebStorageService {
         return this.utility.get(key);
     }
 
-    public set(key: string, value: any): any {
+    public set<T>(key: string, value: T): T {
         return this.utility.set(key, value);
+    }
+
+    public update(key: string, changes: any): any {
+        let value = this.get(key);
+        if (typeof value !== 'object') {
+            debug.throw(new Error(`Value stored under "${key}" key is not an object and tried to be updated.`));
+            return value;
+        }
+        return this.set(key, merge({}, value, changes));
     }
 
     // TODO return true if item existed and false otherwise (?)
