@@ -71,11 +71,7 @@ export class WebStorageUtility {
     }
 
     public getStorageName(): StorageName {
-        let storageName: any = this._storage.type || this._storage.constructor.name;
-        if (storageName === 'Storage') {
-            storageName = (this._storage === localStorage) ? 'localStorage' : 'sessionStorage';
-        }
-        return storageName;
+        return this._storage.type || (this._storage === localStorage) ? 'localStorage' : 'sessionStorage';
     }
 
     public get(key: string, config: DecoratorConfig = {}): any {
