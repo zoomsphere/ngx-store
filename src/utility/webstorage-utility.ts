@@ -121,9 +121,9 @@ export class WebStorageUtility {
         if (typeof this._storage.forEach === 'function') {
             return this._storage.forEach((value, key) => callbackFn(this.getGettable(value), key));
         }
-        for (let key in this._storage) {
+        Object.keys(this._storage).forEach((key) => {
             callbackFn(this.getGettable(this._storage[key]), key);
-        }
+        });
     }
 
     public getSettable(value: any): string {
