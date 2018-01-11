@@ -14,7 +14,6 @@ addons:
       - google-chrome-stable
 
 node_js:
-  - "6"
   - "7"
   - "node"
 
