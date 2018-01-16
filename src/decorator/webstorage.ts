@@ -79,5 +79,5 @@ function WebStorage(
             },
         });
         return target;
-    }
+    };
 }

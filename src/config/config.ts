@@ -20,7 +20,7 @@ const DefaultConfig: WebStorageConfigInterface = {
 declare const NGXSTORE_CONFIG: WebStorageConfigInterface;
 
 let ConfigFills: WebStorageConfigInterface = {};
-let localStoragePrefix = ConfigHelper.getItem('prefix');
+const localStoragePrefix = ConfigHelper.getItem('prefix');
 
 if (typeof NGXSTORE_CONFIG === 'object') {
     ConfigFills = Object.assign({}, NGXSTORE_CONFIG);

@@ -3,6 +3,7 @@
         "tslint-angular"
     ],
     "rules": {
+        "curly": [true, "ignore-same-line"],
         "directive-selector": [
             true,
             "attribute",
@@ -20,6 +21,8 @@
                 "cmp-prefix2"
             ],
             "kebab-case"
-        ]
+        ],
+        "no-empty-interface": false,
+        "no-inferrable-types": false
     }
 }
