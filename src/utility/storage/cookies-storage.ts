@@ -1,4 +1,4 @@
-import { Config, debug } from '../../config';
+import { Config, debug } from '../../config/index';
 import { NgxStorage } from './storage';
 import { StorageName, WebStorageUtility } from '../webstorage-utility';
 import { Observable } from 'rxjs/Observable';
@@ -131,7 +131,6 @@ export class CookiesStorage extends NgxStorage {
      * www.sub.domain.com + path="."          = .sub.domain.com
      * localhost          + path=".whatever." = localhost
      * @param path
-     * @returns {string}
      */
     protected resolveDomain(path: string): string {
         if (!path) return '';
@@ -146,7 +145,6 @@ export class CookiesStorage extends NgxStorage {
     /**
      * This function determines base domain by setting cookie at the highest level possible
      * @url http://rossscrivener.co.uk/blog/javascript-get-domain-exclude-subdomain
-     * @returns {string}
      */
     protected getDomain(): string {
         let i = 0;

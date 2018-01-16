@@ -1,5 +1,7 @@
 ### This project
-dist/
+/dist
+/documentation
+/coverage
 *.tgz
 
 ### Third party

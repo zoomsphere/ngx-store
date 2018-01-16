@@ -1,4 +1,4 @@
-import { Config } from '../config';
+import { Config } from '../config/index';
 import { WebStorageUtility } from './webstorage-utility';
 import { cookiesStorage } from './storage/cookies-storage';
 import { SharedStorageUtility } from './shared-utility';

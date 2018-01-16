@@ -1,7 +1,7 @@
 import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
 import { Cache } from '../decorator/cache';
-import { debug } from '../config';
+import { debug } from '../config/index';
 import { Subject } from 'rxjs/Subject';
 import { NgxStorageEvent } from './storage/storage-event';
 import { Observable } from 'rxjs/Observable';
