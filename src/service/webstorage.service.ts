@@ -1,8 +1,6 @@
-import { ClearType, Config } from '../config';
-import { WebStorageConfigInterface } from '../config';
+import { debug, ClearType, Config, WebStorageConfigInterface } from '../config/index';
 import { WebStorageUtility } from '../utility/webstorage-utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
-import { debug } from '../config';
 import { Cache } from '../decorator/cache';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
@@ -11,7 +9,7 @@ import { NgxStorageEvent } from '../utility/storage/storage-event';
 const merge = require('lodash.merge');
 
 export abstract class WebStorageService {
-    public static keys: Array<string>;
+    public static keys: Array<string> = [];
     protected _changes: Observable<NgxStorageEvent>;
 
     public constructor(public utility: WebStorageUtility) { }
@@ -19,7 +17,6 @@ export abstract class WebStorageService {
     /**
      * Gets keys for stored variables created by ngx-store,
      * ignores keys that have not been created by decorators and have no prefix at once
-     * @returns {Array<string>}
      */
     public get keys(): Array<string> {
         // get prefixed key if prefix is defined
