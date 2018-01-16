@@ -20,7 +20,7 @@ export class WebStorageUtility {
         if (value === 'undefined') return null;
         try {
             return JSON.parse(value);
-        } catch(e) {
+        } catch (e) {
             return value;
         }
     }
@@ -37,7 +37,7 @@ export class WebStorageUtility {
         this.forEach((value, key) => {
             // ignore config settings when previousPrefix = ''
             if (key.startsWith(previousPrefix) && !key.startsWith('NGX-STORE_')) {
-                let nameWithoutPrefix = this.trimPrefix(key);
+                const nameWithoutPrefix = this.trimPrefix(key);
                 this.set(nameWithoutPrefix, this._storage.getItem(key));
 
                 if (previousPrefix !== '') {
@@ -52,7 +52,7 @@ export class WebStorageUtility {
     }
 
     public get keys(): Array<string> {
-        let keys = [];
+        const keys = [];
         this.forEach((value, key) => keys.push(key));
         return keys;
     }
@@ -75,8 +75,8 @@ export class WebStorageUtility {
     }
 
     public get(key: string, config: DecoratorConfig = {}): any {
-        let storageKey = this.getStorageKey(key, config.prefix);
-        let value = this._storage.getItem(storageKey);
+        const storageKey = this.getStorageKey(key, config.prefix);
+        const value = this._storage.getItem(storageKey);
         return this.getGettable(value);
     }
 
@@ -86,8 +86,8 @@ export class WebStorageUtility {
             return null;
         }
         try {
-            let storageKey = this.getStorageKey(key, config.prefix);
-            let storable = this.getSettable(value);
+            const storageKey = this.getStorageKey(key, config.prefix);
+            const storable = this.getSettable(value);
             this.emitEvent(key, value);
             this._storage.setItem(storageKey, storable, config.expires);
         } catch (error) {
@@ -99,12 +99,12 @@ export class WebStorageUtility {
 
     // TODO return true if item existed and false otherwise (?)
     public remove(key: string, noEvent?: boolean): void {
-        let storageKey = this.getStorageKey(key);
+        const storageKey = this.getStorageKey(key);
         if (!noEvent) {
             this.emitEvent(key, null);
         }
         this._storage.removeItem(storageKey);
-        let cacheItem = Cache.get(key);
+        const cacheItem = Cache.get(key);
         if (cacheItem) {
             cacheItem.resetProxy();
         }
@@ -139,7 +139,7 @@ export class WebStorageUtility {
     }
 
     protected emitEvent(key: string, newValue: any, oldValue?: any) {
-        let event = new NgxStorageEvent(this.getStorageName(), key, this._storage);
+        const event = new NgxStorageEvent(this.getStorageName(), key, this._storage);
         event.oldValue = (oldValue !== undefined) ? oldValue : this.get(key);
         event.newValue = newValue;
         this._changes.next(event);

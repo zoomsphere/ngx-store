@@ -9,5 +9,5 @@ export interface WebStorageServiceInterface {
         set(key: string, value: any): void;
         remove(key: string): void;
         clear(clearType?: ClearType, secondParam?: any): void;
-    }
+    };
 }

@@ -20,10 +20,10 @@ export abstract class WebStorageService {
      */
     public get keys(): Array<string> {
         // get prefixed key if prefix is defined
-        let prefixKeys = this.utility.keys.filter(key => {
+        const prefixKeys = this.utility.keys.filter(key => {
             return this.utility.prefix && key.startsWith(this.utility.prefix);
         });
-        let decoratorKeys = (<WebStorageServiceInterface>this.constructor).keys;
+        const decoratorKeys = (<WebStorageServiceInterface>this.constructor).keys;
         return prefixKeys.concat(decoratorKeys);
     }
 
@@ -40,7 +40,7 @@ export abstract class WebStorageService {
     }
 
     public update(key: string, changes: any): any {
-        let value = this.get(key);
+        const value = this.get(key);
         if (typeof value !== 'object') {
             debug.throw(new Error(`Value stored under "${key}" key is not an object and tried to be updated.`));
             return value;
@@ -97,8 +97,8 @@ export abstract class WebStorageService {
     }
 
     protected generateEvent(key: string, newValue: any, oldValue?: any): NgxStorageEvent {
-        let type = this.utility.getStorageName().charAt(0).toLowerCase() + this.utility.getStorageName().slice(1);
-        let event = new NgxStorageEvent(type, key, this.utility.getStorage());
+        const type = this.utility.getStorageName().charAt(0).toLowerCase() + this.utility.getStorageName().slice(1);
+        const event = new NgxStorageEvent(type, key, this.utility.getStorage());
         event.oldValue = (oldValue !== undefined) ? oldValue : this.get(key);
         event.newValue = newValue;
         return event;

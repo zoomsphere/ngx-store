@@ -45,8 +45,8 @@ export class CacheItem implements CacheItemInterface {
         // prevent overwriting value by initializators
         if (!this.initializedTargets.has(this.currentTarget)) {
             this.initializedTargets.add(this.currentTarget);
-            let readValue = this.readValue(config);
-            let savedValue = (readValue !== null) ? readValue : value;
+            const readValue = this.readValue(config);
+            const savedValue = (readValue !== null) ? readValue : value;
             let proxy = this.getProxy(savedValue, config);
             proxy = (proxy !== null) ? proxy : value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
@@ -66,8 +66,8 @@ export class CacheItem implements CacheItemInterface {
         }
         if ((!Config.mutateObjects && !config.mutate) || config.mutate === false) return value;
 
-        let _self = this; // alias to use in standard function expressions
-        let prototype: any = Object.assign(new value.constructor(), value.__proto__);
+        const _self = this; // alias to use in standard function expressions
+        const prototype: any = Object.assign(new value.constructor(), value.__proto__);
 
         prototype.save = function () { // add method for triggering force save
             _self.saveValue(value, config);
@@ -79,14 +79,14 @@ export class CacheItem implements CacheItemInterface {
                 'pop', 'push', 'reverse', 'shift', 'unshift', 'splice',
                 'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin'
             ];
-            for (let method of methodsToOverwrite) {
+            for (const method of methodsToOverwrite) {
                 prototype[method] = function () {
-                    let value = _self.readValue(config);
-                    let result = Array.prototype[method].apply(value, arguments);
+                    const readValue = _self.readValue(config);
+                    const result = Array.prototype[method].apply(readValue, arguments);
                     debug.log('Saving value for ' + _self.key + ' by method ' + prototype.constructor.name + '.' + method);
-                    _self.saveValue(value, config);
+                    _self.saveValue(readValue, config);
                     return result;
-                }
+                };
             }
         }
         Object.setPrototypeOf(value, prototype);
@@ -108,13 +108,13 @@ export class CacheItem implements CacheItemInterface {
         targets.forEach(target => {
             if (this.targets.indexOf(target) === -1) {
                 if (typeof target === 'object') { // handle Angular Component destruction
-                    let originalFunction = target.ngOnDestroy;
-                    let _self = this;
+                    const originalFunction = target.ngOnDestroy;
+                    const _self = this;
                     target.ngOnDestroy = function() {
                         if (typeof originalFunction === 'function') {
                             originalFunction.apply(this, arguments);
                         }
-                        target.ngOnDestroy = originalFunction || function(){};
+                        target.ngOnDestroy = originalFunction || function() {};
 
                         _self.initializedTargets.delete(target);
                         _self.targets = _self.targets.filter(t => t !== target);
