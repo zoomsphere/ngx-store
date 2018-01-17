@@ -50,16 +50,10 @@ export class CacheItem implements CacheItemInterface {
             let proxy = this.getProxy(savedValue, config);
             proxy = (proxy !== null) ? proxy : value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
-            this.utilities.forEach(utility => {
-                if (utility === source) return;
-                utility.set(this._key, savedValue, config);
-            });
+            this.propagateChange(savedValue, config, source);
             return proxy;
         }
-        this.utilities.forEach(utility => {
-            if (utility === source) return;
-            utility.set(this._key, value, config);
-        });
+        this.propagateChange(value, config, source);
         return this.getProxy(value, config);
     }
 
@@ -162,5 +156,13 @@ export class CacheItem implements CacheItemInterface {
 
     public resetProxy(): void {
         this.proxy = null;
+    }
+
+    protected propagateChange(value: any, config: DecoratorConfig, source) {
+        this.utilities.forEach(utility => {
+            // updating service which the change came from would affect in a cycle
+            if (utility === source) return;
+            utility.set(this._key, value, config);
+        });
     }
 }
