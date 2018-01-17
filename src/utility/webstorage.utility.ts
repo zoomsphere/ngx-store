@@ -90,6 +90,10 @@ export class WebStorageUtility {
             const storable = this.getSettable(value);
             this.emitEvent(key, value);
             this._storage.setItem(storageKey, storable, config.expires);
+            const cacheItem = Cache.get(key);
+            if (cacheItem) {
+                cacheItem.saveValue(value, config, this);
+            }
         } catch (error) {
             console.warn(`[ngx-store] ${this.getStorageName()}: following error occurred while trying to save ${key} =`, value);
             console.error(error);
