@@ -1,5 +1,5 @@
 import { NgxStorage } from './storage';
-import { StorageName } from '../webstorage-utility';
+import { StorageName } from '../webstorage.utility';
 
 export class SharedStorage extends NgxStorage {
     protected sharedMap: Map<string, any> = new Map();

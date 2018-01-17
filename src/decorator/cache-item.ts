@@ -1,5 +1,5 @@
 import { WebStorageServiceInterface } from '../service';
-import { WebStorageUtility } from '../utility/webstorage-utility';
+import { WebStorageUtility } from '../utility/webstorage.utility';
 import { Config, debug } from '../config/index';
 import { DecoratorConfig } from './webstorage';
 import { Cache } from './cache';

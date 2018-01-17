@@ -1,4 +1,4 @@
-import { WebStorageUtility } from '../utility/webstorage-utility';
+import { WebStorageUtility } from '../utility/webstorage.utility';
 
 export class ConfigHelper {
     protected static _webStorageUtility: WebStorageUtility =

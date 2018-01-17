@@ -1,6 +1,6 @@
 import { Config, debug } from '../../config/index';
 import { NgxStorage } from './storage';
-import { StorageName, WebStorageUtility } from '../webstorage-utility';
+import { StorageName, WebStorageUtility } from '../webstorage.utility';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 

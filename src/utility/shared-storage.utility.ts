@@ -1,4 +1,4 @@
-import { WebStorageUtility } from './webstorage-utility';
+import { WebStorageUtility } from './webstorage.utility';
 import { SharedStorage } from './storage/shared-storage';
 
 export class SharedStorageUtility extends WebStorageUtility {
