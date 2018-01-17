@@ -66,7 +66,7 @@ export class WebStorageUtility {
     }
 
     public getStorageKey(key: string, prefix?: string): string {
-        prefix = (typeof prefix === 'string') ? prefix : this._prefix;
+        prefix = (typeof prefix === 'string') ? prefix : this.prefix;
         return `${prefix}${key}`;
     }
 

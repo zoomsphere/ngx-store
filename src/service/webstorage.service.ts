@@ -85,7 +85,7 @@ export abstract class WebStorageService {
             }
             keys.forEach(key => this.remove(key));
         } else if (clearType === 'prefix') {
-            secondParam = secondParam || Config.prefix;
+            secondParam = secondParam || this.utility.prefix;
             this.utility.forEach((value, key) => {
                 if (key.startsWith(<string>secondParam)) {
                     this.remove(this.utility.trimPrefix(key));

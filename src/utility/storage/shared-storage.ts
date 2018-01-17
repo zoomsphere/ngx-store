@@ -22,7 +22,7 @@ export class SharedStorage extends NgxStorage {
     }
 
     public getItem(key: string): any {
-        let value = this.sharedMap.get(key);
+        const value = this.sharedMap.get(key);
         return (value !== undefined) ? value : null;
     }
 
