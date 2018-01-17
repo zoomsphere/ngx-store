@@ -66,8 +66,8 @@ export class CookiesStorage extends NgxStorage {
         } else if (expirationDate === null) {
             utcDate = 'Fri, 18 Dec 2099 12:00:00 GMT';
         }
-        let expires = utcDate ? '; expires=' + utcDate : '';
-        let cookie = key + '=' + value + expires + ';path=/;' + domain;
+        const expires = utcDate ? '; expires=' + utcDate : '';
+        const cookie = key + '=' + value + expires + ';path=/;' + domain;
         debug.log('Cookie`s set instruction:', cookie);
         this.cachedItemsMap.set(key, value);
         document.cookie = cookie;
@@ -90,15 +90,15 @@ export class CookiesStorage extends NgxStorage {
         if (this.cachedCookieString === document.cookie) { // No changes
             return this.cachedItemsMap;
         }
-        let map = new Map();
+        const map = new Map();
         if (typeof document === 'undefined') return map;
-        let cookies = document.cookie.split(';');
+        const cookies = document.cookie.split(';');
 
         for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            let eqPos = cookie.indexOf("=");
-            let key = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-            let value = eqPos > -1 ? cookie.substr(eqPos + 1, cookie.length): cookie;
+            const cookie = cookies[i].trim();
+            const eqPos = cookie.indexOf('=');
+            const key = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            const value = eqPos > -1 ? cookie.substr(eqPos + 1, cookie.length) : cookie;
             map.set(key, value);
         }
         // detect changes and emit events
@@ -134,11 +134,11 @@ export class CookiesStorage extends NgxStorage {
      */
     protected resolveDomain(path: string): string {
         if (!path) return '';
-        let hostname = document.domain;
+        const hostname = document.domain;
         if ((hostname.match(/\./g) || []).length < 1) {
             return '';
         }
-        let www = (path[0] !== '.' && hostname.indexOf('www.') === 0) ? 'www.' : '';
+        const www = (path[0] !== '.' && hostname.indexOf('www.') === 0) ? 'www.' : '';
         return www + path + this.getDomain();
     }
 
@@ -149,9 +149,9 @@ export class CookiesStorage extends NgxStorage {
     protected getDomain(): string {
         let i = 0;
         let domain = document.domain;
-        let domainParts = domain.split('.');
-        let s = '_gd' + (new Date()).getTime();
-        while (i < (domainParts.length - 1) && document.cookie.indexOf(s + '=' + s) == -1) {
+        const domainParts = domain.split('.');
+        const s = '_gd' + (new Date()).getTime();
+        while (i < (domainParts.length - 1) && document.cookie.indexOf(s + '=' + s) === -1) {
             domain = domainParts.slice(-1 - (++i)).join('.');
             document.cookie = s + '=' + s + ';domain=' + domain + ';';
         }
