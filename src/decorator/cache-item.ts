@@ -34,7 +34,7 @@ export class CacheItem implements CacheItemInterface {
         return this._key;
     }
 
-    public saveValue(value: any, config: DecoratorConfig = {}): any {
+    public saveValue(value: any, config: DecoratorConfig = {}, source?: WebStorageUtility): any {
         debug.groupCollapsed('CacheItem#saveValue for ' + this.key + ' in ' + this.currentTarget.constructor.name);
         debug.log('new value: ', value);
         debug.log('previous value: ', this.readValue(config));
@@ -46,14 +46,20 @@ export class CacheItem implements CacheItemInterface {
         if (!this.initializedTargets.has(this.currentTarget)) {
             this.initializedTargets.add(this.currentTarget);
             const readValue = this.readValue(config);
-            const savedValue = (readValue !== null) ? readValue : value;
+            const savedValue = (readValue !== null && readValue !== undefined) ? readValue : value;
             let proxy = this.getProxy(savedValue, config);
             proxy = (proxy !== null) ? proxy : value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
-            this.utilities.forEach(utility => utility.set(this._key, savedValue, config));
+            this.utilities.forEach(utility => {
+                if (utility === source) return;
+                utility.set(this._key, savedValue, config);
+            });
             return proxy;
         }
-        this.utilities.forEach(utility => utility.set(this._key, value, config));
+        this.utilities.forEach(utility => {
+            if (utility === source) return;
+            utility.set(this._key, value, config);
+        });
         return this.getProxy(value, config);
     }
 
