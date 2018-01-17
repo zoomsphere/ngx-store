@@ -39,6 +39,33 @@ function test(storageService: typeof WebStorageService) {
             });
         });
 
+        describe('#update() method', () => {
+            it('should merge changes with saved object', () => {
+                service.update('object', { property: 8 });
+                expect(service.get('object')).toEqual({
+                    property: 8,
+                    nested: { property: null },
+                }, 'non-nested change');
+                service.update('object', { nested: { property: true }});
+                expect(service.get('object')).toEqual({
+                    property: 8,
+                    nested: { property: true },
+                }, 'nested change');
+            });
+
+            it('should create new object if it does not exists', () => {
+                service.update('newObject', {a: 1});
+                expect(service.get('newObject')).toEqual({a: 1});
+            });
+
+            it('should throw an error when trying to update non-object', () => {
+                Object.entries(entries).forEach(([value, key]) => {
+                    if (typeof value === 'object') return;
+                    expect(service.update.bind(null, key.toString(), {b: 2})).toThrowError();
+                });
+            });
+        });
+
         describe('should delete specified data', () => {
             const expectation = /null|undefined/;
             it('by key', () => {
