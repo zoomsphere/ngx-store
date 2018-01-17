@@ -113,13 +113,15 @@ export class WebStorageUtility {
     public clear() {
         this.emitEvent(null, null, null);
         this.forEach((value, key) => {
-            this.remove(key, true);
+            this.remove(this.trimPrefix(key), true);
         });
     }
 
     public forEach(callbackFn: (value: any, key: string) => any): void {
         if (typeof this._storage.forEach === 'function') {
-            return this._storage.forEach((value, key) => callbackFn(this.getGettable(value), key));
+            return this._storage.forEach((value, key) => {
+                callbackFn(this.getGettable(value), key);
+            });
         }
         Object.keys(this._storage).forEach((key) => {
             callbackFn(this.getGettable(this._storage[key]), key);
