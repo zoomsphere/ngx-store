@@ -1,6 +1,6 @@
 import { NgxStorageEvent } from './storage-event';
 import { Subject } from 'rxjs/Subject';
-import { StorageName } from '../webstorage-utility';
+import { StorageName } from '../webstorage.utility';
 
 // TODO: in the future use ES6 Proxy to handle indexers
 export abstract class NgxStorage implements Storage {

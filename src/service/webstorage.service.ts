@@ -1,5 +1,5 @@
 import { debug, ClearType, Config, WebStorageConfigInterface } from '../config/index';
-import { WebStorageUtility } from '../utility/webstorage-utility';
+import { WebStorageUtility } from '../utility/webstorage.utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
 import { Cache } from '../decorator/cache';
 import { Observable } from 'rxjs/Observable';

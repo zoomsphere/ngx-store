@@ -6,7 +6,7 @@ import {
 } from '../service/index';
 import { cookiesStorageUtility, localStorageUtility, sessionStorageUtility, sharedStorageUtility } from '../utility/index';
 import { SharedStorageService } from '../service/shared-storage.service';
-import { WebStorageUtility } from '../utility/webstorage-utility';
+import { WebStorageUtility } from '../utility/webstorage.utility';
 import { Cache } from './cache';
 
 // TODO: consider adding 'readonly' property
