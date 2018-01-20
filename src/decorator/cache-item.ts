@@ -4,6 +4,8 @@ import { Config, debug } from '../config/index';
 import { DecoratorConfig } from './webstorage';
 import { Cache } from './cache';
 
+const isEqual = require('lodash.isequal');
+
 export interface CacheItemInterface {
     key: string;
     name: string;
@@ -159,9 +161,11 @@ export class CacheItem implements CacheItemInterface {
     }
 
     protected propagateChange(value: any, config: DecoratorConfig, source) {
+        if (isEqual(value, this.readValue(config))) return;
         this.utilities.forEach(utility => {
             // updating service which the change came from would affect in a cycle
             if (utility === source) return;
+            debug.log(`propagating change on ${this.key} to:`, utility);
             utility.set(this._key, value, config);
         });
     }
