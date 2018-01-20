@@ -13,7 +13,7 @@
         "strictNullChecks": false,
         "moduleResolution": "node",
         "module": "es2015",
-        "target": "es2015",
+        "target": "es5",
         "lib": [
             "dom",
             "es2015",
@@ -41,7 +41,7 @@
     "angularCompilerOptions": {
         "genDir": "dist/src",
         "skipTemplateCodegen": true,
-        "annotateForClosureCompiler": true,
+        "//annotateForClosureCompiler": true,
         "strictMetadataEmit": true,
         "flatModuleOutFile": "ngx-store.js",
         "flatModuleId": "ngx-store"
