@@ -103,4 +103,10 @@ export abstract class WebStorageService {
         event.newValue = newValue;
         return event;
     }
+
+    protected mapNativeEvent(ev: StorageEvent): NgxStorageEvent {
+        const event = this.generateEvent(ev.key, this.utility.getGettable(ev.newValue), this.utility.getGettable(ev.oldValue));
+        event.isInternal = false;
+        return event;
+    }
 }
