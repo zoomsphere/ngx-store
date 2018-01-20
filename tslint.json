@@ -8,18 +8,9 @@
             "limit": 120,
             "ignore-pattern": ""
         }],
-        "component-selector": [
-            true,
-            "element",
-            [
-                "cmp-prefix1",
-                "cmp-prefix2"
-            ],
-            "kebab-case"
-        ],
         "no-console": {
             "options": ["log", "time", "timeEnd", "trace", "assert", "clear",
-                "count", "debug", "profile", "profileEnd", "select", "table"],
+                "count", "debug", "profile", "profileEnd", "select", "table", "info"],
             "severity": "warning"
         },
         "no-empty-interface": false,
