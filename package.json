@@ -11,10 +11,9 @@
         "build": "node build.js",
         "lint": "tslint ./*.ts -t verbose",
         "test": "karma start",
-        "pack-lib": "npm pack ./dist",
-        "prepare": "npm run build",
-        "publish-lib": "npm publish --tag RC ./dist",
-        "publish-lib:next": "npm publish --tag next ./dist",
+        "pack-lib": "npm run build && npm pack ./dist",
+        "publish-lib": "npm run build && npm publish --tag RC ./dist",
+        "publish-lib:next": "npm run build && npm publish --tag next ./dist",
         "compodoc": "compodoc -p tsconfig.json",
         "compodoc-serve": "compodoc -s"
     },
