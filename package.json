@@ -40,7 +40,9 @@
     ],
     "license": "ISC",
     "dependencies": {
+        "@types/lodash.isequal": "^4.5.2",
         "@types/lodash.merge": "^4.6.3",
+        "lodash.isequal": "^4.5.0",
         "lodash.merge": "^4.6.0",
         "ts-debug": "^1.1.1",
         "tslib": "^1.7.1"
