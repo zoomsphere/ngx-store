@@ -15,10 +15,7 @@ export class LocalStorageService extends WebStorageService {
         super(localStorageUtility);
         this._changes = Observable.fromEvent<NgxStorageEvent>(window, 'storage')
             .filter((event: NgxStorageEvent) => event.storageArea === localStorage)
-            .map((e: NgxStorageEvent) => {
-                const event = this.generateEvent(e.key, JSON.parse(e.newValue), JSON.parse(e.oldValue));
-                event.isInternal = false;
-                return event;
-            }).merge(localStorageUtility.changes);
+            .map((event: NgxStorageEvent) => this.mapNativeEvent(event))
+            .merge(localStorageUtility.changes);
     }
 }

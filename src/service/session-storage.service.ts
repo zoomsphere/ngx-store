@@ -15,10 +15,7 @@ export class SessionStorageService extends WebStorageService {
         super(sessionStorageUtility);
         this._changes = Observable.fromEvent<NgxStorageEvent>(window, 'storage')
             .filter((event: NgxStorageEvent) => event.storageArea === sessionStorage)
-            .map((e: NgxStorageEvent) => {
-                const event = this.generateEvent(e.key, JSON.parse(e.newValue), JSON.parse(e.oldValue));
-                event.isInternal = false;
-                return event;
-            }).merge(sessionStorageUtility.changes);
+            .map((event: NgxStorageEvent) => this.mapNativeEvent(event))
+            .merge(sessionStorageUtility.changes);
     }
 }
