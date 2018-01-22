@@ -117,7 +117,7 @@ export class WebStorageUtility {
     public clear() {
         this.emitEvent(null, null, null);
         this.forEach((value, key) => {
-            this.remove(this.trimPrefix(key), true);
+            this.remove(this.trimPrefix(key));
         });
     }
 
