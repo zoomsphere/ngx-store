@@ -12,6 +12,7 @@ export interface CacheItemInterface {
     targets: Array<Object>;
     services: Array<WebStorageServiceInterface>;
     utilities: Array<WebStorageUtility>;
+    config?: DecoratorConfig;
 }
 
 export class CacheItem implements CacheItemInterface {
@@ -148,10 +149,11 @@ export class CacheItem implements CacheItemInterface {
         });
     }
 
-    public addUtilities(utilities: Array<WebStorageUtility>): void {
+    public addUtilities(utilities: Array<WebStorageUtility>, config?: DecoratorConfig): void {
         utilities.forEach(utility => {
             if (this.utilities.indexOf(utility) === -1) {
                 this.utilities.push(utility);
+                utility.set(this.key, this.readValue(config));
             }
         });
     }
