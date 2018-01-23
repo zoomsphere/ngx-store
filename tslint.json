@@ -4,6 +4,7 @@
     ],
     "rules": {
         "curly": [true, "ignore-same-line"],
+        "ban": [true, "fit", "fdescribe"],
         "max-line-length": [true, {
             "limit": 120,
             "ignore-pattern": ""
