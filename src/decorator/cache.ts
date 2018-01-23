@@ -7,12 +7,12 @@ export class Cache {
     public static getCacheFor(cacheCandidate: CacheItemInterface): CacheItem {
         let cacheItem = Cache.get(cacheCandidate.key);
         if (!cacheItem) {
-            debug.log('Created new CacheItem for ' + cacheCandidate.name);
             cacheItem = new CacheItem(cacheCandidate);
+            debug.log(`Created new CacheItem for ${cacheCandidate.name} for ${cacheItem.utilities[0].getStorageName()}`);
             Cache.set(cacheItem);
             return cacheItem;
         }
-        debug.log('Loaded prior CacheItem of ' + cacheItem.name);
+        debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheItem.utilities[0].getStorageName()}`);
         cacheItem.addTargets(cacheCandidate.targets);
         cacheItem.addServices(cacheCandidate.services);
         cacheItem.addUtilities(cacheCandidate.utilities);
