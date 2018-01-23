@@ -18,47 +18,45 @@ export class NgxStorageEvent implements StorageEvent {
     public readonly url = window.location.href;
     public isInternal = true;
 
-    constructor(public type: string, public key: string, public storageArea: Storage) {
-        setTimeout(() => Object.setPrototypeOf(this, new StorageEvent(type)));
-    }
+    constructor(public type: string, public key: string, public storageArea: Storage) {}
 
     /**
      * Methods below exist only to satisfy TypeScript compiler
      */
 
     public get scoped() {
-        return undefined;
-    };
+        return StorageEvent.prototype.scoped;
+    }
 
     public get initEvent() {
-        return undefined;
-    };
+        return StorageEvent.prototype.initEvent.bind(this);
+    }
 
     public get preventDefault() {
-        return undefined;
+        return StorageEvent.prototype.preventDefault.bind(this);
     }
 
     public get stopImmediatePropagation() {
-        return undefined;
+        return StorageEvent.prototype.stopImmediatePropagation.bind(this);
     }
 
     public get stopPropagation() {
-        return undefined;
+        return StorageEvent.prototype.stopPropagation.bind(this);
     }
 
     public get deepPath() {
-        return undefined;
+        return StorageEvent.prototype.deepPath.bind(this);
     }
 
     public get AT_TARGET() {
-        return undefined;
+        return StorageEvent.prototype.AT_TARGET;
     }
 
     public get BUBBLING_PHASE() {
-        return undefined;
+        return StorageEvent.prototype.BUBBLING_PHASE;
     }
 
     public get CAPTURING_PHASE() {
-        return undefined;
+        return StorageEvent.prototype.BUBBLING_PHASE;
     }
 }
