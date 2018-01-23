@@ -48,7 +48,7 @@ function WebStorage(
     config: DecoratorConfig = {}
 ) {
     return (target: any, propertyName: string): void => {
-        let key;
+        let key: string;
         if (typeof keyOrConfig === 'object') {
             key = keyOrConfig.key;
             config = keyOrConfig;
@@ -62,7 +62,8 @@ function WebStorage(
             name: propertyName,
             targets: [ target ],
             services: [ service ],
-            utilities: [ webStorageUtility ]
+            utilities: [ webStorageUtility ],
+            config: config,
         });
 
         Object.defineProperty(target, propertyName, {

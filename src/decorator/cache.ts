@@ -12,10 +12,10 @@ export class Cache {
             Cache.set(cacheItem);
             return cacheItem;
         }
-        debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheItem.utilities[0].getStorageName()}`);
+        debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheCandidate.utilities[0].getStorageName()}`);
         cacheItem.addTargets(cacheCandidate.targets);
         cacheItem.addServices(cacheCandidate.services);
-        cacheItem.addUtilities(cacheCandidate.utilities);
+        cacheItem.addUtilities(cacheCandidate.utilities, cacheCandidate.config);
         Cache.set(cacheItem);
         return cacheItem;
     }
