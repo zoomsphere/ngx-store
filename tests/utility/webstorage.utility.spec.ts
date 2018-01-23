@@ -3,7 +3,7 @@ import {
     sharedStorageUtility
 } from '../../src/utility';
 
-fdescribe('WebStorageUtility', () => {
+describe('WebStorageUtility', () => {
     it('getStorageName() should give proper values', () => {
         expect(localStorageUtility.getStorageName()).toBe('localStorage');
         expect(sessionStorageUtility.getStorageName()).toBe('sessionStorage');
