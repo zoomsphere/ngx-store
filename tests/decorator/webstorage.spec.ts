@@ -14,6 +14,7 @@ class TestClass {
     @SessionStorage() sessionStorageVariable: number = 42;
     @CookieStorage() cookieStorageVariable: boolean = false;
     @SharedStorage() sharedStorageVariable: any = null;
+    @LocalStorage() arrayVariable: Array<number> = [];
 
     @SharedStorage() @SessionStorage() twoDecorators: number = 0;
 }
@@ -61,6 +62,7 @@ describe('Decorators', () => {
         expect(testClass.cookieStorageVariable).toBe(false);
         expect(testClass.sharedStorageVariable).toBe(null);
         expect(testClass.twoDecorators).toBe(128);
+        expect(testClass.arrayVariable).toEqual([]);
     });
 
     it('data in services should be equal like in decorators', () => {
@@ -69,6 +71,7 @@ describe('Decorators', () => {
         expect(cookiesStorageService.get('cookieStorageVariable')).toBe(false);
         expect(sharedStorageService.get('sharedStorageVariable')).toBe(null);
         expect(sharedStorageService.get('twoDecorators')).toBe(128);
+        expect(localStorageService.get('arrayVariable')).toEqual([]);
     });
 
     it('changes in decorators should be reflected in services', () => {
@@ -77,16 +80,21 @@ describe('Decorators', () => {
         testClass.cookieStorageVariable = true;
         testClass.sharedStorageVariable = {};
         testClass.twoDecorators = 43;
+        testClass.arrayVariable.push(1);
+        testClass.arrayVariable.push(2);
+        testClass.arrayVariable.unshift(0);
         expect(testClass.localStorageVariable).toBe('43');
         expect(testClass.sessionStorageVariable).toBe(43);
         expect(testClass.cookieStorageVariable).toBe(true);
         expect(testClass.sharedStorageVariable).toEqual({});
         expect(testClass.twoDecorators).toBe(43);
+        expect(testClass.arrayVariable).toEqual([0, 1, 2]);
         expect(localStorageService.get('localStorageVariable')).toBe('43');
         expect(sessionStorageService.get('sessionStorageVariable')).toBe(43);
         expect(cookiesStorageService.get('cookieStorageVariable')).toBe(true);
         expect(sharedStorageService.get('sharedStorageVariable')).toEqual({});
         expect(sharedStorageService.get('twoDecorators')).toBe(43);
+        expect(localStorageService.get('arrayVariable')).toEqual([0, 1, 2]);
     });
 
     it('changes in services should be reflected in decorators', () => {
