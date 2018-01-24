@@ -20,12 +20,12 @@ All of them provide common methods:
 + `keys: Array<string>`: keys of values stored by `ngx-store` (determined by prefix and decorators)
 + `utility: WebStorageUtility`: access to [`WebStorageUtility`](https://github.com/zoomsphere/ngx-store/src/utility/webstorage-utility.ts) class for advanced usage
 
-## Listening for changes
+## Listening to changes
 `WebstorageService.observe()` method allows to watch storage changes and can take up to 2 parameters:
 ```
 public observe(key?: string, exactMatch?: boolean): Observable<NgxStorageEvent>;
 ```
-`key` specifies filter pattern for `event.key`, by default it's enough to just contain it, but we can easily change the behaviour by passing `exactMatch = true` - in this case prefix is automatically added to the passed key if not included. Returned value is an RxJS Observable of `NgxStorageEvent`, which is just a wrapper of native [`StorageEvent`](https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent) with added `isInternal = true` property, so we can filter out e.g. localStorage events from other tab by this code:
+`key` specifies filter pattern for `event.key`, by default it's enough to just contain it, but we can easily change the behaviour by passing `exactMatch = true` - in this case prefix is automatically added to the passed key if not included. Returned value is an RxJS Observable of `NgxStorageEvent`, which is just a wrapper of native [`StorageEvent`](https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent) with added `isInternal = true` property for changes made by `ngx-store`, so we can filter out e.g. localStorage events from other tab by this code:
 ```
 this.localStorageService.observe()
   .filter(event => !event.isInternal)
