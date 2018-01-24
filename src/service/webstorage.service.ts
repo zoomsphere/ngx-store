@@ -70,24 +70,24 @@ export abstract class WebStorageService {
     /**
      * Clears chosen data from Storage
      * @param clearType 'prefix' | 'decorators' | 'all'
-     * @param secondParam defines the prefix or class (not its instance) whose decorators should be cleared
+     * @param prefixOrClass defines the prefix or class (not its instance) whose decorators should be cleared
      */
-    public clear(clearType?: ClearType, secondParam?: string | object): void {
+    public clear(clearType?: ClearType, prefixOrClass?: string | object): void {
         clearType = clearType || Config.clearType;
         if (clearType === 'decorators') {
             let keys = [];
-            if (typeof secondParam === 'object') {
-                keys = this.keys.filter(key => Cache.get(key).targets.indexOf(secondParam) !== -1);
-                debug.log(this.utility.getStorageName() + ' > Removing decorated data from ' + secondParam.constructor.name + ':', keys);
+            if (typeof prefixOrClass === 'object') {
+                keys = this.keys.filter(key => Cache.get(key).targets.indexOf(prefixOrClass) !== -1);
+                debug.log(this.utility.getStorageName() + ' > Removing decorated data from ' + prefixOrClass.constructor.name + ':', keys);
             } else {
                 keys = this.keys;
                 debug.log(this.utility.getStorageName() + ' > Removing decorated data:', keys);
             }
             keys.forEach(key => this.remove(key));
         } else if (clearType === 'prefix') {
-            secondParam = secondParam || this.utility.prefix;
+            prefixOrClass = prefixOrClass || this.utility.prefix;
             this.utility.forEach((value, key) => {
-                if (key.startsWith(<string>secondParam)) {
+                if (key.startsWith(<string>prefixOrClass)) {
                     this.remove(this.utility.trimPrefix(key));
                 }
             });
