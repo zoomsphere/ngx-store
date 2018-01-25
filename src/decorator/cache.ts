@@ -8,14 +8,14 @@ export class Cache {
         let cacheItem = Cache.get(cacheCandidate.key);
         if (!cacheItem) {
             cacheItem = new CacheItem(cacheCandidate);
-            debug.log(`Created new CacheItem for ${cacheCandidate.name} for ${cacheItem.utilities[0].getStorageName()}`);
+            debug.log(`Created new CacheItem for ${cacheCandidate.name} for ${cacheItem.utilities[0].utility.getStorageName()}`);
             Cache.set(cacheItem);
             return cacheItem;
         }
-        debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheCandidate.utilities[0].getStorageName()}`);
+        debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheCandidate.utilities[0].utility.getStorageName()}`);
         cacheItem.addTargets(cacheCandidate.targets);
         cacheItem.addServices(cacheCandidate.services);
-        cacheItem.addUtilities(cacheCandidate.utilities, cacheCandidate.config);
+        cacheItem.addUtilities(cacheCandidate.utilities);
         Cache.set(cacheItem);
         return cacheItem;
     }
