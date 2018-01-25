@@ -20,6 +20,7 @@ class TestClass {
     // TODO make it working with {key: 'customObject', prefix: ''}
     @CookieStorage('customObject') customCookie: WebstorableObject = <any>{};
 
+    @SharedStorage() @LocalStorage() arrayOfObjects: Array<any> = [{}, {}, {}];
     @SharedStorage() @SessionStorage() twoDecorators: number = 0;
 }
 class TestClass2 {
@@ -69,6 +70,7 @@ describe('Decorators', () => {
         expect(testClass.arrayVariable).toEqual([]);
         expect(testClass.customKey).toEqual(['some', 'values']);
         expect(testClass.customCookie).toEqual(<any>{});
+        expect(testClass.arrayOfObjects.length).toBe(3);
     });
 
     it('data in services should be equal like in decorators', () => {
@@ -80,6 +82,8 @@ describe('Decorators', () => {
         expect(localStorageService.get('arrayVariable')).toEqual([]);
         expect(sessionStorageService.get('customKeyVariable')).toEqual(['some', 'values']);
         expect(cookiesStorageService.get('customObject')).toEqual({});
+        expect(sharedStorageService.get('arrayOfObjects').length).toBe(3);
+        expect(localStorageService.get('arrayOfObjects').length).toBe(3);
     });
 
     it('changes in decorators should be reflected in services', () => {
@@ -102,6 +106,11 @@ describe('Decorators', () => {
         };
         testClass.customCookie.anotherProperty = anotherProperty;
         testClass.customCookie.save();
+        testClass.arrayOfObjects.map(object => {
+            object.property = true;
+        });
+        testClass.arrayOfObjects.pop();
+        testClass.arrayOfObjects.shift();
         expect(testClass.localStorageVariable).toBe('43');
         expect(testClass.sessionStorageVariable).toBe(43);
         expect(testClass.cookieStorageVariable).toBe(true);
@@ -110,6 +119,7 @@ describe('Decorators', () => {
         expect(testClass.arrayVariable).toEqual([0, 1, 2]);
         expect(testClass.customKey).toEqual(['values', 'some']);
         expect(testClass.customCookie).toEqual(<any>{newProperty: true, anotherProperty});
+        expect(testClass.arrayOfObjects).toEqual([{property: true}]);
         expect(localStorageService.get('localStorageVariable')).toBe('43');
         expect(sessionStorageService.get('sessionStorageVariable')).toBe(43);
         expect(cookiesStorageService.get('cookieStorageVariable')).toBe(true);
@@ -118,6 +128,8 @@ describe('Decorators', () => {
         expect(localStorageService.get('arrayVariable')).toEqual([0, 1, 2]);
         expect(sessionStorageService.get('customKeyVariable')).toEqual(['values', 'some']);
         expect(cookiesStorageService.get('customObject')).toEqual(<any>{newProperty: true, anotherProperty});
+        expect(sharedStorageService.get('arrayOfObjects')).toEqual([{property: true}]);
+        expect(localStorageService.get('arrayOfObjects')).toEqual([{property: true}]);
     });
 
     it('changes in services should be reflected in decorators', () => {
@@ -128,6 +140,7 @@ describe('Decorators', () => {
         sessionStorageService.set('twoDecorators', 44); // TODO make it working with change in sharedStorageService
         sessionStorageService.set('customKeyVariable', ['']);
         cookiesStorageService.update('customObject', {anotherProperty: []});
+        sharedStorageService.set('arrayOfObjects', []);
         expect(testClass.localStorageVariable).toBe('44');
         expect(testClass.sessionStorageVariable).toBe(44);
         expect(testClass.cookieStorageVariable).toBeUndefined();
@@ -135,6 +148,9 @@ describe('Decorators', () => {
         expect(testClass.twoDecorators).toBe(44);
         expect(testClass.customKey).toEqual(['']);
         expect(testClass.customCookie).toEqual(<any>{newProperty: true, anotherProperty: []});
+        expect(testClass.arrayOfObjects).toEqual([]);
+        localStorageService.set('arrayOfObjects', [{a: 1}]);
+        expect(testClass.arrayOfObjects).toEqual([{a: 1}]);
     });
 
     it('values should be initially set in another class', () => {
@@ -162,10 +178,10 @@ describe('Decorators', () => {
     });
 
     afterAll(() => {
-        localStorageService.clear();
-        sessionStorageService.clear();
-        cookiesStorageService.clear();
-        sharedStorageService.clear();
+        localStorageService.clear('all');
+        sessionStorageService.clear('all');
+        cookiesStorageService.clear('all');
+        sharedStorageService.clear('all');
     });
 
 });
