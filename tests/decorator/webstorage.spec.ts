@@ -7,7 +7,7 @@ import {
     SessionStorageService,
     SharedStorageService
 } from '../../src/service';
-import { WebstorableArray } from '../../src/ngx-store.types';
+import { WebstorableArray, WebstorableObject } from '../../src/ngx-store.types';
 
 sessionStorage.setItem('ngx_twoDecorators', '128');
 class TestClass {
@@ -17,6 +17,8 @@ class TestClass {
     @SharedStorage() sharedStorageVariable: any = null;
     @LocalStorage() arrayVariable: Array<number> = [];
     @SessionStorage('customKeyVariable') customKey: WebstorableArray<string> = <any>['some', 'values'];
+    // TODO make it working with {key: 'customObject', prefix: ''}
+    @CookieStorage('customObject') customCookie: WebstorableObject = <any>{};
 
     @SharedStorage() @SessionStorage() twoDecorators: number = 0;
 }
@@ -66,6 +68,7 @@ describe('Decorators', () => {
         expect(testClass.twoDecorators).toBe(128);
         expect(testClass.arrayVariable).toEqual([]);
         expect(testClass.customKey).toEqual(['some', 'values']);
+        expect(testClass.customCookie).toEqual(<any>{});
     });
 
     it('data in services should be equal like in decorators', () => {
@@ -76,6 +79,7 @@ describe('Decorators', () => {
         expect(sharedStorageService.get('twoDecorators')).toBe(128);
         expect(localStorageService.get('arrayVariable')).toEqual([]);
         expect(sessionStorageService.get('customKeyVariable')).toEqual(['some', 'values']);
+        expect(cookiesStorageService.get('customObject')).toEqual({});
     });
 
     it('changes in decorators should be reflected in services', () => {
@@ -88,6 +92,16 @@ describe('Decorators', () => {
         testClass.arrayVariable.push(2);
         testClass.arrayVariable.unshift(0);
         testClass.customKey.reverse();
+        testClass.customCookie.newProperty = true;
+        const anotherProperty = {
+            a: 'a',
+            b: 'b',
+            c: false,
+            d: 3,
+            e: [3, 4, 5],
+        };
+        testClass.customCookie.anotherProperty = anotherProperty;
+        testClass.customCookie.save();
         expect(testClass.localStorageVariable).toBe('43');
         expect(testClass.sessionStorageVariable).toBe(43);
         expect(testClass.cookieStorageVariable).toBe(true);
@@ -95,6 +109,7 @@ describe('Decorators', () => {
         expect(testClass.twoDecorators).toBe(43);
         expect(testClass.arrayVariable).toEqual([0, 1, 2]);
         expect(testClass.customKey).toEqual(['values', 'some']);
+        expect(testClass.customCookie).toEqual(<any>{newProperty: true, anotherProperty});
         expect(localStorageService.get('localStorageVariable')).toBe('43');
         expect(sessionStorageService.get('sessionStorageVariable')).toBe(43);
         expect(cookiesStorageService.get('cookieStorageVariable')).toBe(true);
@@ -102,6 +117,7 @@ describe('Decorators', () => {
         expect(sharedStorageService.get('twoDecorators')).toBe(43);
         expect(localStorageService.get('arrayVariable')).toEqual([0, 1, 2]);
         expect(sessionStorageService.get('customKeyVariable')).toEqual(['values', 'some']);
+        expect(cookiesStorageService.get('customObject')).toEqual(<any>{newProperty: true, anotherProperty});
     });
 
     it('changes in services should be reflected in decorators', () => {
@@ -111,12 +127,14 @@ describe('Decorators', () => {
         sharedStorageService.set('sharedStorageVariable', {a: 4});
         sessionStorageService.set('twoDecorators', 44); // TODO make it working with change in sharedStorageService
         sessionStorageService.set('customKeyVariable', ['']);
+        cookiesStorageService.update('customObject', {anotherProperty: []});
         expect(testClass.localStorageVariable).toBe('44');
         expect(testClass.sessionStorageVariable).toBe(44);
         expect(testClass.cookieStorageVariable).toBeUndefined();
         expect(testClass.sharedStorageVariable).toEqual({a: 4});
         expect(testClass.twoDecorators).toBe(44);
         expect(testClass.customKey).toEqual(['']);
+        expect(testClass.customCookie).toEqual(<any>{newProperty: true, anotherProperty: []});
     });
 
     it('values should be initially set in another class', () => {
