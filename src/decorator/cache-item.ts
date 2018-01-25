@@ -44,7 +44,7 @@ export class CacheItem implements CacheItemInterface {
     public saveValue(value: any, config: DecoratorConfig = {}, source?: WebStorageUtility): any {
         debug.groupCollapsed('CacheItem#saveValue for ' + this.key + ' in ' + this.currentTarget.constructor.name);
         debug.log('new value: ', value);
-        debug.log('previous value: ', this.readValue(config));
+        debug.log('previous value: ', this.readValue());
         debug.log('targets.length: ', this.targets.length);
         debug.log('currentTarget:', this.currentTarget);
         debug.groupEnd();
@@ -52,21 +52,21 @@ export class CacheItem implements CacheItemInterface {
         // prevent overwriting value by initializators
         if (!this.initializedTargets.has(this.currentTarget)) {
             this.initializedTargets.add(this.currentTarget);
-            const readValue = this.readValue(config);
+            const readValue = this.readValue();
             const savedValue = (readValue !== null && readValue !== undefined) ? readValue : value;
             let proxy = this.getProxy(savedValue, config);
             proxy = (proxy !== null) ? proxy : value;
             debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
-            this.propagateChange(savedValue, config, source);
+            this.propagateChange(savedValue, source);
             return proxy;
         }
-        this.propagateChange(value, config, source);
+        this.propagateChange(value, source);
         return this.getProxy(value, config);
     }
 
     public getProxy(value?: any, config: DecoratorConfig = {}): any {
         if (value === undefined && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
-        value = (value === undefined) ? this.readValue(config) : value;
+        value = (value === undefined) ? this.readValue() : value;
         if (typeof value !== 'object' || value === null) {
             this.proxy = value;
             return value;
@@ -88,7 +88,7 @@ export class CacheItem implements CacheItemInterface {
             ];
             for (const method of methodsToOverwrite) {
                 prototype[method] = function () {
-                    const readValue = _self.readValue(config);
+                    const readValue = _self.readValue();
                     const result = Array.prototype[method].apply(readValue, arguments);
                     debug.log('Saving value for ' + _self.key + ' by method ' + prototype.constructor.name + '.' + method);
                     _self.saveValue(readValue, config);
@@ -153,7 +153,7 @@ export class CacheItem implements CacheItemInterface {
         utilityEntries.forEach(entry => {
             if (this.utilities.findIndex(e => e.utility === entry.utility) === -1) {
                 this.utilities.push(entry);
-                entry.utility.set(this.key, this.readValue(entry.config));
+                entry.utility.set(this.key, this.readValue());
             }
         });
     }
@@ -162,8 +162,8 @@ export class CacheItem implements CacheItemInterface {
         this.proxy = null;
     }
 
-    protected propagateChange(value: any, config: DecoratorConfig, source) {
-        if (isEqual(value, this.readValue(config))) return;
+    protected propagateChange(value: any, source) {
+        if (isEqual(value, this.readValue())) return;
         this.utilities.forEach(entry => {
             const utility = entry.utility;
             // updating service which the change came from would affect in a cycle
