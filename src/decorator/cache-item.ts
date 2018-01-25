@@ -98,12 +98,7 @@ export class CacheItem implements CacheItemInterface {
     }
 
     public readValue(config: DecoratorConfig = {}): any {
-        let value = null;
-        this.utilities.forEach(utility => {
-            if (value === null) {
-                value = utility.get(this._key, config);
-            }
-        });
+        const value = this.utilities[0].get(this.key, config);
         return (typeof value !== 'object') ? value : JSON.parse(JSON.stringify(this.getProxy(value, config)));
     }
 
