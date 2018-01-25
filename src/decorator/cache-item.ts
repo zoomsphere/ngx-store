@@ -11,7 +11,11 @@ export interface CacheItemInterface {
     name: string;
     targets: Array<Object>;
     services: Array<WebStorageServiceInterface>;
-    utilities: Array<WebStorageUtility>;
+    utilities: Array<UtilityEntry>;
+}
+
+export interface UtilityEntry {
+    utility: WebStorageUtility;
     config?: DecoratorConfig;
 }
 
@@ -19,7 +23,7 @@ export class CacheItem implements CacheItemInterface {
     public name: string = '';
     public targets: Array<Object> = [];
     public services: Array<WebStorageServiceInterface> = [];
-    public utilities: Array<WebStorageUtility> = [];
+    public utilities: Array<UtilityEntry> = [];
     public currentTarget: Object;
     protected proxy: any = null;
     protected _key: string = '';
@@ -98,8 +102,9 @@ export class CacheItem implements CacheItemInterface {
     }
 
     public readValue(config: DecoratorConfig = {}): any {
-        const value = this.utilities[0].get(this.key, config);
-        return (typeof value !== 'object') ? value : JSON.parse(JSON.stringify(this.getProxy(value, config)));
+        const entry = this.utilities[0];
+        const value = entry ? entry.utility.get(this.key, entry.config) : null;
+        return (typeof value !== 'object') ? value : JSON.parse(JSON.stringify(this.getProxy(value, entry.config)));
     }
 
     public addTargets(targets: Array<any>): void {
@@ -144,11 +149,11 @@ export class CacheItem implements CacheItemInterface {
         });
     }
 
-    public addUtilities(utilities: Array<WebStorageUtility>, config?: DecoratorConfig): void {
-        utilities.forEach(utility => {
-            if (this.utilities.indexOf(utility) === -1) {
-                this.utilities.push(utility);
-                utility.set(this.key, this.readValue(config));
+    public addUtilities(utilityEntries: Array<UtilityEntry>): void {
+        utilityEntries.forEach(entry => {
+            if (this.utilities.findIndex(e => e.utility === entry.utility) === -1) {
+                this.utilities.push(entry);
+                entry.utility.set(this.key, this.readValue(entry.config));
             }
         });
     }
@@ -159,11 +164,12 @@ export class CacheItem implements CacheItemInterface {
 
     protected propagateChange(value: any, config: DecoratorConfig, source) {
         if (isEqual(value, this.readValue(config))) return;
-        this.utilities.forEach(utility => {
+        this.utilities.forEach(entry => {
+            const utility = entry.utility;
             // updating service which the change came from would affect in a cycle
             if (utility === source) return;
             debug.log(`propagating change on ${this.key} to:`, utility);
-            utility.set(this._key, value, config);
+            utility.set(this._key, value, entry.config);
         });
     }
 }

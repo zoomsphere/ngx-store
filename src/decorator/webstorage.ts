@@ -62,8 +62,10 @@ function WebStorage(
             name: propertyName,
             targets: [ target ],
             services: [ service ],
-            utilities: [ webStorageUtility ],
-            config: config,
+            utilities: [{
+                utility: webStorageUtility,
+                config: config,
+            }],
         });
 
         Object.defineProperty(target, propertyName, {
