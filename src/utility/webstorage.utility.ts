@@ -94,6 +94,7 @@ export class WebStorageUtility {
             if (cacheItem) {
                 debug.log(`updating following CacheItem from ${this.constructor.name}:`, cacheItem);
                 cacheItem.resetProxy();
+                cacheItem.propagateChange(value, this);
             }
         } catch (error) {
             console.warn(`[ngx-store] ${this.getStorageName()}: following error occurred while trying to save ${key} =`, value);

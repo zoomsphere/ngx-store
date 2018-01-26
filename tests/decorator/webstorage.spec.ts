@@ -137,7 +137,7 @@ describe('Decorators', () => {
         sessionStorageService.set('sessionStorageVariable', 44);
         cookiesStorageService.remove('cookieStorageVariable');
         sharedStorageService.set('sharedStorageVariable', {a: 4});
-        sessionStorageService.set('twoDecorators', 44); // TODO make it working with change in sharedStorageService
+        sharedStorageService.set('twoDecorators', 44);
         sessionStorageService.set('customKeyVariable', ['']);
         cookiesStorageService.update('customObject', {anotherProperty: []});
         sharedStorageService.set('arrayOfObjects', []);

@@ -162,7 +162,7 @@ export class CacheItem implements CacheItemInterface {
         this.proxy = null;
     }
 
-    protected propagateChange(value: any, source) {
+    public propagateChange(value: any, source) {
         if (isEqual(value, this.readValue())) return;
         this.utilities.forEach(entry => {
             const utility = entry.utility;
