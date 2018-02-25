@@ -11,4 +11,4 @@ export const sessionStorageUtility: WebStorageUtility =
 export const cookiesStorageUtility: WebStorageUtility =
     new WebStorageUtility(cookiesStorage, Config.prefix, Config.previousPrefix);
 export const sharedStorageUtility: SharedStorageUtility =
-    new SharedStorageUtility(sharedStorage, '', '');
+    new SharedStorageUtility(sharedStorage, Config.prefix, Config.prefix);
