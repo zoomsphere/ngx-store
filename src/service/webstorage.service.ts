@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/delay';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
+import { Resource } from './resource';
 const merge = require('lodash.merge');
 
 export abstract class WebStorageService {
@@ -33,6 +34,15 @@ export abstract class WebStorageService {
 
     public get(key: string): any {
         return this.utility.get(key);
+    }
+
+    /**
+     * Returns new data Resource for given key exposing builder design pattern
+     * @param {string} key
+     * @returns {any}
+     */
+    public load(key: string): Resource {
+        return new Resource(this, key);
     }
 
     public set<T>(key: string, value: T): T {
