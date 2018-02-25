@@ -43,8 +43,10 @@
     "dependencies": {
         "@types/lodash.isequal": "^4.5.2",
         "@types/lodash.merge": "^4.6.3",
+        "lodash.get": "^4.4.2",
         "lodash.isequal": "^4.5.0",
         "lodash.merge": "^4.6.0",
+        "lodash.set": "^4.3.2",
         "ts-debug": "^1.1.1",
         "tslib": "^1.7.1"
     },
@@ -62,6 +64,8 @@
         "@angular/platform-server": "^4.0.0",
         "@compodoc/compodoc": "1.0.3",
         "@types/jasmine": "2.6.2",
+        "@types/lodash.get": "^4.4.3",
+        "@types/lodash.set": "^4.3.3",
         "@types/node": "^8.0.47",
         "chalk": "2.3.0",
         "codelyzer": "4.0.2",
