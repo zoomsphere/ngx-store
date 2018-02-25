@@ -8,7 +8,7 @@ export const entries = {
     object: {
         property: 0,
         nested: {
-            property: null
+            property: null,
         },
     },
     array: [7, 6, 5, 4],

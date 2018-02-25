@@ -66,6 +66,26 @@ function test(storageService: typeof WebStorageService) {
             });
         });
 
+        describe('load() builder pattern', () => {
+            it('chain should read proper value', () => {
+                expect(service.load('object').path('nested.property').value).toBe(null);
+                expect(service.load('non-existing').defaultValue('default').value).toBe('default');
+                expect(service.load('object').path('non-existing').defaultValue('default').value).toBe('default');
+            });
+            it('chain should save value', () => {
+                expect(service.load('new_key').save('==').value).toBe('==');
+                expect(service.load('new_key').defaultValue(8).save(undefined).value).toBe(8);
+                expect(service.load('object').path('nested.new_key').save(123).value).toBe(123);
+                expect(service.get('object')).toEqual({
+                    property: 0,
+                    nested: {
+                        property: null,
+                        new_key: 123,
+                    },
+                });
+            });
+        });
+
         describe('should delete specified data', () => {
             const expectation = /null|undefined/;
             it('by key', () => {

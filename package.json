@@ -1,7 +1,7 @@
 {
     "name": "ngx-store",
     "private": true,
-    "version": "1.4.0-RC5",
+    "version": "1.4.0-RC6",
     "description": "Angular decorators to automagically keep variables in HTML5 LocalStorage, SessionStorage, cookies; injectable services for managing and listening to data changes and a bit more.",
     "main": "./ngx-store.js",
     "main for angular5": "./bundles/ngx-store.umd.js",
@@ -43,10 +43,12 @@
     "dependencies": {
         "@types/lodash.isequal": "^4.5.2",
         "@types/lodash.merge": "^4.6.3",
+        "lodash.get": "^4.4.2",
         "lodash.isequal": "^4.5.0",
-        "lodash.merge": "^4.6.0",
+        "lodash.merge": "^4.6.1",
+        "lodash.set": "^4.3.2",
         "ts-debug": "^1.1.1",
-        "tslib": "^1.7.1"
+        "tslib": "^1.9.0"
     },
     "peerDependencies": {
         "@angular/core": ">= 2.3.0"
@@ -60,9 +62,11 @@
         "@angular/platform-browser": "^4.0.0",
         "@angular/platform-browser-dynamic": "^4.0.0",
         "@angular/platform-server": "^4.0.0",
-        "@compodoc/compodoc": "1.0.3",
+        "@compodoc/compodoc": "^1.0.7",
         "@types/jasmine": "2.6.2",
-        "@types/node": "^8.0.47",
+        "@types/lodash.get": "^4.4.3",
+        "@types/lodash.set": "^4.3.3",
+        "@types/node": "^8.9.4",
         "chalk": "2.3.0",
         "codelyzer": "4.0.2",
         "core-js": "2.5.1",
@@ -85,7 +89,7 @@
         "source-map-loader": "0.2.3",
         "ts-loader": "3.1.1",
         "tslint": "^5.9.1",
-        "tslint-angular": "^1.1.0",
+        "tslint-angular": "^1.1.1",
         "typescript": "~2.4.2",
         "uglify-js": "3.1.6",
         "webpack": "3.8.1",

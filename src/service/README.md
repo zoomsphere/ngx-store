@@ -8,9 +8,10 @@ Angular-Injectable services included in this library:
 
 All of them provide common methods:
 + `get(key: string): any`: returns JSON-parsed data
++ `load(key: string): Resource`: returns an instance of [`Resource`](https://github.com/zoomsphere/ngx-store/src/service/resource.ts) class for given key exposing API based on builder design pattern (see [#Builder pattern](https://github.com/zoomsphere/ngx-store/tree/master/src/service#builder-pattern) section below)
 + `set(key: string, value: T): T`: sets data in Storage
 + `update(key: string, changes: any): any`: updates object stored under `key` by deep merge, throws an error if stored value exists and is not an object
-+ `remove(key: string): void` removes variable with given key
++ `remove(key: string): void`: removes variable with given key
 + `clear(): void`: clears Storage in mode provided by `Config.clearType` (`'prefix'` by default)
 + `clear('all'): void`: clears whole Storage
 + `clear('prefix', prefix?: string): void`: clears Storage keys starting by passed `prefix` (or `Config.prefix` if not provided)
@@ -20,13 +21,33 @@ All of them provide common methods:
 + `keys: Array<string>`: keys of values stored by `ngx-store` (determined by prefix and decorators)
 + `utility: WebStorageUtility`: access to [`WebStorageUtility`](https://github.com/zoomsphere/ngx-store/src/utility/webstorage-utility.ts) class for advanced usage
 
+## Builder pattern
+`WebStorage.load(key: string)` method exposes API based on builder design pattern. Following methods are allowed:
++ `value` - getter returning value for current builder state, ends the chain
++ `path(path: string)` - sets path of object property, e.g. if we have `{ nested: { property: true }}` under "object" key in localStorage, then `localStorageService.load('object').path('nested.property').value` will be equal to `true`
++ `prefix(prefix: string)` - sets prefix, e.g. `localStorageService.load('key').prefix('abc_').value` will read value of item stored under "abc_key" key in LS
++ `defaultValue(value: any)` - sets default value for both reading and saving, will be used in case when real value is `null` or `undefined`
++ `save(value: any)` - saves given value in chosen place - as a new entry or an existing object property depending on `path`
+
+See [`Resource`](https://github.com/zoomsphere/ngx-store/src/service/resource.ts) class for details.
+
+#### Code example: 
+```typescript
+this.localStorageService.set('object', { nested: { property: false }});
+let objectResource = this.localStorageService.load('object');
+console.log(objectResource.path('nested.property').value); // false
+console.log(objectResource.path('nested.property').save(true).value); // true
+console.log(objectResource.path('nested.new_key').defaultValue(8).save(null).value); // 8
+console.log(objectResource.path('nested').value); // { property: true, new_key: 8 }
+```
+
 ## Listening to changes
 `WebstorageService.observe()` method allows to watch storage changes and can take up to 2 parameters:
-```
+```typescript
 public observe(key?: string, exactMatch?: boolean): Observable<NgxStorageEvent>;
 ```
 `key` specifies filter pattern for `event.key`, by default it's enough to just contain it, but we can easily change the behaviour by passing `exactMatch = true` - in this case prefix is automatically added to the passed key if not included. Returned value is an RxJS Observable of `NgxStorageEvent`, which is just a wrapper of native [`StorageEvent`](https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent) with added `isInternal = true` property for changes made by `ngx-store`, so we can filter out e.g. localStorage events from other tab by this code:
-```
+```typescript
 this.localStorageService.observe()
   .filter(event => !event.isInternal)
   .subscribe((event) => {

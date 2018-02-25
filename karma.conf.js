@@ -83,6 +83,9 @@ module.exports = function (config) {
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['spec', 'coverage-istanbul'],
+        specReporter: {
+            suppressSkipped: true,      // do not print information about skipped tests
+        },
 
         coverageIstanbulReporter: {
             reports: ['html', 'lcovonly'],
