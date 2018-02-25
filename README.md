@@ -9,6 +9,7 @@ This library adds decorators that make it super easy to *automagically* save and
     + `@SessionStorage()` - to save variable in HTML5 sessionStorage
     + `@CookieStorage()` - to save variable as a cookie
     + `@SharedStorage()` - to keep variable in temporary memory that can be shared across classes
+    + `@TempStorage()` - alias for `SharedStorage`
 - Injectable `LocalStorageService`, `SessionStorageService`, `CookiesStorageService` and `SharedStorageService` ([read more here](src/service#angular-storage))
 - Possibility of [listening to storage changes](https://github.com/zoomsphere/ngx-store/tree/master/src/service#listening-to-changes)
 - Easy configuration (see [#configuration](#configuration) section)
@@ -17,6 +18,7 @@ This library adds decorators that make it super easy to *automagically* save and
     + Angular AoT compiler
     + `angular2-localstorage`
     + [nativescript-localstorage](https://github.com/NathanaelA/nativescript-localstorage)
+    + Angular v2, 4 and 5
     + your own project!
 - Tests coverage
 
