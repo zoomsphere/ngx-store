@@ -66,7 +66,6 @@ function test(storageService: typeof WebStorageService) {
             });
         });
 
-        describe('should delete specified data', () => {
         describe('load() builder pattern', () => {
             it('chain should read proper value', () => {
                 expect(service.load('object').path('nested.property').value).toBe(null);
@@ -87,6 +86,7 @@ function test(storageService: typeof WebStorageService) {
             });
         });
 
+        describe('should delete specified data', () => {
             const expectation = /null|undefined/;
             it('by key', () => {
                 Object.entries(entries).forEach(([key, value]) => {
