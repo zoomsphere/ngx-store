@@ -7,6 +7,7 @@ export { WebStorageService, CookiesStorageService, LocalStorageService, SessionS
 export { WebStorageConfigInterface, WEBSTORAGE_CONFIG } from './config/index';
 export { Webstorable, WebstorableArray, WebstorableObject } from './ngx-store.types';
 export { NgxStorageEvent } from './utility/storage/storage-event';
+export { Resource as NgxResource } from './service/resource';
 
 @NgModule({
     providers: [
