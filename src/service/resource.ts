@@ -29,6 +29,28 @@ export class Resource<T> {
     }
 
     /**
+     * Appends current path
+     * e.g. if path('key') and appendPath('nested'), the path will be "key.nested"
+     * @param {string} path
+     * @returns {this}
+     */
+    public appendPath(path: string): this {
+        this._path.push(path);
+        return this;
+    }
+
+    /**
+     * Removes last item of path
+     * e.g. if path('key.nested') and truncatePath(), the path will be "key"
+     * @param {string} path
+     * @returns {this}
+     */
+    public truncatePath(path: string): this {
+        this._path.pop();
+        return this;
+    }
+
+    /**
      * Sets prefix
      * @param {string} prefix
      * @returns {this}
