@@ -23,7 +23,7 @@ export class Resource<T> {
      * @param {string} path
      * @returns {this}
      */
-    public path(path: string): this {
+    public setPath(path: string): this {
         this._path = path.split('.');
         return this;
     }
@@ -55,7 +55,7 @@ export class Resource<T> {
      * @param {string} prefix
      * @returns {this}
      */
-    public prefix(prefix: string): this {
+    public setPrefix(prefix: string): this {
         this._prefix = prefix;
         return this;
     }
@@ -65,7 +65,7 @@ export class Resource<T> {
      * @param defaultValue
      * @returns {this}
      */
-    public defaultValue(defaultValue: T): this {
+    public setDefaultValue(defaultValue: T): this {
         this._defaultValue = defaultValue;
         const value = this.readValue();
         if (this.isNullOrUndefined(value)) {
@@ -95,15 +95,15 @@ export class Resource<T> {
         return this.isNullOrUndefined(value) ? this._defaultValue : value;
     }
 
-    protected isNullOrUndefined(value: any) {
+    protected isNullOrUndefined(value: any): boolean {
         return (value === null || value === undefined);
     }
 
-    protected get pathString() {
+    protected get pathString(): string {
         return this._path.join('.');
     }
 
-    protected readValue() {
+    protected readValue(): T {
         const value = this.service.utility.get(this.key, {prefix: this._prefix});
         if (this.pathString) {
             return _get(value, this.pathString);
