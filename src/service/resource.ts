@@ -19,6 +19,30 @@ export class Resource<T> {
     }
 
     /**
+     * Returns default value
+     * @returns {T}
+     */
+    public get defaultValue(): T {
+        return this._defaultValue;
+    }
+
+    /**
+     * Returns current path as a string
+     * @returns {string}
+     */
+    public get path(): string {
+        return this.pathString;
+    }
+
+    /**
+     * Returns currently set prefix
+     * @returns {string}
+     */
+    public get prefix(): string {
+        return this._prefix;
+    }
+
+    /**
      * Sets path of object property
      * @param {string} path
      * @returns {this}
@@ -51,6 +75,15 @@ export class Resource<T> {
     }
 
     /**
+     * Resets set path
+     * @returns {this}
+     */
+    public resetPath(): this {
+        this._path = [];
+        return this;
+    }
+
+    /**
      * Sets prefix
      * @param {string} prefix
      * @returns {this}
@@ -58,6 +91,17 @@ export class Resource<T> {
     public setPrefix(prefix: string): this {
         this._prefix = prefix;
         return this;
+    }
+
+    /**
+     * Moves storage item to new key using given prefix
+     * @param {string} prefix
+     * @returns {this}
+     */
+    public changePrefix(prefix: string): this {
+        this.service.utility.set(this.key, this.fullValue, {prefix});
+        this.service.utility.remove(this.key, {prefix: this._prefix});
+        return this.setPrefix(prefix);
     }
 
     /**
@@ -84,6 +128,15 @@ export class Resource<T> {
             value = _set(this.fullValue, this.pathString, this.considerDefault(value));
         }
         this.service.utility.set(this.key, this.considerDefault(value), {prefix: this._prefix});
+        return this;
+    }
+
+    /**
+     * Removes item stored under current key
+     * @returns {this}
+     */
+    public remove(): this {
+        this.service.utility.remove(this.key);
         return this;
     }
 
