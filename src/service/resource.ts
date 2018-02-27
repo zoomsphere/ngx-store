@@ -67,6 +67,10 @@ export class Resource<T> {
      */
     public defaultValue(defaultValue: T): this {
         this._defaultValue = defaultValue;
+        const value = this.readValue();
+        if (this.isNullOrUndefined(value)) {
+            this.save(defaultValue);
+        }
         return this;
     }
 
