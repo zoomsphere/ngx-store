@@ -104,11 +104,8 @@ export class WebStorageUtility {
     }
 
     // TODO return true if item existed and false otherwise (?)
-    public remove(key: string, noEvent?: boolean): void {
-        const storageKey = this.getStorageKey(key);
-        if (!noEvent) {
-            this.emitEvent(key, null);
-        }
+    public remove(key: string, config: DecoratorConfig = {}): void {
+        const storageKey = this.getStorageKey(key, config.prefix);
         this._storage.removeItem(storageKey);
         const cacheItem = Cache.get(key);
         if (cacheItem) {
