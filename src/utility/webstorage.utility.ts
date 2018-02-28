@@ -1,7 +1,7 @@
 import { DecoratorConfig } from '../decorator/webstorage';
 import { WebStorage } from './storage/cookies-storage';
 import { Cache } from '../decorator/cache';
-import { debug } from '../config/index';
+import { CONFIG_PREFIX, debug } from '../config/index';
 import { Subject } from 'rxjs/Subject';
 import { NgxStorageEvent } from './storage/storage-event';
 import { Observable } from 'rxjs/Observable';
@@ -36,7 +36,7 @@ export class WebStorageUtility {
         debug.log(this.getStorageName() + ' > Detected prefix change from ' + previousPrefix + ' to ' + prefix);
         this.forEach((value, key) => {
             // ignore config settings when previousPrefix = ''
-            if (key.startsWith(previousPrefix) && !key.startsWith('NGX-STORE_')) {
+            if (key.startsWith(previousPrefix) && !key.startsWith(CONFIG_PREFIX)) {
                 const nameWithoutPrefix = this.trimPrefix(key);
                 this.set(nameWithoutPrefix, this._storage.getItem(key));
 
@@ -116,7 +116,8 @@ export class WebStorageUtility {
     public clear() {
         this.emitEvent(null, null, null);
         this.forEach((value, key) => {
-            this.remove(this.trimPrefix(key));
+            if (key.startsWith(CONFIG_PREFIX)) return;
+            this.remove(key, {prefix: ''});
         });
     }
 
