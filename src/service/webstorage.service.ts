@@ -41,7 +41,7 @@ export abstract class WebStorageService {
      * @param {string} key
      * @returns {any}
      */
-    public load(key: string): Resource {
+    public load(key: string): Resource<any> {
         return new Resource(this, key);
     }
 

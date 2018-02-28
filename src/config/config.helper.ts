@@ -1,8 +1,10 @@
 import { WebStorageUtility } from '../utility/webstorage.utility';
 
+export const CONFIG_PREFIX = 'NGX-STORE_';
+
 export class ConfigHelper {
     protected static _webStorageUtility: WebStorageUtility =
-        new WebStorageUtility(localStorage, 'NGX-STORE_');
+        new WebStorageUtility(localStorage, CONFIG_PREFIX);
 
     public static getItem(key: string): any {
         return ConfigHelper._webStorageUtility.get(key);

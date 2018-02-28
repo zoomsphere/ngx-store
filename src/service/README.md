@@ -31,7 +31,7 @@ All of them provide common methods:
 
 See [`Resource`](https://github.com/zoomsphere/ngx-store/src/service/resource.ts) class for details.
 
-#### Code example: 
+#### Code example:
 ```typescript
 this.localStorageService.set('object', { nested: { property: false }});
 let objectResource = this.localStorageService.load('object');
