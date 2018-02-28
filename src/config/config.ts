@@ -34,14 +34,9 @@ if (localStoragePrefix !== undefined && localStoragePrefix !== null) {
     ConfigFills.previousPrefix = DefaultConfig.previousPrefix;
 }
 
-/**
- * @deprecated define global variable `NGXSTORE_CONFIG` instead
- */
-export let WEBSTORAGE_CONFIG = DefaultConfig;
-
 // merge default config, deprecated config and global config all together
 export const Config: WebStorageConfigInterface =
-    Object.assign({}, DefaultConfig, WEBSTORAGE_CONFIG, ConfigFills);
+    Object.assign({}, DefaultConfig, ConfigFills);
 
 export const debug = new Debugger(console, Config.debugMode, '[ngx-store] ');
 ConfigHelper.setItem('prefix', Config.prefix);
