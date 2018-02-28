@@ -6,6 +6,8 @@ import { Debugger } from 'ts-debug';
 // TODO check if NGXSTORE_CONFIG implements WebStorageConfigInterface
 // TODO allow to set configuration in node-config (`config` on npm)
 
+export { CONFIG_PREFIX } from './config.helper';
+
 const DefaultConfig: WebStorageConfigInterface = {
     prefix: 'ngx_',
     previousPrefix: 'angular2ws_',
