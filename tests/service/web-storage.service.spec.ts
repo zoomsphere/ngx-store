@@ -70,7 +70,7 @@ function test(storageService: typeof WebStorageService) {
             it('chain should read proper value', () => {
                 expect(service.load('object').setPath('nested.property').value).toBe(null);
                 expect(service.load('non-existing').setDefaultValue('default').value).toBe('default');
-                expect(service.load('object').setPath('non-existing').setDefaultValue('default').value).toBe('default');
+                expect(service.load('object2').setPath('non-existing').setDefaultValue('default').value).toBe('default');
             });
             it('chain should save value', () => {
                 expect(service.load('new_key').save('==').value).toBe('==');
@@ -84,10 +84,29 @@ function test(storageService: typeof WebStorageService) {
                     },
                 });
             });
+            it('set and get values should be equal', () => {
+                const resource = service.load('object').setDefaultValue(1).setPrefix('pre').setPath('nested');
+                expect(resource.defaultValue).toBe(1);
+                expect(resource.prefix).toBe('pre');
+                expect(resource.path).toBe('nested');
+                expect(resource.appendPath('new_key').path).toBe('nested.new_key');
+                expect(resource.truncatePath().path).toBe('nested');
+                expect(resource.resetPath().path).toBe('');
+            });
+            it('should change prefix', () => {
+                const resource = service.load('prefix_change').save(true).changePrefix('pre_');
+                expect(resource.value).toBe(true);
+                expect(resource.prefix).toBe('pre_');
+                expect(service.get('prefix_change')).toMatch(/null|undefined/);
+                expect(service.utility.get('prefix_change', {prefix: 'pre_'})).toBe(true);
+            });
         });
 
         describe('should delete specified data', () => {
             const expectation = /null|undefined/;
+            it('from Resource', () => {
+                expect(service.load('something_unique').save(true).remove().value).toMatch(expectation);
+            });
             it('by key', () => {
                 Object.entries(entries).forEach(([key, value]) => {
                     service.remove(key);

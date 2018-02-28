@@ -66,10 +66,9 @@ export class Resource<T> {
     /**
      * Removes last item of path
      * e.g. if path('key.nested') and truncatePath(), the path will be "key"
-     * @param {string} path
      * @returns {this}
      */
-    public truncatePath(path: string): this {
+    public truncatePath(): this {
         this._path.pop();
         return this;
     }
