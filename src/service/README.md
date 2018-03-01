@@ -22,12 +22,17 @@ All of them provide common methods:
 + `utility: WebStorageUtility`: access to [`WebStorageUtility`](https://github.com/zoomsphere/ngx-store/src/utility/webstorage-utility.ts) class for advanced usage
 
 ## Builder pattern
-`WebStorage.load(key: string)` method exposes API based on builder design pattern. Following methods are allowed:
-+ `value` - getter returning value for current builder state, ends the chain
-+ `path(path: string)` - sets path of object property, e.g. if we have `{ nested: { property: true }}` under "object" key in localStorage, then `localStorageService.load('object').path('nested.property').value` will be equal to `true`
-+ `prefix(prefix: string)` - sets prefix, e.g. `localStorageService.load('key').prefix('abc_').value` will read value of item stored under "abc_key" key in LS
-+ `defaultValue(value: any)` - sets default value for both reading and saving, will be used in case when real value is `null` or `undefined`
+`WebStorage.load(key: string)` method exposes API based on builder design pattern. Following methods are allowed in a chain:
++ `setPath(path: string)` - sets path of object property, e.g. if we have `{ nested: { property: true }}` under "object" key in localStorage, then `localStorageService.load('object').path('nested.property').value` will be equal to `true`
++ `appendPath(path: string)` - appends current path, e.g. if path('key') and appendPath('nested'), the path will be "key.nested"
++ `truncatePath()` - removes last item of path, e.g. if path('key.nested') and truncatePath(), the path will be "key"
++ `resetPath()` - resets set path
++ `setPrefix(prefix: string)` - sets prefix, e.g. `localStorageService.load('key').prefix('abc_').value` will read value of item stored under "abc_key" key in LS
++ `changePrefix(prefix: string)` - moves storage item to new key using given prefix
++ `setDefaultValue(value: any)` - sets default value for both reading and saving, will be used in case when real value is `null` or `undefined`
 + `save(value: any)` - saves given value in chosen place - as a new entry or an existing object property depending on `path`
++ `remove()` - removes item stored under current key
++ there are also "non-chainable" getters for: `value`, `defaultValue`, `path` and `prefix`
 
 See [`Resource`](https://github.com/zoomsphere/ngx-store/src/service/resource.ts) class for details.
 
@@ -39,6 +44,33 @@ console.log(objectResource.path('nested.property').value); // false
 console.log(objectResource.path('nested.property').save(true).value); // true
 console.log(objectResource.path('nested.new_key').defaultValue(8).save(null).value); // 8
 console.log(objectResource.path('nested').value); // { property: true, new_key: 8 }
+```
+Real-life usage in a class:
+```typescript
+import { LocalStorageService, NgxResource } from 'ngx-store';
+
+interface ModuleSettings {
+    viewType?: string;
+    notificationsCount: number;
+    displayName: string;
+}
+
+class ModuleService {
+    constructor(public localStorageService: LocalStorageService) {}
+    
+    public get settings(): NgxResource<ModuleSettings> {
+        return this.localStorageService
+            .load(`userSettings`)
+            .setPath(`modules`)
+            .setDefaultValue({}) // we have to set {} as default value, because numeric `moduleId` would create an array 
+            .appendPath(this.moduleId)
+            .setDefaultValue({});
+    }
+    
+    public saveModuleSettings(settings: ModuleSettings) {
+        this.settings.save(settings);
+    }
+}
 ```
 
 ## Listening to changes

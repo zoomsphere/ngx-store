@@ -22,7 +22,22 @@ This library adds decorators that make it super easy to *automagically* save and
     + your own project!
 - Tests coverage
 
+## CHANGELOG
+### v1.4.0
+- standardized behavior for:
+    - more than 1 decorator, e.g. in `@LocalStorage() @CookieStorage() variable: any;` `CookieStorage` (decorator closer to variable) has higher priority, hence the value will be read from cookies only. The cookie value will be saved in `localStorage` regardless of its content to keep consistency.
+    - `WebStorage.clear('all')` - will now remove everything except `ngx-store`'s config (stored in `localStorage`)
+- removed deprecated (since v0.5) `WEBSTORAGE_CONFIG`
+- `@SharedStorage` has now alias `@TempStorage`
+- introduced [builder pattern](https://github.com/zoomsphere/ngx-store/tree/master/src/service#builder-pattern)
+- added unit tests coverage
+- fixes for storage events
+
+**NOTICE:** v1.5 is planning to be compiled with Angular5, hence will not support A4
+
 ## Upcoming (TODO)
+- Storage events for keys removed from outside
+- Tests for storage events (accepting PRs)
 - Support for Set and Map
 - Encoding of saved data
 - Take configuration from [npm config](https://www.npmjs.com/package/config)'s file (?)
