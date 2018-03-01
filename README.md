@@ -38,6 +38,7 @@ This library adds decorators that make it super easy to *automagically* save and
 ## Upcoming (TODO)
 - Storage events for keys removed from outside
 - Tests for storage events (accepting PRs)
+- Accepting Moment's instances as expiration date (accepting PRs)
 - Support for Set and Map
 - Encoding of saved data
 - Take configuration from [npm config](https://www.npmjs.com/package/config)'s file (?)
