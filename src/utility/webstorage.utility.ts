@@ -1,4 +1,4 @@
-import { DecoratorConfig } from '../decorator/webstorage';
+import { DecoratorConfig } from '../ngx-store.types';
 import { WebStorage } from './storage/cookies-storage';
 import { Cache } from '../decorator/cache';
 import { CONFIG_PREFIX, debug } from '../config/index';
