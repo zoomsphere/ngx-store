@@ -1,7 +1,7 @@
 {
     "name": "ngx-store",
     "private": true,
-    "version": "1.4.0-RC6",
+    "version": "1.4.0-RC7",
     "description": "Angular decorators to automagically keep variables in HTML5 LocalStorage, SessionStorage, cookies; injectable services for managing and listening to data changes and a bit more.",
     "main": "./ngx-store.js",
     "main for angular5": "./bundles/ngx-store.umd.js",
@@ -14,7 +14,7 @@
         "test:watch": "karma start karma.conf.js --single-run false",
         "pack-lib": "npm run build && npm pack ./dist",
         "publish-lib": "npm run build && npm publish --tag RC ./dist",
-        "publish-lib:next": "npm run build && npm publish --tag next ./dist",
+        "publish-lib:rc": "npm run build && npm publish --tag RC ./dist",
         "compodoc": "compodoc -p tsconfig.json",
         "compodoc-serve": "compodoc -s"
     },

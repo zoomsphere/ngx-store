@@ -26,7 +26,7 @@ This library adds decorators that make it super easy to *automagically* save and
 ### v1.4.0
 - standardized behavior for:
     - more than 1 decorator, e.g. in `@LocalStorage() @CookieStorage() variable: any;` `CookieStorage` (decorator closer to variable) has higher priority, hence the value will be read from cookies only. The cookie value will be saved in `localStorage` regardless of its content to keep consistency.
-    - `WebStorage.clear('all')` - will now remove everything except `ngx-store`'s config (stored in `localStorage`)
+    - `WebStorageService.clear('all')` - now will remove everything except `ngx-store`'s config (stored in `localStorage`)
 - removed deprecated (since v0.5) `WEBSTORAGE_CONFIG`
 - `@SharedStorage` has now alias `@TempStorage`
 - introduced [builder pattern](https://github.com/zoomsphere/ngx-store/tree/master/src/service#builder-pattern)
