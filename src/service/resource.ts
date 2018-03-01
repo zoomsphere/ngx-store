@@ -2,6 +2,7 @@ import { WebStorageService } from './webstorage.service';
 import { Config } from '../config/config';
 const _get = require('lodash.get');
 const _set = require('lodash.set');
+const _merge = require('lodash.merge');
 
 export class Resource<T> {
     protected _defaultValue: any = null;
@@ -118,7 +119,7 @@ export class Resource<T> {
     }
 
     /**
-     * Creates or updates value as a new entry or existing object property depending on path
+     * Creates or overrides value as a new entry or existing object property depending on path
      * @param value
      * @returns {this}
      */
@@ -128,6 +129,15 @@ export class Resource<T> {
         }
         this.service.utility.set(this.key, this.considerDefault(value), {prefix: this._prefix});
         return this;
+    }
+
+    /**
+     * Updates existing object property using current path
+     * @param {T} value
+     * @returns {this}
+     */
+    public update(value: T): this {
+        return this.save(_merge(this.readValue(), value));
     }
 
     /**

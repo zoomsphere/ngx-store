@@ -38,6 +38,7 @@ export abstract class WebStorageService {
 
     /**
      * Returns new data Resource for given key exposing builder design pattern
+     * designed for complex nested data structures
      * @param {string} key
      * @returns {any}
      */

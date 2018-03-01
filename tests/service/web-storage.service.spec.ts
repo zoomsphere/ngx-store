@@ -76,13 +76,16 @@ function test(storageService: typeof WebStorageService) {
                 expect(service.load('new_key').save('==').value).toBe('==');
                 expect(service.load('new_key').setDefaultValue(8).save(undefined).value).toBe(8);
                 expect(service.load('object').setPath('nested.new_key').save(123).value).toBe(123);
-                expect(service.get('object')).toEqual({
+                const expectedObject = {
                     property: 0,
                     nested: {
                         property: null,
                         new_key: 123,
                     },
-                });
+                };
+                expect(service.get('object')).toEqual(expectedObject);
+                expectedObject.nested.new_key = 125;
+                expect(service.load('object').setPath('nested').update({new_key: 125}).value).toEqual(expectedObject.nested, 'update');
             });
             it('set and get values should be equal', () => {
                 const resource = service.load('object').setDefaultValue(1).setPrefix('pre').setPath('nested');

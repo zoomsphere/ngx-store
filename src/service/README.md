@@ -31,6 +31,7 @@ All of them provide common methods:
 + `changePrefix(prefix: string)` - moves storage item to new key using given prefix
 + `setDefaultValue(value: any)` - sets default value for both reading and saving, will be used in case when real value is `null` or `undefined`
 + `save(value: any)` - saves given value in chosen place - as a new entry or an existing object property depending on `path`
++ `update(value: any)` - updates object stored under current path using `lodash.merge`
 + `remove()` - removes item stored under current key
 + there are also "non-chainable" getters for: `value`, `defaultValue`, `path` and `prefix`
 
@@ -44,6 +45,7 @@ console.log(objectResource.path('nested.property').value); // false
 console.log(objectResource.path('nested.property').save(true).value); // true
 console.log(objectResource.path('nested.new_key').defaultValue(8).save(null).value); // 8
 console.log(objectResource.path('nested').value); // { property: true, new_key: 8 }
+console.log(objectResource.update({new_key: true})); // { nested: { property: false }, new_key: true }
 ```
 Real-life usage in a class:
 ```typescript
@@ -69,6 +71,10 @@ class ModuleService {
     
     public saveModuleSettings(settings: ModuleSettings) {
         this.settings.save(settings);
+    }
+    
+    public updateModuleSettings(settings: Partial<ModuleSettings>) {
+        this.settings.update(settings);
     }
 }
 ```
