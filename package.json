@@ -11,6 +11,7 @@
         "build": "node build.js",
         "lint": "tslint ./*.ts -t verbose",
         "test": "karma start",
+        "test:watch": "karma start karma.conf.js --single-run false",
         "pack-lib": "npm run build && npm pack ./dist",
         "publish-lib": "npm run build && npm publish --tag RC ./dist",
         "publish-lib:next": "npm run build && npm publish --tag next ./dist",
