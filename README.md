@@ -39,6 +39,7 @@ This library adds decorators that make it super easy to *automagically* save and
 - Storage events for keys removed from outside
 - Tests for storage events (accepting PRs)
 - Accepting Moment's instances as expiration date (accepting PRs)
+- More options for managing cookies
 - Support for Set and Map
 - Encoding of saved data
 - Take configuration from [npm config](https://www.npmjs.com/package/config)'s file (?)
