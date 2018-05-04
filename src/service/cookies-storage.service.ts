@@ -1,7 +1,7 @@
 import { cookiesStorage } from '../utility/storage/cookies-storage';
 import { WebStorageService } from './webstorage.service';
 import { cookiesStorageUtility } from '../utility/index';
-import 'rxjs/add/operator/merge';
+import { merge } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -10,8 +10,9 @@ export class CookiesStorageService extends WebStorageService {
 
     constructor() {
         super(cookiesStorageUtility);
-        this._changes = cookiesStorage.externalChanges.asObservable()
-            .merge(cookiesStorageUtility.changes);
+        this._changes =
+             merge(cookiesStorage.externalChanges.asObservable(),
+                   cookiesStorageUtility.changes);
     }
 
     public set<T>(key: string, value: T, expirationDate?: Date): T {

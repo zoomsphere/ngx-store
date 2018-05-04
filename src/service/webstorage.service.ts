@@ -2,9 +2,8 @@ import { debug, ClearType, Config, WebStorageConfigInterface } from '../config/i
 import { WebStorageUtility } from '../utility/webstorage.utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
 import { Cache } from '../decorator/cache';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/delay';
+import { Observable } from 'rxjs';
+import { delay, filter } from 'rxjs/operators';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
 import { Resource } from './resource';
 const merge = require('lodash.merge');
@@ -65,17 +64,20 @@ export abstract class WebStorageService {
     }
 
     public observe(key?: string, exactMatch?: boolean) {
-        return this._changes.filter((event: NgxStorageEvent) => {
-            if (!key) { return true; }
-            if (exactMatch) {
-                if (key.startsWith(Config.prefix)) {
-                    return event.key === key;
+        return this._changes.pipe(
+            filter((event: NgxStorageEvent) => {
+                if (!key) { return true; }
+                if (exactMatch) {
+                    if (key.startsWith(Config.prefix)) {
+                        return event.key === key;
+                    }
+                    return event.key === Config.prefix + key;
+                } else {
+                    return event.key.indexOf(key) !== -1;
                 }
-                return event.key === Config.prefix + key;
-            } else {
-                return event.key.indexOf(key) !== -1;
-            }
-        }).delay(30); // event should come after actual data change and propagation
+            }),
+            delay(30) // event should come after actual data change and propagation
+        );
     }
 
     /**

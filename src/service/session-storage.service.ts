@@ -1,10 +1,8 @@
 import { WebStorageService } from './webstorage.service';
 import { sessionStorageUtility } from '../utility/index';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/merge';
+import { Observable, fromEvent, merge } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
 
 @Injectable()
@@ -13,9 +11,12 @@ export class SessionStorageService extends WebStorageService {
 
     constructor() {
         super(sessionStorageUtility);
-        this._changes = Observable.fromEvent<NgxStorageEvent>(window, 'storage')
-            .filter((event: NgxStorageEvent) => event.storageArea === sessionStorage)
-            .map((event: NgxStorageEvent) => this.mapNativeEvent(event))
-            .merge(sessionStorageUtility.changes);
+        this._changes =
+            merge(fromEvent<NgxStorageEvent>(window, 'storage')
+                  .pipe(
+                      filter((event: NgxStorageEvent) => event.storageArea === sessionStorage),
+                      map((event: NgxStorageEvent) => this.mapNativeEvent(event))
+                  ),
+                  sessionStorageUtility.changes);
     }
 }
