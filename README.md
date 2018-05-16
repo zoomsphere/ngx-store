@@ -13,7 +13,7 @@ This library adds decorators that make it super easy to *automagically* save and
 - Injectable `LocalStorageService`, `SessionStorageService`, `CookiesStorageService` and `SharedStorageService` ([read more here](src/service#angular-storage))
 - Possibility of [listening to storage changes](https://github.com/zoomsphere/ngx-store/tree/master/src/service#listening-to-changes)
 - Easy configuration (see [#configuration](#configuration) section)
-- Compatibility with: 
+- Compatibility with:
     + all previous versions
     + Angular AoT compiler
     + `angular2-localstorage`
@@ -23,7 +23,8 @@ This library adds decorators that make it super easy to *automagically* save and
 - Tests coverage
 
 ## CHANGELOG
-### v1.4.0
+### v2.0.0 - support for Angular 6 (RxJS v6)
+### v1.4.x
 - standardized behavior for:
     - more than 1 decorator, e.g. in `@LocalStorage() @CookieStorage() variable: any;` `CookieStorage` (decorator closer to variable) has higher priority, hence the value will be read from cookies only. The cookie value will be saved in `localStorage` regardless of its content to keep consistency.
     - `WebStorageService.clear('all')` - now will remove everything except `ngx-store`'s config (stored in `localStorage`)
@@ -33,7 +34,6 @@ This library adds decorators that make it super easy to *automagically* save and
 - added unit tests coverage
 - fixes for storage events
 
-**NOTICE:** v1.5 is planning to be compiled with Angular5, hence will not support A4
 
 ## Upcoming (TODO)
 - Storage events for keys removed from outside
@@ -92,7 +92,7 @@ As this project uses decorating functions, it is important to provide custom con
     ```
 2. If you use webpack, you can provide global variable in your `webpack.js` file this way:
     ```javascript
-    plugins: [ 
+    plugins: [
       new webpack.DefinePlugin({
         NGXSTORE_CONFIG: JSON.stringify({
           prefix: '', // etc
@@ -113,7 +113,7 @@ Decorating functions can take config object with the following fields:
 1. Pretty easy to use decorators. Here is where the real magic happens.
     ```typescript
     import { CookieStorage, LocalStorage, SessionStorage } from 'ngx-store';
-    
+
     export class MySuperComponent {
       // it will be stored under ${prefix}viewCounts name
       @LocalStorage() viewCounts: number = 0;
@@ -125,7 +125,7 @@ Decorating functions can take config object with the following fields:
       @LocalStorage() @CookieStorage({prefix: '', key: 'user_id'}) userId: string = '';
       // it will be stored in a cookie named ${prefix}user_workspaces for 24 hours
       @CookieStorage({key: 'user_workspaces', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}) userWorkspaces = [];
-     
+
       constructor() {
         this.viewCounts++;
         this.userName = 'some name stored in localstorage';
@@ -141,22 +141,22 @@ Decorating functions can take config object with the following fields:
     **Sharing variables across classes:** Decorated variables can be easily shared across different classes, e.g. Angular Components (also after their destruction) without need to create new service for this purpose.
     ```typescript
     import { LocalStorage, SharedStorage } from 'ngx-store';
-    
+
     export class HomeComponent {
       @SharedStorage() title: string = 'Homepage'; // it will be kept in temp memory until app reload
       @LocalStorage() userNote: string = 'Leave your note here'; // it will be read from and saved to localStorage
-   
+
       constructor() {
         setTimeout(() => {
           console.log('userNote:', this.userNote); // it should be changed after user's visit to NestedComponent
         }, 5000);
       }
     }
- 
+
     export class NestedComponent {
       @SharedStorage('title') homeTitle: string = '';
       @LocalStorage() protected userNote: string = '';
-   
+
       constructor() {
         console.log('homeTitle:', this.homeTitle); // should print 'Homepage'
         console.log('userNote:', this.userNote); // should print userNote set in HomeComponent
@@ -173,7 +173,7 @@ Decorating functions can take config object with the following fields:
       @LocalStorage() someObject: any = { c: 3 };
       @SessionStorage() arrayOfSomethings: WebstorableArray<number> = <any>[0,1,2,3,4];
       @CookieStorage({ mutate: false }) someCookie: {version?: number, content?: string} = {};
-       
+
       constructor() {
         this.someObject.a = 1;
         this.someObject['b'] = 2;
@@ -190,7 +190,7 @@ Decorating functions can take config object with the following fields:
        }
     }
     ```
-    
+
     **Limited lifecycle classes in AoT compilation:** There is a special case when Service or Component in your application containing decorated variable is being destroyed:
     ```typescript
     import { OnDestroy } from '@angular/core';
@@ -198,15 +198,15 @@ Decorating functions can take config object with the following fields:
 
     export class SomeService implements OnDestroy { // implement the interface
         @LocalStorage() destroyedVariable: any = {};
-     
+
         ngOnDestroy() {} // event empty method is needed to allow ngx-store handle class destruction
     }
     ```
-    
+
 2. Use the [services](src/service#angular-storage) to manage your data:
     ```typescript
     import { CookiesStorageService, LocalStorageService, SessionStorageService, SharedStorageService } from 'ngx-store';
- 
+
     export class MyService {
       constructor(
         localStorageService: LocalStorageService,
@@ -217,16 +217,16 @@ Decorating functions can take config object with the following fields:
         console.log('all cookies:');
         cookiesStorageService.utility.forEach((value, key) => console.log(key + '=', value));
       }
-   
+
       public saveSomeData(object: Object, array: Array<any>) {
         this.localStorageService.set('someObject', object);
         this.sessionStorageService.set('someArray', array);
-        
+
         this.localStorageService.keys.forEach((key) => {
           console.log(key + ' =', this.localStorageService.get(key));
         });
       }
-   
+
       public clearSomeData(): void {
         this.localStorageService.clear('decorators'); // removes only variables created by decorating functions
         this.localStorageService.clear('prefix'); // removes variables starting with set prefix (including decorators)
