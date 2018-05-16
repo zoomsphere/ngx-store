@@ -1,5 +1,5 @@
 import { NgxStorageEvent } from './storage-event';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { StorageName } from '../webstorage.utility';
 
 // TODO: in the future use ES6 Proxy to handle indexers

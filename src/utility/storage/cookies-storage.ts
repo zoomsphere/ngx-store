@@ -1,8 +1,7 @@
 import { Config, debug } from '../../config/index';
 import { NgxStorage } from './storage';
 import { StorageName, WebStorageUtility } from '../webstorage.utility';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/interval';
+import { Observable, interval } from 'rxjs';
 
 export interface WebStorage extends Storage {
    setItem(key: string, data: string, expirationDate?: Date): void;
@@ -16,7 +15,7 @@ export class CookiesStorage extends NgxStorage {
         super();
         this.getAllItems();
         if (Config.cookiesCheckInterval) {
-            Observable.interval(Config.cookiesCheckInterval)
+            interval(Config.cookiesCheckInterval)
                 .subscribe(() => {
                     if (!this.externalChanges.observers.length) {
                         return; // don't run if there are no set subscriptions
