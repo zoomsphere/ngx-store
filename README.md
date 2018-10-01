@@ -87,6 +87,7 @@ As this project uses decorating functions, it is important to provide custom con
       cookiesScope: '',    // what you pass here will actually prepend base domain
       cookiesCheckInterval: 0, // number in ms describing how often cookies should be checked for changes
       previousPrefix: 'angular2ws_', // you have to set it only if you were using custom prefix in old version ('angular2ws_' is a default value)
+      decoratorDefaultToSubject: false // default: false, determines if decorators will create a standard property or an RxJS Subject
     };
     </script>
     ```
@@ -106,6 +107,7 @@ As this project uses decorating functions, it is important to provide custom con
 Decorating functions can take config object with the following fields:
 - `key: string` - key under the variable will be stored, default key is the variable name
 - `mutate: boolean` - enable or disable object mutation for instance, default depends on global config
+- `asSubject: boolean` - makes decorator property an RxJS Subject<T> as opposed to type T, default depends on global config which defaults to false
 - `expires: Date` - for `@CookieStorage()` only, specifies expiration date, null = lifetime cookie
 
 
@@ -113,10 +115,13 @@ Decorating functions can take config object with the following fields:
 1. Pretty easy to use decorators. Here is where the real magic happens.
     ```typescript
     import { CookieStorage, LocalStorage, SessionStorage } from 'ngx-store';
+    import { Subject } from 'rxjs';
 
     export class MySuperComponent {
       // it will be stored under ${prefix}viewCounts name
       @LocalStorage() viewCounts: number = 0;
+      // it will be used as an RxJS Subject
+      @LocalStorage({ asSubject: true, key: 'viewCounts' }) viewCounts$: Subject<number>;
       // this under name: ${prefix}differentLocalStorageKey
       @LocalStorage('differentLocalStorageKey') userName: string = '';
       // it will be stored under ${prefix}itWillBeRemovedAfterBrowserClose in session storage

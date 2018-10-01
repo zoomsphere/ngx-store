@@ -16,6 +16,7 @@ const DefaultConfig: WebStorageConfigInterface = {
     cookiesScope: '',
     cookiesCheckInterval: 0,
     debugMode: false,
+    decoratorDefaultToSubject: false
 };
 
 // take configuration provided as a global variable

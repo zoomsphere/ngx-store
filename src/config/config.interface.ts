@@ -6,5 +6,6 @@ export interface WebStorageConfigInterface {
     cookiesScope?: string;
     cookiesCheckInterval?: number;
     debugMode?: boolean;
+    decoratorDefaultToSubject?: boolean;
 }
 export type ClearType = 'decorators' | 'prefix' | 'all';

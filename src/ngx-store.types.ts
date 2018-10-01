@@ -11,6 +11,7 @@ export interface WebStorageDecoratorConfig {
 export interface StorageDecoratorConfig extends WebStorageDecoratorConfig {
     prefix?: string;
     mutate?: boolean;
+    asSubject?: boolean;
 }
 export interface LocalStorageDecoratorConfig extends StorageDecoratorConfig { }
 export interface SessionStorageDecoratorConfig extends StorageDecoratorConfig { }
