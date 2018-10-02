@@ -13,8 +13,8 @@ import {
     CookieStorageDecoratorConfig, DecoratorConfig, LocalStorageDecoratorConfig,
     SessionStorageDecoratorConfig, WebStorageDecoratorConfig
 } from '../ngx-store.types';
-import { Subject } from 'rxjs';
-import { filter, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { filter, map, withLatestFrom, skip } from 'rxjs/operators';
 import { Config } from '../config/config';
 
 export function LocalStorage(keyOrConfig?: string | LocalStorageDecoratorConfig,
@@ -79,14 +79,15 @@ function WebStorage(
         }
 
         let propertyDescriptor: PropertyDescriptor;
+
         if (config.asSubject) {
-            const subject = new Subject();
-            subject.next(getCache());
-            subject.subscribe(setCache);
+            const subject = new BehaviorSubject(getCache());
+            subject.pipe(skip(1)).subscribe(setCache);
             webStorageUtility.changes.pipe(
                 filter(changeEvent => changeEvent.key === cacheItem.key),
                 withLatestFrom(subject),
-                filter(([changeEvent, subjectValue]) => changeEvent.newValue !== subjectValue)
+                filter(([changeEvent, subjectValue]) => changeEvent.newValue !== subjectValue),
+                map(([changeEvent]) => changeEvent.newValue)
             ).subscribe(subject);
 
             propertyDescriptor = { value: subject };
