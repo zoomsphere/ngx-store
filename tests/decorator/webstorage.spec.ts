@@ -191,14 +191,27 @@ describe('Decorators', () => {
 
     it('changes to values should be emmitted to subscribers and visible to other classes', () => {
         testClass2 = new TestClass2();
-        testClass2.localStorageVariable = 'string';
+        testClass2.localStorageVariable = 'test string 1';
         testClass3 = new TestClass3();
-        testClass3.localStorageVariable.pipe(skip(1), take(1)).subscribe((latestValue) => {
-            expect(latestValue).toBe('new string');
-            // testClass2.localStorageVariable won't be updated until the NgxStorageEvent completes
-            setTimeout(expect(testClass2.localStorageVariable).toBe('new string'), 0);
+
+        const expectationList = [
+            'test string 1',
+            'test string 2',
+            'test string 3'
+        ];
+        let expectationIndex = 0;
+        testClass3.localStorageVariable.pipe(take(3)).subscribe((latestValue) => {
+            const expectation = expectationList[expectationIndex];
+
+            expect(latestValue).toBe(expectation);
+            expect(testClass2.localStorageVariable).toBe(expectation);
+
+            expectationIndex++;
+            if (expectation === 'test string 2') {
+                testClass2.localStorageVariable = 'test string 3';
+            }
         });
-        testClass3.localStorageVariable.next('new string');
+        testClass3.localStorageVariable.next('test string 2');
     });
 
     it('changes to values should be emmitted to subscribers and visible to other subjects', () => {
@@ -214,15 +227,17 @@ describe('Decorators', () => {
             'test string 5',
             'test string 6'
         ];
-        let expectation = 0;
+        let expectationIndex = 0;
         testClass3.localStorageVariable.pipe(
             withLatestFrom(testClass3Instance2.localStorageVariable),
             skip(1),
             take(7)
         ).subscribe(([testClass3Value, testClass3Instance2Value]: [string, string]) => {
-            expect(testClass3Value).toBe(expectationList[expectation]);
-            expect(testClass3Instance2Value).toBe(expectationList[expectation]);
-            expectation++;
+            const expectation = expectationList[expectationIndex];
+
+            expect(testClass3Value).toBe(expectation);
+            expect(testClass3Instance2Value).toBe(expectation);
+            expectationIndex++;
         });
         testClass3.localStorageVariable.next(expectationList[0]);
         testClass3.localStorageVariable.next(expectationList[1]);
