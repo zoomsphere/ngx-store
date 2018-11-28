@@ -45,6 +45,10 @@ export class NgxStorageEvent implements StorageEvent {
         return StorageEvent.prototype.stopPropagation.bind(this);
     }
 
+    public get composedPath() {
+        return StorageEvent.prototype.composedPath.bind(this);
+    }
+
     public get deepPath() {
         return StorageEvent.prototype.deepPath.bind(this);
     }
