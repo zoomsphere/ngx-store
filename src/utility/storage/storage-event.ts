@@ -25,10 +25,6 @@ export class NgxStorageEvent implements StorageEvent {
      * Methods below exist only to satisfy TypeScript compiler
      */
 
-    public get scoped() {
-        return StorageEvent.prototype.scoped;
-    }
-
     public get initEvent() {
         return StorageEvent.prototype.initEvent.bind(this);
     }
@@ -47,10 +43,6 @@ export class NgxStorageEvent implements StorageEvent {
 
     public get composedPath() {
         return StorageEvent.prototype.composedPath.bind(this);
-    }
-
-    public get deepPath() {
-        return StorageEvent.prototype.deepPath.bind(this);
     }
 
     public get AT_TARGET() {
