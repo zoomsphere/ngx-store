@@ -1,7 +1,7 @@
 {
     "name": "ngx-store",
     "private": true,
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Angular decorators to automagically keep variables in HTML5 LocalStorage, SessionStorage, cookies; injectable services for managing and listening to data changes and a bit more.",
     "main": "./bundles/ngx-store.umd.js",
     "module": "./esm5/ngx-store.js",
