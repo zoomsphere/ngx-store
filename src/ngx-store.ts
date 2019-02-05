@@ -1,6 +1,6 @@
 // Public classes.
 import { NgModule } from '@angular/core';
-import { WebStorageService, CookiesStorageService, LocalStorageService, SessionStorageService, SharedStorageService } from './service/index';
+import { CookiesStorageService, LocalStorageService, SessionStorageService, SharedStorageService } from './service/index';
 
 export { CookieStorage, LocalStorage, SessionStorage, SharedStorage, SharedStorage as TempStorage } from './decorator/webstorage';
 export { WebStorageService, CookiesStorageService, LocalStorageService, SessionStorageService, SharedStorageService, SharedStorageService as TempStorageService } from './service/index';
