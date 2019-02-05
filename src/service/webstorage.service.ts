@@ -3,7 +3,7 @@ import { WebStorageUtility } from '../utility/webstorage.utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
 import { Cache } from '../decorator/cache';
 import { Observable } from 'rxjs';
-import { delay, filter } from 'rxjs/operators';
+import { delay, filter, first } from 'rxjs/operators';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
 import { Resource } from './resource';
 const merge = require('lodash.merge');
@@ -76,6 +76,7 @@ export abstract class WebStorageService {
                     return event.key.indexOf(key) !== -1;
                 }
             }),
+            first(), // take first event from events array
             delay(30) // event should come after actual data change and propagation
         );
     }
