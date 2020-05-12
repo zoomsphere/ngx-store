@@ -1,7 +1,7 @@
 import { WebStorageService } from './webstorage.service';
 import { localStorageUtility } from '../utility/index';
 import { Injectable } from '@angular/core';
-import { Observable, fromEvent, merge } from 'rxjs';
+import { fromEvent, merge } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
 
