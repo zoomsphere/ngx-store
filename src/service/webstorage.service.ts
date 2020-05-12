@@ -21,10 +21,10 @@ export abstract class WebStorageService {
     public get keys(): Array<string> {
         // get prefixed key if prefix is defined
         const prefixKeys = this.utility.keys.filter(key => {
-            if(this.utility.prefix && this.utility.prefix.length) {
+            if (this.utility.prefix && this.utility.prefix.length) {
                 return key.startsWith(this.utility.prefix);
             }
-            return true
+            return true;
         });
         const decoratorKeys = (<WebStorageServiceInterface>this.constructor).keys;
         return prefixKeys.concat(decoratorKeys);
