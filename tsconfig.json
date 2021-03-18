@@ -3,6 +3,7 @@
         "baseUrl": ".",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "importHelpers": true,
         "strict": false,
         "module": "commonjs",
         "moduleResolution": "node",

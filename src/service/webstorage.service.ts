@@ -1,4 +1,4 @@
-import { debug, ClearType, Config, WebStorageConfigInterface } from '../config/index';
+import { ClearType, Config, debug, WebStorageConfigInterface } from '../config';
 import { WebStorageUtility } from '../utility/webstorage.utility';
 import { WebStorageServiceInterface } from './webstorage.interface';
 import { Cache } from '../decorator/cache';
@@ -6,13 +6,14 @@ import { Observable } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
 import { NgxStorageEvent } from '../utility/storage/storage-event';
 import { Resource } from './resource';
+
 const merge = require('lodash.merge');
 
 export abstract class WebStorageService {
     public static keys: Array<string> = [];
     protected _changes: Observable<NgxStorageEvent>;
 
-    public constructor(public utility: WebStorageUtility) { }
+    protected constructor(public utility: WebStorageUtility) { }
 
     /**
      * Gets keys for stored variables created by ngx-store,

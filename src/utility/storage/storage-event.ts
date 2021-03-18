@@ -1,7 +1,9 @@
-export class NgxStorageEvent implements StorageEvent {
+export class NgxStorageEvent<T = any> implements StorageEvent {
     protected static initTimeStamp = Date.now();
-    public oldValue: any;
-    public newValue: any;
+    // @ts-ignore
+    public oldValue: T;
+    // @ts-ignore
+    public newValue: T;
     public NONE: any;
     public timeStamp = (Date.now() - NgxStorageEvent.initTimeStamp);
     public readonly bubbles = false;
