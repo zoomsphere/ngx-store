@@ -7,38 +7,38 @@ import { WebStorageUtility } from '../utility/webstorage.utility';
 const isEqual = require('lodash.isequal');
 
 export class Cache {
-    public static items: Map<string, CacheItem> = new Map();
+  public static items: Map<string, CacheItem> = new Map();
 
-    public static getCacheFor(cacheCandidate: CacheItemInterface): CacheItem {
-        let cacheItem = Cache.get(cacheCandidate.key);
-        if (!cacheItem) {
-            cacheItem = new CacheItem(cacheCandidate);
-            debug.log(`Created new CacheItem for ${cacheCandidate.name} for ${cacheItem.utilities[0].utility.getStorageName()}`);
-            Cache.set(cacheItem);
-            return cacheItem;
-        }
-        debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheCandidate.utilities[0].utility.getStorageName()}`);
-        cacheItem.addTargets(cacheCandidate.targets);
-        cacheItem.addServices(cacheCandidate.services);
-        cacheItem.addUtilities(cacheCandidate.utilities);
-        Cache.set(cacheItem);
-        return cacheItem;
+  public static getCacheFor(cacheCandidate: CacheItemInterface): CacheItem {
+    let cacheItem = Cache.get(cacheCandidate.key);
+    if (!cacheItem) {
+      cacheItem = new CacheItem(cacheCandidate);
+      debug.log(`Created new CacheItem for ${cacheCandidate.name} for ${cacheItem.utilities[0].utility.getStorageName()}`);
+      Cache.set(cacheItem);
+      return cacheItem;
     }
+    debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheCandidate.utilities[0].utility.getStorageName()}`);
+    cacheItem.addTargets(cacheCandidate.targets);
+    cacheItem.addServices(cacheCandidate.services);
+    cacheItem.addUtilities(cacheCandidate.utilities);
+    Cache.set(cacheItem);
+    return cacheItem;
+  }
 
-    public static remove(cacheItem: CacheItem): boolean {
-        return Cache.items.delete(cacheItem.key);
-    }
+  public static remove(cacheItem: CacheItem): boolean {
+    return Cache.items.delete(cacheItem.key);
+  }
 
-    public static get(key: string): CacheItem {
-        return Cache.items.get(key) as CacheItem;
-    }
+  public static get(key: string): CacheItem {
+    return Cache.items.get(key) as CacheItem;
+  }
 
-    protected static set(cacheItem: CacheItem): void {
-        if (!Cache.get(cacheItem.key)) {
-            debug.log('CacheItem for ' + cacheItem.key, cacheItem);
-        }
-        Cache.items.set(cacheItem.key, cacheItem);
+  protected static set(cacheItem: CacheItem): void {
+    if (!Cache.get(cacheItem.key)) {
+      debug.log('CacheItem for ' + cacheItem.key, cacheItem);
     }
+    Cache.items.set(cacheItem.key, cacheItem);
+  }
 }
 
 // tslint:disable:only-arrow-functions
@@ -89,13 +89,17 @@ export class CacheItem implements CacheItemInterface {
   }
 
   public getProxy(value?: any, config: DecoratorConfig = {}): any {
-    if (value === undefined && this.proxy) return this.proxy; // return cached proxy if value hasn't changed
+    if (value === undefined && this.proxy) {
+      return this.proxy;
+    } // return cached proxy if value hasn't changed
     value = (value === undefined) ? this.readValue() : value;
     if (typeof value !== 'object' || value === null) {
       this.proxy = value;
       return value;
     }
-    if ((!Config.mutateObjects && !config.mutate) || config.mutate === false) return value;
+    if ((!Config.mutateObjects && !config.mutate) || config.mutate === false) {
+      return value;
+    }
 
     const _self = this; // alias to use in standard function expressions
     const prototype: any = Object.assign(new value.constructor(), value.__proto__);
@@ -108,7 +112,7 @@ export class CacheItem implements CacheItemInterface {
     if (Array.isArray(value)) { // handle methods that could change value of array
       const methodsToOverwrite = [
         'pop', 'push', 'reverse', 'shift', 'unshift', 'splice',
-        'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin'
+        'filter', 'forEach', 'map', 'fill', 'sort', 'copyWithin',
       ];
       for (const method of methodsToOverwrite) {
         prototype[method] = function(): void {
@@ -189,11 +193,15 @@ export class CacheItem implements CacheItemInterface {
   }
 
   public propagateChange(value: any, source?: WebStorageUtility): void {
-    if (isEqual(value, this.readValue())) return;
+    if (isEqual(value, this.readValue())) {
+      return;
+    }
     this.utilities.forEach(entry => {
       const utility = entry.utility;
       // updating service which the change came from would affect in a cycle
-      if (utility === source) return;
+      if (utility === source) {
+        return;
+      }
       debug.log(`propagating change on ${this.key} to:`, utility);
       utility.set(this._key, value, entry.config);
     });

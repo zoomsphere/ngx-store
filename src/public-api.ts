@@ -3,9 +3,13 @@
  */
 
 // Public classes.
-export { CookieStorage, LocalStorage, SessionStorage, SharedStorage, SharedStorage as TempStorage } from './lib/decorator/webstorage';
+export {
+  CookieStorage, LocalStorage, SessionStorage, SharedStorage, SharedStorage as TempStorage,
+} from './lib/decorator/webstorage';
 export { WebStorageService } from './lib/service/webstorage.service';
-export { CookiesStorageService, CookiesStorageService as CookieStorageService } from './lib/service/cookies-storage.service';
+export {
+  CookiesStorageService, CookiesStorageService as CookieStorageService,
+} from './lib/service/cookies-storage.service';
 export { SharedStorageService, SharedStorageService as TempStorageService } from './lib/service/shared-storage.service';
 export { LocalStorageService } from './lib/service/local-storage.service';
 export { SessionStorageService } from './lib/service/session-storage.service';

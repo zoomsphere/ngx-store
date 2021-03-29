@@ -23,7 +23,12 @@ This library adds decorators that make it super easy to *automagically* save and
 - Tests coverage
 
 ## CHANGELOG
-#### v3.0.0 - support for Angular 11 & TypeScript 4, added schematics
+#### v3.0.0:
+- support for Angular 11 & TypeScript 4
+- resolved circular dependencies
+- added schematics
+- added `.forRoot()` and `.forChild()` methods for future use
+- required dependencies moved to schematics installation script
 #### v2.1.0 - support for Angular 7 & TypeScript 3
 #### v2.0.0 - support for Angular 6 (RxJS v6)
 #### v1.4.x:
@@ -49,6 +54,10 @@ This library adds decorators that make it super easy to *automagically* save and
 
 
 ## Installation
+### Versions 3+
+Just run: `ng add ngx-store`. Done!
+
+### Older versions
 1. Download the library: `npm i ngx-store --save`
 2. Import the WebStorageModule in your `app.module.ts`:
     ```typescript
@@ -57,7 +66,7 @@ This library adds decorators that make it super easy to *automagically* save and
 
     @NgModule({
       imports: [
-        WebStorageModule,
+        WebStorageModule.forRoot(),
       ],
     })
     export class AppModule {}
@@ -86,8 +95,8 @@ As this project uses decorating functions, it is important to provide custom con
       clearType: 'prefix', // default: 'prefix'
       mutateObjects: true, // default: true
       debugMode: false,    // you can enable debug logs if you ever meet any bug to localize its source
-      cookiesScope: '',    // what you pass here will actually prepend base domain
-      cookiesCheckInterval: 0, // number in ms describing how often cookies should be checked for changes
+      cookiesScope: '',    // what you pass here will prepend base domain e.g. "." => .domain.com (all subdomains)
+      cookiesCheckInterval: 0, // number in ms describing how often cookies should be checked for changes, 0 = disabled
       previousPrefix: 'angular2ws_', // you have to set it only if you were using custom prefix in old version ('angular2ws_' is a default value)
     };
     </script>

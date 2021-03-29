@@ -6,15 +6,15 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CookiesStorageService extends WebStorageService {
-    public static keys: Array<string> = [];
+  public static keys: Array<string> = [];
 
-    constructor() {
-        super(cookiesStorageUtility);
-        this._changes = !cookiesStorage.externalChanges ? cookiesStorageUtility.changes
-            : merge(cookiesStorage.externalChanges?.asObservable(), cookiesStorageUtility.changes);
-    }
+  constructor() {
+    super(cookiesStorageUtility);
+    this._changes = !cookiesStorage.externalChanges ? cookiesStorageUtility.changes
+      : merge(cookiesStorage.externalChanges?.asObservable(), cookiesStorageUtility.changes);
+  }
 
-    public set<T>(key: string, value: T, expirationDate?: Date): T {
-        return this.utility.set(key, value, { expires: expirationDate }) as T;
-    }
+  public set<T>(key: string, value: T, expirationDate?: Date): T {
+    return this.utility.set(key, value, {expires: expirationDate}) as T;
+  }
 }
