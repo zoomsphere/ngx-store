@@ -1,8 +1,6 @@
-export class NgxStorageEvent<T = any> implements StorageEvent {
+export class NgxStorageEvent<T = any> implements Omit<StorageEvent, 'oldValue' | 'newValue'> {
   protected static initTimeStamp = Date.now();
-  // @ts-ignore
   public oldValue: T;
-  // @ts-ignore
   public newValue: T;
   public NONE: any;
   public timeStamp = (Date.now() - NgxStorageEvent.initTimeStamp);
