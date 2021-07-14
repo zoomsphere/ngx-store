@@ -81,7 +81,7 @@ export abstract class WebStorageService {
           }
           return event.key === Config.prefix + key;
         } else {
-          return event.key.indexOf(key) !== -1;
+          return event.key?.indexOf(key) !== -1;
         }
       }),
       delay(30), // event should come after actual data change and propagation
