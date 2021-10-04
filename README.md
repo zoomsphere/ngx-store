@@ -18,11 +18,13 @@ This library adds decorators that make it super easy to *automagically* save and
   + Angular AoT compiler
   + `angular2-localstorage` (seamless migration)
   + [nativescript-localstorage](https://github.com/NathanaelA/nativescript-localstorage)
-  + Angular v2, 4, 5, 7, 11
+  + Angular since version 2
   + your own project!
 - Tests coverage
 
 ## CHANGELOG
+#### v3.1.0:
+- added `migrateKey` decorator config option
 #### v3.0.0:
 - support for Angular 11 & TypeScript 4
 - resolved circular dependencies
@@ -118,7 +120,7 @@ Decorating functions can take config object with the following fields:
 - `key: string` - key under the variable will be stored, default key is the variable name
 - `mutate: boolean` - enable or disable object mutation for instance, default depends on global config
 - `expires: Date` - for `@CookieStorage()` only, specifies expiration date, null = lifetime cookie
-
+- `migrateKey: string` - previously used key from which the value will be transferred to the current `key`, the old key will be cleared afterwards
 
 ## Usage
 1. Pretty easy to use decorators. Here is where the real magic happens.
@@ -136,6 +138,8 @@ Decorating functions can take config object with the following fields:
       @LocalStorage() @CookieStorage({prefix: '', key: 'user_id'}) userId: string = '';
       // it will be stored in a cookie named ${prefix}user_workspaces for 24 hours
       @CookieStorage({key: 'user_workspaces', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}) userWorkspaces = [];
+      // the value will be transferred from localStorage's "location" key
+      @LocalStorage({key: 'myLocation', migrateKey: 'location'}) myLocation: string = '';
 
       constructor() {
         this.viewCounts++;
