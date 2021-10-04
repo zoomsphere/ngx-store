@@ -1,7 +1,7 @@
 export class NgxStorageEvent<T = any> implements Omit<StorageEvent, 'oldValue' | 'newValue'> {
   protected static initTimeStamp = Date.now();
-  public oldValue: T;
-  public newValue: T;
+  public oldValue!: T;
+  public newValue!: T;
   public NONE: any;
   public timeStamp = (Date.now() - NgxStorageEvent.initTimeStamp);
   public readonly bubbles = false;
@@ -14,7 +14,7 @@ export class NgxStorageEvent<T = any> implements Omit<StorageEvent, 'oldValue' |
   public readonly isTrusted = true;
   public readonly path = [window];
   public readonly returnValue = true;
-  public readonly srcElement = <any> window;
+  public readonly srcElement = window as any;
   public readonly target = window;
   public readonly url = window.location.href;
   public isInternal = true;
@@ -25,7 +25,7 @@ export class NgxStorageEvent<T = any> implements Omit<StorageEvent, 'oldValue' |
   /**
    * Methods below exist only to satisfy TypeScript compiler
    */
-
+  // tslint:disable:typedef
   public get initEvent() {
     return StorageEvent.prototype.initEvent.bind(this);
   }

@@ -8,20 +8,21 @@ export type WebstorableArray<T> = Webstorable & Array<T>;
 // TODO create config interface for service methods
 export interface WebStorageDecoratorConfig {
   key?: string;
+  mutate?: boolean;
 }
 
 export interface StorageDecoratorConfig extends WebStorageDecoratorConfig {
   prefix?: string;
-  mutate?: boolean;
-}
-
-export interface LocalStorageDecoratorConfig extends StorageDecoratorConfig {
 }
 
 export interface SessionStorageDecoratorConfig extends StorageDecoratorConfig {
 }
 
-export interface CookieStorageDecoratorConfig extends StorageDecoratorConfig {
+export interface LocalStorageDecoratorConfig extends StorageDecoratorConfig {
+  migrateKey?: string;
+}
+
+export interface CookieStorageDecoratorConfig extends LocalStorageDecoratorConfig {
   expires?: Date;
 }
 

@@ -17,7 +17,8 @@ export class Cache {
       Cache.set(cacheItem);
       return cacheItem;
     }
-    debug.log(`Loaded prior CacheItem of ${cacheItem.name} for ${cacheCandidate.utilities[0].utility.getStorageName()}`);
+    debug.log(`Loaded prior CacheItem of ${cacheItem.name}
+     for ${cacheCandidate.utilities[0].utility.getStorageName()}`);
     cacheItem.addTargets(cacheCandidate.targets);
     cacheItem.addServices(cacheCandidate.services);
     cacheItem.addUtilities(cacheCandidate.utilities);
@@ -64,7 +65,7 @@ export class CacheItem implements CacheItemInterface {
     return this._key;
   }
 
-  public saveValue(value: any, config: DecoratorConfig = {}, source?: WebStorageUtility): any {
+  public saveValue(value: any, config: DecoratorConfig = {}): any {
     debug.groupCollapsed('CacheItem#saveValue for ' + this.key + ' in ' + this.currentTarget.constructor.name);
     debug.log('new value: ', value);
     // if (value === false && this.readValue() === true) debugger;
@@ -76,15 +77,19 @@ export class CacheItem implements CacheItemInterface {
     // prevent overwriting value by initializators
     if (!this.initializedTargets.has(this.currentTarget)) {
       this.initializedTargets.add(this.currentTarget);
-      const readValue = this.readValue();
+      let readValue = this.readValue();
+      if (readValue !== null && config.migrateKey) {
+        this.migrate(config, this.utilities[0].utility);
+        readValue = this.readValue();
+      }
       const savedValue = (readValue !== null && readValue !== undefined) ? readValue : value;
       let proxy = this.getProxy(savedValue, config);
       proxy = (proxy !== null) ? proxy : value;
       debug.log('initial value for ' + this.key + ' in ' + this.currentTarget.constructor.name, proxy);
-      this.propagateChange(savedValue, source);
+      this.propagateChange(savedValue);
       return proxy;
     }
-    this.propagateChange(value, source);
+    this.propagateChange(value);
     return this.getProxy(value, config);
   }
 
@@ -205,5 +210,13 @@ export class CacheItem implements CacheItemInterface {
       debug.log(`propagating change on ${this.key} to:`, utility);
       utility.set(this._key, value, entry.config);
     });
+  }
+
+  protected migrate(config: DecoratorConfig, utility: WebStorageUtility): void {
+    const migrateKey = config.migrateKey!;
+    debug.log('Migrating', migrateKey, 'to', config.key, 'in', utility.getStorageName());
+    const value = utility.get(migrateKey, config);
+    utility.set(this._key, value);
+    utility.remove(migrateKey);
   }
 }

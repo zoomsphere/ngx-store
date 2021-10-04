@@ -6,6 +6,7 @@ import { SessionStorageService } from '../service/session-storage.service';
 import { CookiesStorageService } from '../service/cookies-storage.service';
 import { WebstorableArray, WebstorableObject } from '../ngx-store.types';
 import { NgxStoreModule } from '../ngx-store.module';
+import { OnDestroy } from '@angular/core';
 
 sessionStorage.setItem('ngx_twoDecorators', '128');
 
@@ -30,7 +31,7 @@ class TestClass2 {
   @SharedStorage() sharedStorageVariable: any = null;
 }
 
-const testClass = new TestClass();
+const testClass: TestClass = new TestClass();
 let testClass2: TestClass2;
 
 describe('Decorators', () => {
@@ -176,6 +177,25 @@ describe('Decorators', () => {
     expect(testClass.sessionStorageVariable).toBe(911);
     expect(testClass.cookieStorageVariable).toBe(false);
     expect(testClass.sharedStorageVariable).toEqual({b: 5});
+  });
+
+  it('migration should work properly', () => {
+    class MigrationTest implements OnDestroy {
+      @LocalStorage({migrateKey: 'oldKey', key: 'newKey'}) migration = 'migration';
+      public ngOnDestroy(): void {}
+    }
+    const migrationTest = new MigrationTest();
+    expect(migrationTest.migration).toBe('migration');
+    expect(localStorageService.get('oldKey')).toBe(null);
+    expect(localStorageService.get('newKey')).toBe('migration');
+    migrationTest.ngOnDestroy();
+    localStorageService.set('oldKey', 'migrated');
+    class MigratedTest {
+      @LocalStorage({migrateKey: 'oldKey', key: 'newKey'}) migration = 'migration';
+    }
+    expect(new MigratedTest().migration).toBe('migrated');
+    expect(localStorageService.get('oldKey')).toBe(null);
+    expect(localStorageService.get('newKey')).toBe('migrated');
   });
 
   afterAll(() => {

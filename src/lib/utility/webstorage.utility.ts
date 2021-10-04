@@ -87,6 +87,10 @@ export class WebStorageUtility {
   public get(key: string, config: DecoratorConfig = {}): any {
     const storageKey = this.getStorageKey(key, config.prefix);
     const value = this._storage.getItem(storageKey);
+    // TODO return undefined if no key
+    /*if (value === null && !(storageKey in this._storage)) {
+      return undefined;
+    }*/
     return this.getGettable(value as string);
   }
 
