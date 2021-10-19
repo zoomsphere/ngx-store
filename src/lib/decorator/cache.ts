@@ -78,7 +78,7 @@ export class CacheItem implements CacheItemInterface {
     if (!this.initializedTargets.has(this.currentTarget)) {
       this.initializedTargets.add(this.currentTarget);
       let readValue = this.readValue();
-      if (readValue !== null && config.migrateKey) {
+      if (config.migrateKey) {
         this.migrate(config, this.utilities[0].utility);
         readValue = this.readValue();
       }
@@ -213,10 +213,17 @@ export class CacheItem implements CacheItemInterface {
   }
 
   protected migrate(config: DecoratorConfig, utility: WebStorageUtility): void {
-    const migrateKey = config.migrateKey!;
+    const prefix = (config.prefix || Config.prefix) || '';
+    const keyExists = (key: string): boolean => key in utility.getStorage();
+    const migrateKey = keyExists(prefix + config.migrateKey!)
+      ? prefix + config.migrateKey!
+      : config.migrateKey!;
+    if (!keyExists(migrateKey)) {
+      return;
+    }
     debug.log('Migrating', migrateKey, 'to', config.key, 'in', utility.getStorageName());
-    const value = utility.get(migrateKey, config);
+    const value = utility.get(migrateKey, {...config, prefix: ''});
     utility.set(this._key, value);
-    utility.remove(migrateKey);
+    utility.remove(migrateKey, {prefix: ''});
   }
 }
