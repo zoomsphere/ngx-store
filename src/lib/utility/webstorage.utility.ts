@@ -129,9 +129,6 @@ export class WebStorageUtility {
   }
 
   public clear(): void {
-    /*if (this.getStorageName() === 'sharedStorage') {
-        debugger;
-    }*/
     this.emitEvent(null as any, null, null);
     this.forEach((value, key) => {
       if (key.startsWith(CONFIG_PREFIX)) {
