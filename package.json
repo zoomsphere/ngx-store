@@ -1,6 +1,6 @@
 {
   "name": "ngx-store",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "author": "Daniel Kucal",
   "license": "ISC",
   "description": "Angular decorators to automagically keep variables in HTML5 LocalStorage, SessionStorage, cookies; injectable services for managing and listening to data changes and a bit more.",
